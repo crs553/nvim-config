@@ -39,8 +39,19 @@ return {
 			"hrsh7th/cmp-buffer",
 			"hrsh7th/cmp-path",
 			"hrsh7th/cmp-cmdline",
-			"L3MON4D3/LuaSnip", -- snippet engine
 			"rafamadriz/friendly-snippets", -- optional snippet collection
+			{
+				"L3MON4D3/LuaSnip",
+				build = function()
+					-- Add Git's bin folder to PATH so make can find sh.exe
+					local git_bin = "C:\\Users\\charlie\\AppData\\Local\\Programs\\Git\\bin"
+					vim.env.PATH = git_bin .. ";" .. vim.env.PATH
+
+					-- Run make with your GCC from Scoop
+					local gcc_path = "C:\\Users\\charlie\\scoop\\apps\\gcc\\current\\bin\\gcc.exe"
+					os.execute("make install_jsregexp CC=" .. gcc_path)
+				end,
+			},
 		},
 		config = function()
 			local cmp = require("cmp")
@@ -98,6 +109,7 @@ return {
 			require("conform").setup({
 				formatters_by_ft = {
 					lua = { "stylua" },
+					python = { "black", "isort" },
 				},
 			})
 
@@ -115,9 +127,7 @@ return {
 		"zapling/mason-conform.nvim",
 		dependencies = { "mason-org/mason.nvim" },
 		config = function()
-			require("mason-conform").setup({
-				ensure_installed = { "stylua" },
-			})
+			require("mason-conform").setup({})
 		end,
 	},
 }
