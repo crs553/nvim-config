@@ -2,11 +2,55 @@ return {
 	"folke/snacks.nvim",
 	priority = 1000,
 	lazy = false,
+	event = "VimEnter",
 	---@type snacks.Config
 	opts = {
 		animate = { enabled = true },
 		bigfile = { enabled = true },
-		dashboard = { enabled = true },
+		dashboard = {
+			enabled = true,
+			opts = {
+				hide = {
+					statusline = false,
+				},
+			},
+			formats = {
+				key = function(item)
+					return {
+						{ "[", hl = "Special" },
+						{ item.key, hl = "Identifier" }, -- "Key" not always defined, Identifier is safer
+						{ "]", hl = "Special" },
+					}
+				end,
+			},
+			sections = {
+				{ section = "header" },
+				{ section = "keys", gap = 1, padding = 1 },
+				{
+					pane = 2,
+					icon = " ",
+					title = "Recent Files",
+					section = "recent_files",
+					indent = 2,
+					padding = 1,
+				},
+				{
+					pane = 2,
+					icon = " ",
+					title = "Projects",
+					section = "projects",
+					indent = 2,
+					padding = 1,
+				},
+				{
+					pane = 2,
+					height = 16,
+					section = "terminal",
+					cmd = fortune,
+					padding = 1,
+				},
+			},
+		},
 		explorer = { enabled = true },
 		indent = { enabled = true },
 		input = { enabled = true },
