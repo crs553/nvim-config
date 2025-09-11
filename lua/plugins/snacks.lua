@@ -283,16 +283,16 @@ return {
 		{
 			"<leader>sd",
 			function()
-				Snacks.picker.diagnostics()
+				Snacks.picker.diagnostics_buffer()
 			end,
-			desc = "Diagnostics",
+			desc = "Buffer Diagnostics",
 		},
 		{
 			"<leader>sD",
 			function()
-				Snacks.picker.diagnostics_buffer()
+				Snacks.picker.diagnostics()
 			end,
-			desc = "Buffer Diagnostics",
+			desc = "Diagnostics",
 		},
 		{
 			"<leader>sH",
