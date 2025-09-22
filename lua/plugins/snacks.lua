@@ -9,12 +9,24 @@ return {
 		bigfile = { enabled = true },
 		dashboard = {
 			enabled = true,
+			preset = {
+				header = [[
+ ________________           
+|   |,"    `.|   |           
+|   /  SONY  \\   |          
+|O _\\   />   /_  |   ___ _  
+|_(_)'.____.'(_)_|  (\")__(\")
+[___|[=]__[=]|___]  //    \\\\]],
+			},
 			opts = {
 				hide = {
 					statusline = false,
 				},
 			},
 			formats = {
+				header = {
+					align = "center",
+				},
 				key = function(item)
 					return {
 						{ "[", hl = "Special" },

@@ -8,7 +8,7 @@ return {
 	-- Mason + lspconfig integration
 	{
 		"mason-org/mason-lspconfig.nvim",
-		opts = { ensure_installed = { "lua_ls", "matlab_ls" } },
+		opts = { ensure_installed = { "lua_ls", "matlab_ls", "gopls" } },
 		dependencies = {
 			{ "mason-org/mason.nvim", opts = {} },
 			"neovim/nvim-lspconfig",
@@ -102,6 +102,9 @@ return {
 		end,
 	},
 
+	--------------------------------------------------------
+	--- Formatting
+	--------------------------------------------------------
 	-- conform.nvim for formatting
 	{
 		"stevearc/conform.nvim",
@@ -110,6 +113,7 @@ return {
 				formatters_by_ft = {
 					lua = { "stylua" },
 					python = { "black", "isort" },
+					go = { "golangci-lint" },
 				},
 			})
 
