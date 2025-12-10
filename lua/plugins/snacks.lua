@@ -5,7 +5,7 @@ return {
 	event = "VimEnter",
 	---@type snacks.Config
 	opts = {
-		animate = { enabled = true },
+		--animate = { enabled = true },
 		bigfile = { enabled = true },
 		dashboard = {
 			enabled = true,
