@@ -29,6 +29,9 @@ return {
 	{
 		"neovim/nvim-lspconfig",
 		config = function()
+			local capabilities = vim.lsp.protocol.make_client_capabilities()
+			capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+
 			local on_attach = function(_, bufnr)
 				local map = function(mode, keys, func, desc)
 					vim.keymap.set(mode, keys, func, { buffer = bufnr, desc = "LSP: " .. desc })
@@ -42,9 +45,20 @@ return {
 			-- Lua
 			vim.lsp.config["lua_ls"] = {
 				on_attach = on_attach,
+				capabilities = capabilities,
+				filetypes = { "lua" },
+				settings = {
+					Lua = {
+						workspace = { checkThirdParty = false },
+						telemetry = { enable = false },
+					},
+				},
 			}
+			vim.lsp.enable("lua_ls")
+
 			vim.lsp.config["ltex_plus"] = {
 				on_attach = on_attach,
+				capabilities = capabilities,
 				settings = {
 					ltex = {
 						language = "en-GB", -- British English
@@ -62,10 +76,29 @@ return {
 				},
 				filetypes = { "markdown", "tex", "text", "gitcommit", "bib" },
 			}
+			vim.lsp.enable("ltex_plus")
+
+			vim.lsp.config["matlab_ls"] = {
+				filetypes = { "matlab" },
+				settings = {
+					MATLAB = {
+						installPath = "C:\\Program Files\\MATLAB\\R2024a\\",
+						matlabConnectionTiming = "onStart",
+						telemetry = true,
+						verboseLogging = true,
+						mlintpath = "C:\\Program Files\\MATLAB\\R2024b\\bin\\win64\\mlint.exe",
+					},
+				},
+				on_attach = on_attach,
+				capabilities = capabilities,
+				single_file_support = true,
+			}
+			vim.lsp.enable("matlab_ls")
 
 			-- Python (pylsp + mypy plugin)
 			vim.lsp.config["pylsp"] = {
 				on_attach = on_attach,
+				capabilities = capabilities,
 				settings = {
 					pylsp = {
 						plugins = {
@@ -84,11 +117,14 @@ return {
 					},
 				},
 			}
+			vim.lsp.enable("pylsp")
 
 			-- Go
 			vim.lsp.config["gopls"] = {
 				on_attach = on_attach,
+				capabilities = capabilities,
 			}
+			vim.lsp.enable("gopls")
 		end,
 	},
 
@@ -170,39 +206,6 @@ return {
 				mapping = cmp.mapping.preset.cmdline(),
 				sources = cmp.config.sources({ { name = "path" } }, { { name = "cmdline" } }),
 			})
-		end,
-	},
-
-	--------------------------------------------------------
-	--- Formatting
-	--------------------------------------------------------
-
-	{
-		"stevearc/conform.nvim",
-		config = function()
-			require("conform").setup({
-				formatters_by_ft = {
-					lua = { "stylua" },
-					go = { "golangci-lint" },
-					python = { "isort", "black" },
-				},
-			})
-
-			vim.api.nvim_create_autocmd("BufWritePre", {
-				pattern = "*",
-				callback = function()
-					require("conform").format({ async = false })
-				end,
-			})
-		end,
-	},
-
-	-- must be after mason and conform
-	{
-		"zapling/mason-conform.nvim",
-		dependencies = { "mason-org/mason.nvim" },
-		config = function()
-			require("mason-conform").setup({})
 		end,
 	},
 }
