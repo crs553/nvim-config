@@ -14,5 +14,12 @@ return {
       end,
       desc = "Buffer Local Keymaps (which-key)",
     },
+    {
+      "<leader>ca",
+      function()
+        vim.lsp.buf.code_action()
+      end,
+      desc = "Code Action",
+    },
   },
 }
