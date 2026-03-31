@@ -1,5 +1,3 @@
--- MATLAB ftplugin (using opt_local everywhere)
-
 -- Comment string
 vim.opt_local.commentstring = "% %s"
 
