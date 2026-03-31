@@ -25,7 +25,7 @@ return {
       "lua",
       "markdown",
       "markdown_inline",
-      "matlab", -- not in default set, so we add it
+      "matlab",
       "python",
       "query",
       "regex",
@@ -38,8 +38,4 @@ return {
       "yaml",
     },
   },
-
-  config = function(_, opts)
-    require("nvim-treesitter.configs").setup(opts)
-  end,
 }
