@@ -8,12 +8,12 @@ require("snacks").setup({
     enabled = true,
     preset = {
       header = [[
-    ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
-    ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║
-    ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║
-    ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║
-    ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
-    ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝]],
+      ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
+      ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║
+      ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║
+      ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║
+      ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
+      ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝]],
     },
     opts = {
       hide = { statusline = false },
@@ -220,8 +220,8 @@ vim.api.nvim_create_autocmd("User", {
     S.toggle.diagnostics():map("<leader>ud")
     S.toggle.line_number():map("<leader>ul")
     S.toggle
-        .option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 })
-        :map("<leader>uc")
+    .option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 })
+    :map("<leader>uc")
     S.toggle.treesitter():map("<leader>uT")
     S.toggle.option("background", { off = "light", on = "dark", name = "Dark Background" }):map("<leader>ub")
     S.toggle.inlay_hints():map("<leader>uh")
