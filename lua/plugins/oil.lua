@@ -4,9 +4,9 @@ vim.pack.add({
   }
 })
 require("oil").setup({
-      default_file_explorer = true,
-      view_options = {
-        show_hidden = false,
-      },
+  default_file_explorer = true,
+  view_options = {
+    show_hidden = false,
+  },
 })
 vim.keymap.set("n", "-", "<cmd>Oil<CR>")
