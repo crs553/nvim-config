@@ -2,9 +2,6 @@
 vim.pack.add({ { src = "https://github.com/williamboman/mason.nvim" } })
 vim.pack.add({ { src = "https://github.com/williamboman/mason-lspconfig.nvim" } })
 
--- LSP Config
-vim.pack.add({ { src = "https://github.com/neovim/nvim-lspconfig" } })
-
 -- CMP + Snippets
 vim.pack.add({
   { src = "https://github.com/hrsh7th/nvim-cmp" },
@@ -25,9 +22,8 @@ require("mason-lspconfig").setup({
 })
 
 -- ======================
--- LSP Setup
+-- LSP Capabilities & on_attach
 -- ======================
--- Ensure cmp_nvim_lsp is loaded
 local has_cmp_lsp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
 if not has_cmp_lsp then
   vim.notify("cmp_nvim_lsp not found!", vim.log.levels.WARN)
@@ -37,7 +33,6 @@ end
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
 
--- Common on_attach for all LSPs
 local on_attach = function(_, bufnr)
   local map = function(mode, keys, func, desc)
     vim.keymap.set(mode, keys, func, { buffer = bufnr, desc = "LSP: " .. desc })
@@ -48,10 +43,12 @@ local on_attach = function(_, bufnr)
   map("n", "<space>lr", vim.lsp.buf.rename, "Rename symbol")
 end
 
-local lspconfig = require("lspconfig")
+-- ======================
+-- LSP Servers (vim.lsp.config API)
+-- ======================
 
 -- Lua
-lspconfig.lua_ls.setup({
+vim.lsp.config["lua_ls"] = {
   on_attach = on_attach,
   capabilities = capabilities,
   filetypes = { "lua" },
@@ -61,10 +58,11 @@ lspconfig.lua_ls.setup({
       telemetry = { enable = false },
     },
   },
-})
+}
+vim.lsp.enable("lua_ls")
 
 -- LTEX Plus
-lspconfig.ltex_plus.setup({
+vim.lsp.config["ltex_plus"] = {
   on_attach = on_attach,
   capabilities = capabilities,
   filetypes = { "markdown", "tex", "text", "gitcommit", "bib" },
@@ -78,10 +76,13 @@ lspconfig.ltex_plus.setup({
       sentenceCacheSize = 2000,
     },
   },
-})
+}
+vim.lsp.enable("ltex_plus")
 
 -- MATLAB
-lspconfig.matlab_ls.setup({
+vim.lsp.config["matlab_ls"] = {
+  on_attach = on_attach,
+  capabilities = capabilities,
   filetypes = { "matlab" },
   settings = {
     MATLAB = {
@@ -91,13 +92,12 @@ lspconfig.matlab_ls.setup({
       verboseLogging = true,
     },
   },
-  on_attach = on_attach,
-  capabilities = capabilities,
   single_file_support = true,
-})
+}
+vim.lsp.enable("matlab_ls")
 
 -- Python (pylsp + mypy)
-lspconfig.pylsp.setup({
+vim.lsp.config["pylsp"] = {
   on_attach = on_attach,
   capabilities = capabilities,
   settings = {
@@ -110,7 +110,8 @@ lspconfig.pylsp.setup({
       },
     },
   },
-})
+}
+vim.lsp.enable("pylsp")
 
 -- ======================
 -- nvim-cmp Setup
@@ -143,9 +144,12 @@ cmp.setup({
   experimental = { ghost_text = true },
 })
 
--- CMP for cmdline
+-- CMP cmdline support
 cmp.setup.cmdline({ "/", "?" }, { mapping = cmp.mapping.preset.cmdline(), sources = { { name = "buffer" } } })
-cmp.setup.cmdline(":", {
-  mapping = cmp.mapping.preset.cmdline(),
-  sources = cmp.config.sources({ { name = "path" } }, { { name = "cmdline" } }),
-})
+cmp.setup.cmdline(
+  ":",
+  {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({ { name = "path" } }, { { name = "cmdline" } }),
+  }
+)
