@@ -1,7 +1,7 @@
 vim.pack.add({
-	{
-		src = "https://github.com/kylechui/nvim-surround",
-	},
+  {
+    src = "https://github.com/kylechui/nvim-surround",
+  },
 })
 
 -- Normal mode
@@ -9,10 +9,10 @@ vim.keymap.set("n", "ys", "<cmd>lua require('nvim-surround').normal()<CR>", { de
 vim.keymap.set("n", "yss", "<cmd>lua require('nvim-surround').normal_cur()<CR>", { desc = "Surround: normal current" })
 vim.keymap.set("n", "yS", "<cmd>lua require('nvim-surround').normal_line()<CR>", { desc = "Surround: normal line" })
 vim.keymap.set(
-	"n",
-	"ySS",
-	"<cmd>lua require('nvim-surround').normal_cur_line()<CR>",
-	{ desc = "Surround: normal current line" }
+  "n",
+  "ySS",
+  "<cmd>lua require('nvim-surround').normal_cur_line()<CR>",
+  { desc = "Surround: normal current line" }
 )
 
 -- Visual mode
