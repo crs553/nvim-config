@@ -10,7 +10,7 @@ require("config.options")
 require("config.floaterm")
 
 require("plugins.catppuccin")
---require("plugins.floaterm")
+require("plugins.gitsigns")
 require("plugins.lspconfig")
 require("plugins.lualine")
 require("plugins.markdown")
