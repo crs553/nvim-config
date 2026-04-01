@@ -1,13 +1,14 @@
+local au_group = vim.api.nvim_create_augroup("UserConfig", { clear = true })
 vim.api.nvim_create_autocmd("TextYankPost", {
 	desc = "Highlight when yanking (copying) text",
-	group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
+	group = au_group,
 	callback = function()
 		vim.highlight.on_yank()
 	end,
 })
 
 vim.api.nvim_create_autocmd("LspAttach", {
-	group = vim.api.nvim_create_augroup("my.lsp", {}),
+	group = au_group,
 	callback = function(args)
 		local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
 		if client:supports_method("textDocument/implementation") then
@@ -30,25 +31,55 @@ vim.api.nvim_create_autocmd("LspAttach", {
 			and client:supports_method("textDocument/formatting")
 		then
 			vim.api.nvim_create_autocmd("BufWritePre", {
-				group = vim.api.nvim_create_augroup("my.lsp", { clear = false }),
+				group = au_group,
 				buffer = args.buf,
-				callback = function()
-					vim.lsp.buf.format({ bufnr = args.buf, id = client.id, timeout_m = 1000 })
+				callback = function(args)
+					if vim.bo[args.buf].buftype ~= "" then
+						return
+					end
+					if not vim.bo[args.buf].modifiable then
+						return
+					end
+					if vim.api.nvim_buf_get_name(args.buf) == "" then
+						return
+					end
+
+					vim.lsp.buf.format({ bufnr = args.buf, timeout_ms = 2000 })
 				end,
 			})
 		end
 	end,
 })
 
-local function close_all_buffers_except_current()
-	local bufs = vim.api.nvim_list_bufs()
-	local current_buf = vim.api.nvim_get_current_buf()
-	for _, buf in ipairs(bufs) do
-		if buf ~= current_buf then
-			vim.api.nvim_buf_delete(buf, { force = true })
+vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
+	callback = function()
+		if not pcall(require, "nvim-treesitter.parsers") then
+			vim.notify("nvim-treesitter no parsers!", vim.log.levels.WARN)
 		end
-	end
-end
 
--- Map to a key (e.g., <leader>q)
-vim.keymap.set("n", "<leader>q", close_all_buffers_except_current, { desc = "Close all other buffers" })
+		if vim.o.diff then -- except in diff mode
+			return
+		end
+
+		local last_pos = vim.api.nvim_buf_get_mark(0, '"') -- {line, col}
+		local last_line = vim.api.nvim_buf_line_count(0)
+
+		local row = last_pos[1]
+		if row < 1 or row > last_line then
+			return
+		end
+
+		pcall(vim.api.nvim_win_set_cursor, 0, last_pos)
+	end,
+})
+
+-- wrap, linebreak and spellcheck on markdown and text files
+vim.api.nvim_create_autocmd("FileType", {
+	group = augroup,
+	pattern = { "markdown", "text", "gitcommit" },
+	callback = function()
+		vim.opt_local.wrap = true
+		vim.opt_local.linebreak = true
+		vim.opt_local.spell = true
+	end,
+})
