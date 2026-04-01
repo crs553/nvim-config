@@ -5,7 +5,7 @@ vim.pack.add({
 require("snacks").setup({
   bigfile = { enabled = true },
   dashboard = {
-    enabled = true,
+    enabled = false,
     preset = {
       header = [[
       ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
@@ -91,6 +91,9 @@ end, { desc = "Grep" })
 vim.keymap.set("n", "<leader>fh", function()
   S.picker.help()
 end, { desc = "Help Pages" })
+vim.keymap.set("n", "<leader>fq", function()
+  S.picker.qflist()
+end, { desc = "Quickfix List" })
 
 -- Git
 vim.keymap.set("n", "<leader>gb", function()
@@ -220,8 +223,8 @@ vim.api.nvim_create_autocmd("User", {
     S.toggle.diagnostics():map("<leader>ud")
     S.toggle.line_number():map("<leader>ul")
     S.toggle
-    .option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 })
-    :map("<leader>uc")
+        .option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 })
+        :map("<leader>uc")
     S.toggle.treesitter():map("<leader>uT")
     S.toggle.option("background", { off = "light", on = "dark", name = "Dark Background" }):map("<leader>ub")
     S.toggle.inlay_hints():map("<leader>uh")
