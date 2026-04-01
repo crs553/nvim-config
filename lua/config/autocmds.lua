@@ -44,7 +44,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
 						return
 					end
 
-					vim.lsp.buf.format({ bufnr = args.buf, timeout_ms = 2000 })
+					-- Skip MATLAB files (.m) or filetype "matlab"
+					local ft = vim.bo[args.buf].filetype
+					local name = vim.api.nvim_buf_get_name(args.buf)
+					if ft == "matlab" or name:match("%.m$") then
+						return
+					end
+
+					vim.lsp.buf.format({ bufnr = args.buf, timeout_ms = 10000 })
 				end,
 			})
 		end
