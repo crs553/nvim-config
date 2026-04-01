@@ -41,9 +41,10 @@ local on_attach = function(_, bufnr)
     vim.keymap.set(mode, keys, func, { buffer = bufnr, desc = "LSP: " .. desc })
   end
 
-  map("n", "<space>lh", vim.lsp.buf.hover, "Hover")
-  map("n", "<space>ld", vim.lsp.buf.definition, "Go to definition")
-  map("n", "<space>lr", vim.lsp.buf.rename, "Rename symbol")
+  map("n", "<leader>lh", vim.lsp.buf.hover, "Hover")
+  map("n", "<leader>ld", vim.lsp.buf.definition, "Go to definition")
+  map("n", "<leader>lr", vim.lsp.buf.rename, "Rename symbol")
+  map("n", "<leader>ca", vim.lsp.buf.code_action, "Code Action")
 end
 
 -- ======================
