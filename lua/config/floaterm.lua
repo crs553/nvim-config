@@ -20,7 +20,7 @@ vim.api.nvim_create_autocmd("TermOpen", {
 
 local terminal_state = { buf = nil, win = nil, is_open = false }
 
-local function FloatingTerminal()
+local function FloatingTerminal(cmd)
 	if terminal_state.is_open and terminal_state.win and vim.api.nvim_win_is_valid(terminal_state.win) then
 		vim.api.nvim_win_close(terminal_state.win, false)
 		terminal_state.is_open = false
@@ -61,7 +61,7 @@ local function FloatingTerminal()
 		end
 	end
 	if not has_terminal then
-		vim.fn.termopen(vim.o.shell)
+		vim.fn.termopen(cmd or vim.o.shell)
 	end
 
 	terminal_state.is_open = true
@@ -86,3 +86,6 @@ vim.keymap.set("t", "<M-i>", function()
 		terminal_state.is_open = false
 	end
 end, { noremap = true, silent = true, desc = "Toggle floating terminal" })
+vim.keymap.set("n", "<leader>gg", function()
+	FloatingTerminal("lazygit")
+end, { desc = "Open lazygit" })
