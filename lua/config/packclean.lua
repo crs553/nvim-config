@@ -2,6 +2,7 @@ local function pack_clean()
 	local active_plugins = {}
 	local unused_plugins = {}
 
+	vim.notify("Running Package Cleaner")
 	for _, plugin in ipairs(vim.pack.get()) do
 		active_plugins[plugin.spec.name] = plugin.active
 	end
@@ -13,7 +14,7 @@ local function pack_clean()
 	end
 
 	if #unused_plugins == 0 then
-		print("No unused plugins.")
+		vim.notify("No unused plugins.")
 		return
 	end
 
