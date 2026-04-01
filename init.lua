@@ -7,9 +7,10 @@ vim.g.have_nerd_font = true
 require("config.keymaps")
 require("config.autocmds")
 require("config.options")
+require("config.floaterm")
 
 require("plugins.catppuccin")
-require("plugins.floaterm")
+--require("plugins.floaterm")
 require("plugins.lspconfig")
 require("plugins.lualine")
 require("plugins.markdown")
