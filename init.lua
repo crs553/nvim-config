@@ -8,6 +8,7 @@ require("config.keymaps")
 require("config.autocmds")
 require("config.options")
 require("config.floaterm")
+require("config.packclean")
 
 require("plugins.catppuccin")
 require("plugins.difftool")
