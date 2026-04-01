@@ -1,3 +1,6 @@
+-- LSP config
+vim.pack.add({ { src = "https://github.com/neovim/nvim-lspconfig" } })
+
 -- Mason
 vim.pack.add({ { src = "https://github.com/williamboman/mason.nvim" } })
 vim.pack.add({ { src = "https://github.com/williamboman/mason-lspconfig.nvim" } })
@@ -81,17 +84,16 @@ vim.lsp.enable("ltex_plus")
 
 -- MATLAB
 vim.lsp.config["matlab_ls"] = {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  filetypes = { "matlab" },
   settings = {
     MATLAB = {
-      installPath = "C:\\Program Files\\MATLAB\\R2024b\\",
+      installPath = "C:\\Program Files\\MATLAB\\R2024b",
       matlabConnectionTiming = "onStart",
       telemetry = true,
-      verboseLogging = true,
+      indexWorkspace = true,
     },
   },
+  capabilities = capabilities,
+  on_attach = on_attach,
   single_file_support = true,
 }
 vim.lsp.enable("matlab_ls")
@@ -146,10 +148,7 @@ cmp.setup({
 
 -- CMP cmdline support
 cmp.setup.cmdline({ "/", "?" }, { mapping = cmp.mapping.preset.cmdline(), sources = { { name = "buffer" } } })
-cmp.setup.cmdline(
-  ":",
-  {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = cmp.config.sources({ { name = "path" } }, { { name = "cmdline" } }),
-  }
-)
+cmp.setup.cmdline(":", {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = cmp.config.sources({ { name = "path" } }, { { name = "cmdline" } }),
+})
