@@ -42,9 +42,10 @@ local on_attach = function(_, bufnr)
 	end
 
 	map("n", "<leader>lh", vim.lsp.buf.hover, "Hover")
-	map("n", "<leader>ld", vim.lsp.buf.definition, "Go to definition")
-	map("n", "<leader>lr", vim.lsp.buf.rename, "Rename symbol")
+	map("n", "<leader>ld", vim.lsp.buf.definition, "Definition")
+	map("n", "<leader>lr", vim.lsp.buf.rename, "Rename")
 	map("n", "<leader>ca", vim.lsp.buf.code_action, "Code Action")
+	map("i", "<C-h>", vim.lsp.buf.signature_help, "Signature Help")
 end
 
 -- ======================
@@ -83,8 +84,10 @@ vim.lsp.config["ltex_plus"] = {
 }
 vim.lsp.enable("ltex_plus")
 
--- MATLAB
+-- MATLAB -- note I managed this externally as the Mason files were not working for me
 vim.lsp.config["matlab_ls"] = {
+	capabilities = capabilities,
+	on_attach = on_attach,
 	cmd = { "matlab-language-server", "--stdio" },
 	settings = {
 		MATLAB = {
@@ -94,8 +97,6 @@ vim.lsp.config["matlab_ls"] = {
 			telemetry = true,
 		},
 	},
-	capabilities = capabilities,
-	on_attach = on_attach,
 	single_file_support = true,
 }
 vim.lsp.enable("matlab_ls")
@@ -117,9 +118,7 @@ vim.lsp.config["pylsp"] = {
 }
 vim.lsp.enable("pylsp")
 
--- ======================
 -- nvim-cmp Setup
--- ======================
 local cmp = require("cmp")
 local luasnip = require("luasnip")
 require("luasnip.loaders.from_vscode").lazy_load()
@@ -142,6 +141,7 @@ cmp.setup({
 	sources = cmp.config.sources({
 		{ name = "nvim_lsp" },
 		{ name = "luasnip" },
+	}, {
 		{ name = "buffer" },
 		{ name = "path" },
 	}),
