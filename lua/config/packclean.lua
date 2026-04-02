@@ -25,3 +25,4 @@ local function pack_clean()
 end
 
 vim.keymap.set("n", "<leader>pc", pack_clean, { desc = "Clean unused plugins" })
+vim.keymap.set("n", "<leader>pu", "<cmd>lua vim.pack.update()<CR>", { desc = "Update installed plugins" })
