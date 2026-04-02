@@ -1,4 +1,7 @@
-lua
+vim.pack.add({ { src = "https://codeberg.org/mfussenegger/nvim-dap.git" } })
+vim.pack.add({
+        { src = "https://github.com/leoluz/nvim-dap-go" },
+})
 require('dap-go').setup {
   -- Additional dap configurations can be added.
   -- dap_configurations accepts a list of tables where each entry
