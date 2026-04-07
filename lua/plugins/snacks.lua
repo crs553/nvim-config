@@ -3,6 +3,8 @@ vim.pack.add({
 })
 
 require("snacks").setup({
+	bigfile = { enabled = true },
+	image = { enabled = true },
 	indent = { enabled = true },
 	input = { enabled = true },
 	notifier = { enabled = true, timeout = 3000 },
