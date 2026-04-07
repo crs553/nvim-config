@@ -50,12 +50,12 @@ local on_attach = function(_, bufnr)
 		vim.keymap.set(mode, keys, func, { buffer = bufnr, desc = "LSP: " .. desc })
 	end
 
-	map("n", "<leader>lh", vim.lsp.buf.hover, "Hover" )
-	map("n", "<leader>ld", vim.lsp.buf.definition, "Definition" )
-	map("n", "<leader>lr", vim.lsp.buf.rename, "Rename" )
-	map("n", "<leader>ca", vim.lsp.buf.code_action, "Code Action" )
-	map("n", "grf", vim.lsp.buf.format, "Format Buffer" )
-	map("n", "<C-h>", vim.lsp.buf.signature_help, "Signature Help" )
+	map("n", "<leader>lh", vim.lsp.buf.hover, "Hover")
+	map("n", "<leader>ld", vim.lsp.buf.definition, "Definition")
+	map("n", "<leader>lr", vim.lsp.buf.rename, "Rename")
+	map("n", "<leader>ca", vim.lsp.buf.code_action, "Code Action")
+	map("n", "grf", vim.lsp.buf.format, "Format Buffer")
+	map("n", "<C-h>", vim.lsp.buf.signature_help, "Signature Help")
 end
 
 vim.lsp.enable("bashls")
@@ -135,6 +135,7 @@ vim.lsp.enable("pylsp")
 vim.lsp.config["arduino_language_server"] = {
 	on_attach = on_attach,
 	capabilities = capabilities,
+	root_dir = vim.loop.cwd,
 }
 vim.lsp.enable("arduino_language_server")
 
