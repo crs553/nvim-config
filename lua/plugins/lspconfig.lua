@@ -168,6 +168,7 @@ cmp.setup({
 	}, {
 		{ name = "buffer" },
 		{ name = "path" },
+		{ name = "ollama" }, -- AI inline suggestions
 	}),
 	experimental = { ghost_text = true },
 })
