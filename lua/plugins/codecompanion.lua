@@ -1,7 +1,7 @@
 vim.pack.add({
-  { src = "https://github.com/olimorris/codecompanion.nvim"},
-  { src = "https://github.com/nvim-lua/plenary.nvim"},
-  { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
+	{ src = "https://github.com/olimorris/codecompanion.nvim" },
+	{ src = "https://github.com/nvim-lua/plenary.nvim" },
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
 })
 
 require("codecompanion").setup({
@@ -11,12 +11,7 @@ require("codecompanion").setup({
 				name = "ollama-local",
 				url = "http://127.0.0.1:11434",
 				schema = {
-					model = "qwen2.5-coder:7b",
-				},
-
-				options = {
-					temperature = 0.2,
-					top_p = 0.9,
+					model = "qwen3-coder",
 				},
 			})
 		end,
@@ -29,6 +24,27 @@ require("codecompanion").setup({
 
 		inline = {
 			adapter = "ollama",
+		},
+	},
+
+	interactions = {
+		opts = {
+			date_format = "%A, %d %B %Y", -- Example: "Monday, 01 January 2024"
+			language = "English",
+		},
+		chat = {
+			opts = {
+				completion_provider = "cmp",
+			},
+			editor_context = {
+				["buffer"] = {
+					opts = {
+						-- Always sync the buffer by sharing its "diff"
+						-- Or choose "all" to share the entire buffer
+						default_params = "diff",
+					},
+				},
+			},
 		},
 	},
 })
@@ -51,4 +67,9 @@ end, { desc = "Explain / edit selection with AI" })
 vim.keymap.set("n", "<leader>ap", function()
 	vim.cmd("CodeCompanionChat")
 	vim.cmd("startinsert")
+end, { desc = "Prompt AI (buffer context)" })
+
+-- Quick prompt for current buffer
+vim.keymap.set("n", "<leader>ap", function()
+	vim.cmd("CodeCompanionActions")
 end, { desc = "Prompt AI (buffer context)" })
