@@ -16,6 +16,7 @@ local function close_all_buffers_except_current()
 			vim.api.nvim_buf_delete(buf, { force = true })
 		end
 	end
+	vim.notify("Non-focused buffers deleted")
 end
 -- Map to a key (e.g., <leader>q)
 vim.keymap.set("n", "<leader>q", close_all_buffers_except_current, { desc = "Close all other buffers" })
