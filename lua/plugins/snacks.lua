@@ -59,6 +59,9 @@ end, { desc = "Help Pages" })
 vim.keymap.set("n", "<leader>fq", function()
 	S.picker.qflist()
 end, { desc = "Quickfix List" })
+vim.keymap.set("n", "<leader>fk", function()
+	S.picker.keymaps()
+end, { desc = "Search Keymaps" })
 
 -- Git
 vim.keymap.set("n", "<leader>gb", function()
