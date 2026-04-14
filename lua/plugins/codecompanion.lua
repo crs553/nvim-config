@@ -11,7 +11,7 @@ require("codecompanion").setup({
 				name = "ollama-local",
 				url = "http://127.0.0.1:11434",
 				schema = {
-					model = "qwen3-coder",
+					model = "qwen3.5:9b",
 				},
 			})
 		end,
@@ -35,15 +35,6 @@ require("codecompanion").setup({
 		chat = {
 			opts = {
 				completion_provider = "cmp",
-			},
-			editor_context = {
-				["buffer"] = {
-					opts = {
-						-- Always sync the buffer by sharing its "diff"
-						-- Or choose "all" to share the entire buffer
-						default_params = "diff",
-					},
-				},
 			},
 		},
 	},
