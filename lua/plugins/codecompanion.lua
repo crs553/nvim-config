@@ -11,7 +11,7 @@ require("codecompanion").setup({
 				name = "ollama-local",
 				url = "http://127.0.0.1:11434",
 				schema = {
-					model = "qwen3.5:9b",
+					model = "qwen3-coder",
 				},
 			})
 		end,
