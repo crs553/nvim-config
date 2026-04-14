@@ -55,7 +55,7 @@ opt.encoding = "utf-8" -- set encoding
 
 -- Folding: requires treesitter available at runtime; safe fallback if not
 opt.foldmethod = "expr" -- use expression for folding
-opt.foldexpr = "v:lua.vim.treesitter.foldexpr()" -- use treesitter for folding
+opt.foldexpr = "nvim_treesitter#foldexpr()" -- use treesitter for folding
 opt.foldlevel = 99 -- start with all folds open
 
 opt.splitbelow = true -- horizontal split below
