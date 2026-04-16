@@ -8,10 +8,6 @@
       "rev": "426dbebe06b5c69fd846ceb17b42e12f890aedf1",
       "src": "https://github.com/catppuccin/nvim"
     },
-    "cmp-ai": {
-      "rev": "996c76519fa92abab8071e3a732f4c07265eb554",
-      "src": "https://github.com/tzachar/cmp-ai.git"
-    },
     "cmp-buffer": {
       "rev": "b74fab3656eea9de20a9b8116afa3cfc4ec09657",
       "src": "https://github.com/hrsh7th/cmp-buffer"
