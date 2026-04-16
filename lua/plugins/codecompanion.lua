@@ -146,14 +146,6 @@ vim.keymap.set("n", "<leader>ai", vim.cmd.CodeCompanionChat, {
 	silent = true,
 })
 
--- Inline AI on selection (visual mode)
-vim.keymap.set("v", "<leader>ae", function()
-	vim.cmd("CodeCompanionChat Add")
-end, {
-	desc = "AI: edit/explain selection",
-	silent = true,
-})
-
 -- Open chat with immediate insert (buffer context prompt)
 vim.keymap.set("n", "<leader>ac", function()
 	vim.cmd("CodeCompanionChat")
@@ -176,5 +168,17 @@ vim.keymap.set("n", "<leader>as", vim.cmd.CodeCompanionStop, {
 })
 
 vim.keymap.set("v", "<leader>ad", function()
-	require("codecompanion").prompt("docstring")
+	require("codecompanion").prompt("docstrings")
 end, { desc = "Write docstring and comments for selection" })
+
+vim.keymap.set("v", "<leader>ae", function()
+	require("codecompanion").prompt("explain")
+end, { desc = "Explain the selection" })
+
+vim.keymap.set("n", "<leader>ag", function()
+	require("codecompanion").prompt("commit")
+end, { desc = "Generate commit message" })
+
+vim.keymap.set("v", "<leader>af", function()
+	require("codecompanion").prompt("fix")
+end, { desc = "Fix this code" })
