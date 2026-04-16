@@ -1,12 +1,15 @@
+local lopt = vim.opt_local
 -- Comment string
-vim.opt_local.commentstring = "% %s"
+lopt.commentstring = "% %s"
 
 -- Indentation
-vim.opt_local.tabstop = 4
-vim.opt_local.shiftwidth = 4
-vim.opt_local.expandtab = true
+lopt.tabstop = 4
+lopt.shiftwidth = 4
+lopt.expandtab = true
 
 -- Folding
-vim.opt_local.foldmethod = "indent"
-vim.opt_local.foldenable = true
-vim.opt_local.foldlevel = 99
+lopt.foldmethod = "indent"
+lopt.foldenable = true
+lopt.foldlevel = 99
+
+lopt.filetype = "matlab"
