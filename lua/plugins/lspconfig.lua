@@ -56,7 +56,7 @@ local on_attach = function(_, bufnr)
 	map("n", "<leader>lr", vim.lsp.buf.rename, "Rename")
 	map("n", "<leader>ca", vim.lsp.buf.code_action, "Code Action")
 	map("n", "grf", vim.lsp.buf.format, "Format Buffer")
-	map("n", "<C-h>", vim.lsp.buf.signature_help, "Signature Help")
+	map("n", "<leader>sh", vim.lsp.buf.signature_help, "Signature Help")
 end
 
 vim.lsp.enable("bashls")
