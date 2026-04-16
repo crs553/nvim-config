@@ -51,70 +51,75 @@ require("codecompanion").setup({
 				completion_provider = "cmp",
 			},
 		},
+	},
 
-		prompt_library = {
-			["Write docstring and comments for function"] = {
-				strategy = "inline",
-				description = "Adds a docstring and inline comments to the selected function",
-				opts = {
-					placement = "before",
-				},
-				prompts = {
-					{
-						role = "user",
-						content = "Write a clear docstring and add helpful inline comments for the following function:\n\n{{selection}}",
-					},
+	prompt_library = {
+		docstring = {
+			strategy = "inline",
+			description = "Adds a docstring and inline comments to the selected function",
+			opts = {
+				placement = "before",
+			},
+			prompts = {
+				{
+					role = "user",
+					content = "Write a clear docstring and add helpful inline comments for:\n\n{{selection}}",
 				},
 			},
-			["Refactor this code"] = {
-				strategy = "inline",
-				description = "Improve structure, readability, and naming",
-				opts = { placement = "after" },
-				prompts = {
-					{
-						role = "user",
-						content = "Refactor the following code for clarity and maintainability:\n\n{{selection}}",
-					},
+		},
+
+		refactor = {
+			strategy = "inline",
+			description = "Improve structure, readability, and naming",
+			opts = { placement = "after" },
+			prompts = {
+				{
+					role = "user",
+					content = "Refactor this code for clarity and maintainability:\n\n{{selection}}",
 				},
 			},
-			["Explain code"] = {
-				strategy = "chat",
-				description = "Explain selected code",
-				prompts = {
-					{
-						role = "user",
-						content = "Explain what this code does step by step:\n\n{{selection}}",
-					},
+		},
+
+		explain = {
+			strategy = "chat",
+			description = "Explain selected code",
+			prompts = {
+				{
+					role = "user",
+					content = "Explain what this code does step by step:\n\n{{selection}}",
 				},
 			},
-			["Find bugs"] = {
-				strategy = "chat",
-				description = "Detect issues in code",
-				prompts = {
-					{
-						role = "user",
-						content = "Find bugs, edge cases, and potential runtime issues:\n\n{{selection}}",
-					},
+		},
+
+		bugs = {
+			strategy = "chat",
+			description = "Detect issues in code",
+			prompts = {
+				{
+					role = "user",
+					content = "Find bugs, edge cases, and potential runtime issues:\n\n{{selection}}",
 				},
 			},
-			["Optimize performance"] = {
-				strategy = "inline",
-				description = "Make code faster and reduce allocations",
-				prompts = {
-					{
-						role = "user",
-						content = "Optimize this code for performance. Explain any tradeoffs in comments:\n\n{{selection}}",
-					},
+		},
+
+		optimize = {
+			strategy = "inline",
+			description = "Make code faster and reduce allocations",
+			prompts = {
+				{
+					role = "user",
+					content = "Optimize this code for performance. Explain tradeoffs in comments:\n\n{{selection}}",
 				},
 			},
-			["Generate tests"] = {
-				strategy = "chat",
-				description = "Generate unit tests",
-				prompts = {
-					{
-						role = "user",
-						content = "Generate comprehensive unit tests for this code:\n\n{{selection}}",
-					},
+		},
+
+		tests = {
+			strategy = "chat",
+			description = "Generate unit tests",
+			prompts = {
+				{
+					role = "user",
+					content = "Generate comprehensive unit tests for this code:\n\n{{selection}}",
 				},
 			},
 		},
