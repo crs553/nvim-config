@@ -147,22 +147,22 @@ vim.lsp.enable("gopls")
 local cmp_ai = require("cmp_ai.config")
 
 cmp_ai:setup({
-	max_lines = 60, -- keep context small for speed
+	max_lines = 30, -- keep context small for speed
 
 	provider = "Ollama",
 
 	provider_options = {
-		model = "qwen3-coder",
+		model = "deepseek-coder:1.3b",
 
 		-- Qwen3-Coder benefits from FIM-style formatting
-		prompt = function(lines_before, lines_after)
-			return "<|fim_prefix|>" .. lines_before .. "<|fim_suffix|>" .. lines_after .. "<|fim_middle|>"
+		prompt = function(before, after)
+			return before .. "\n<fim_suffix>\n" .. after .. "\n<fim_middle>"
 		end,
 	},
 
 	-- IMPORTANT: avoid lag spikes consider changing to false
-	run_on_every_keystroke = true,
-	--debounce_ms = 150,
+	run_on_every_keystroke = false,
+	debounce_ms = 250,
 	notify = false,
 	notify_callback = function(msg)
 		vim.notify(msg)
