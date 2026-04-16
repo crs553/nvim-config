@@ -14,6 +14,7 @@ vim.pack.add({
 	{ src = "https://github.com/hrsh7th/cmp-cmdline" },
 	{ src = "https://github.com/L3MON4D3/LuaSnip" },
 	{ src = "https://github.com/rafamadriz/friendly-snippets" },
+	{ src = "https://github.com/tzachar/cmp-ai.git" },
 })
 
 -- ======================
@@ -142,6 +143,36 @@ vim.lsp.enable("arduino_language_server")
 --go files
 vim.lsp.enable("gopls")
 
+-- ai code completion setup
+local cmp_ai = require("cmp_ai.config")
+
+cmp_ai:setup({
+	max_lines = 60, -- keep context small for speed
+
+	provider = "Ollama",
+
+	provider_options = {
+		model = "qwen3-coder",
+
+		-- Qwen3-Coder benefits from FIM-style formatting
+		prompt = function(lines_before, lines_after)
+			return "<|fim_prefix|>" .. lines_before .. "<|fim_suffix|>" .. lines_after .. "<|fim_middle|>"
+		end,
+	},
+
+	-- IMPORTANT: avoid lag spikes consider changing to false
+	run_on_every_keystroke = true,
+	--debounce_ms = 150,
+	notify = false,
+	notify_callback = function(msg)
+		vim.notify(msg)
+	end,
+
+	ignored_file_types = {
+		help = true,
+	},
+})
+
 -- nvim-cmp Setup
 local cmp = require("cmp")
 local luasnip = require("luasnip")
@@ -166,9 +197,9 @@ cmp.setup({
 		{ name = "nvim_lsp" },
 		{ name = "luasnip" },
 	}, {
+		{ name = "cmp_ai" }, -- AI inline suggestions
 		{ name = "buffer" },
 		{ name = "path" },
-		{ name = "ollama" }, -- AI inline suggestions
 	}),
 	experimental = { ghost_text = true },
 })
