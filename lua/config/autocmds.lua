@@ -1,8 +1,13 @@
+-- Highlight yanked text with background
 local au_group = vim.api.nvim_create_augroup("UserConfig", { clear = true })
+
+-- Create autocmd to highlight yanked text
 vim.api.nvim_create_autocmd("TextYankPost", {
+	--- Highlight the yanked text
 	desc = "Highlight when yanking (copying) text",
 	group = au_group,
 	callback = function()
+		--- Highlight the last yanked text
 		vim.highlight.on_yank()
 	end,
 })

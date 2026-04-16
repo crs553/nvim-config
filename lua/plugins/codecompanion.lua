@@ -2,7 +2,9 @@ vim.pack.add({
 	{ src = "https://github.com/nvim-lua/plenary.nvim" },
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
 	{ src = "https://github.com/olimorris/codecompanion.nvim" },
+	{ src = "https://github.com/nvim-mini/mini.diff" },
 })
+require("mini.diff").setup()
 
 require("codecompanion").setup({
 	adapters = {
@@ -27,6 +29,9 @@ require("codecompanion").setup({
 				chat_context = "📎️",
 			},
 			fold_context = true,
+		},
+		diff = {
+			provider = "mini_diff",
 		},
 	},
 
@@ -75,7 +80,7 @@ require("codecompanion").setup({
 				auto_submit = true,
 				ignore_system_prompt = false,
 				modes = { "v" },
-				placement = "new",
+				placement = "replace",
 				stop_context_insertion = true,
 			},
 
