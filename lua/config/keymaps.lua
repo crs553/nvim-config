@@ -19,4 +19,9 @@ local function close_all_buffers_except_current()
 	vim.notify("Non-focused buffers deleted")
 end
 -- Map to a key (e.g., <leader>q)
-vim.keymap.set("n", "<leader>q", close_all_buffers_except_current, { desc = "Close all other buffers" })
+map("n", "<leader>q", close_all_buffers_except_current, { desc = "Close all other buffers" })
+
+map("n", "<c-k>", ":wincmd k<CR>", { desc = "Move up in split", silent = true })
+map("n", "<c-j>", ":wincmd j<CR>", { desc = "Move down in split ", silent = true })
+map("n", "<c-h>", ":wincmd h<CR>", { desc = "Move left in split", silent = true })
+map("n", "<c-l>", ":wincmd l<CR>", { desc = "Move right in split", silent = true })
