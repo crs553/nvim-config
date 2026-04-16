@@ -19,6 +19,9 @@ require("codecompanion").setup({
 	},
 
 	display = {
+		action_palette = {
+			provider = "default",
+		},
 		chat = {
 			icons = {
 				chat_context = "📎️",
@@ -28,7 +31,10 @@ require("codecompanion").setup({
 	},
 
 	strategies = {
-		chat = { adapter = "ollama" },
+		chat = {
+			adapter = "ollama",
+			model = "qwen3-coder",
+		},
 		inline = {
 			adapter = "ollama",
 			keymaps = {
@@ -38,12 +44,20 @@ require("codecompanion").setup({
 		},
 		--agent = { adapter = "ollama" },
 		cmd = { adapter = "ollama" },
+		background = {
+			chat = {
+				opts = {
+					enabled = true,
+				},
+			},
+		},
 	},
 
 	interactions = {
 		opts = {
 			date_format = "%A, %d %B %Y",
-			language = "English",
+			log_level = "Debug",
+			language = "British English",
 		},
 
 		chat = {
@@ -52,74 +66,65 @@ require("codecompanion").setup({
 			},
 		},
 	},
-
 	prompt_library = {
-		docstring = {
-			strategy = "inline",
-			description = "Adds a docstring and inline comments to the selected function",
+		["Generate Docstrings"] = {
+			interaction = "inline",
+			description = "Generate docstrings for code",
 			opts = {
-				placement = "before",
+				alias = "docstrings",
+				auto_submit = true,
+				ignore_system_prompt = false,
+				modes = { "v" },
+				placement = "new",
+				stop_context_insertion = true,
 			},
-			prompts = {
-				{
-					role = "user",
-					content = "Write a clear docstring and add helpful inline comments for:\n\n{{selection}}",
-				},
-			},
-		},
 
-		refactor = {
-			strategy = "inline",
-			description = "Improve structure, readability, and naming",
-			opts = { placement = "after" },
 			prompts = {
 				{
-					role = "user",
-					content = "Refactor this code for clarity and maintainability:\n\n{{selection}}",
-				},
-			},
-		},
+					role = "system",
+					content = [[
+You are a code documentation assistant.
 
-		explain = {
-			strategy = "chat",
-			description = "Explain selected code",
-			prompts = {
-				{
-					role = "user",
-					content = "Explain what this code does step by step:\n\n{{selection}}",
-				},
-			},
-		},
+Your task is to add or update docstrings in code.
 
-		bugs = {
-			strategy = "chat",
-			description = "Detect issues in code",
-			prompts = {
-				{
-					role = "user",
-					content = "Find bugs, edge cases, and potential runtime issues:\n\n{{selection}}",
-				},
-			},
-		},
+STRICT RULES:
+- Only modify or add docstrings
+- Do NOT change logic, structure, variable names, or formatting
+- Follow the language's standard docstring conventions (e.g. PEP 257 for Python)
+- Be concise, clear, and idiomatic
+- Do not include explanations inside the code
 
-		optimize = {
-			strategy = "inline",
-			description = "Make code faster and reduce allocations",
-			prompts = {
-				{
-					role = "user",
-					content = "Optimize this code for performance. Explain tradeoffs in comments:\n\n{{selection}}",
+OUTPUT FORMAT (must follow exactly):
+1. MODIFIED CODE
+2. CHANGELOG (bullet points describing changes only)
+        ]],
 				},
-			},
-		},
 
-		tests = {
-			strategy = "chat",
-			description = "Generate unit tests",
-			prompts = {
 				{
 					role = "user",
-					content = "Generate comprehensive unit tests for this code:\n\n{{selection}}",
+					content = function(context)
+						local text =
+							require("codecompanion.helpers.actions").get_code(context.start_line, context.end_line)
+
+						-- Optional safety guard for large selections
+						if #text > 12000 then
+							return "Code selection too large. Please select a smaller section."
+						end
+
+						return table.concat({
+							"Add docstrings to the following code.",
+							"",
+							"RULES:",
+							"- Only add or update docstrings",
+							"- Do NOT modify logic or structure",
+							"- Return output in the required format",
+							"",
+							"CODE:",
+							"```" .. context.filetype,
+							text,
+							"```",
+						}, "\n")
+					end,
 				},
 			},
 		},
@@ -154,7 +159,7 @@ end, {
 })
 
 -- Actions menu (context-aware operations)
-vim.keymap.set("n", "<leader>aa", vim.cmd.CodeCompanionActions, {
+vim.keymap.set({ "n", "v" }, "<leader>aa", vim.cmd.CodeCompanionActions, {
 	desc = "AI Actions",
 	silent = true,
 })
@@ -165,6 +170,6 @@ vim.keymap.set("n", "<leader>as", vim.cmd.CodeCompanionStop, {
 	silent = true,
 })
 
-vim.keymap.set("v", "<leader>cd", function()
-	require("codecompanion").prompt("Write docstring and comments for function")
+vim.keymap.set("v", "<leader>ad", function()
+	require("codecompanion").prompt("docstring")
 end, { desc = "Write docstring and comments for selection" })
