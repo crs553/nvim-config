@@ -182,3 +182,7 @@ end, { desc = "Generate commit message" })
 vim.keymap.set("v", "<leader>af", function()
 	require("codecompanion").prompt("fix")
 end, { desc = "Fix this code" })
+
+vim.keymap.set({ "n", "v" }, "<leader>ab", function()
+	require("codecompanion").prompt("inline")
+end, { desc = "Inline prompt" })
