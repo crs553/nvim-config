@@ -11,7 +11,7 @@ require("config.floaterm")
 require("config.packclean")
 
 require("plugins.catppuccin")
-require("plugins.codecompanion")
+-- require("plugins.codecompanion")
 require("plugins.dap")
 require("plugins.gitsigns")
 require("plugins.lspconfig")
@@ -24,3 +24,4 @@ require("plugins.treesitter")
 require("plugins.undotree")
 require("plugins.vimbegood")
 require("plugins.whichkey")
+require("plugins.ai") -- at end just to ensure cmp is setup
