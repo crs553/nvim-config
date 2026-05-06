@@ -28,7 +28,6 @@ require("mason-lspconfig").setup({
 		"pylsp",
 		"marksman",
 		"ltex_plus",
-		"gopls",
 		"arduino_language_server",
 		"stylua",
 	},
@@ -139,39 +138,6 @@ vim.lsp.config["arduino_language_server"] = {
 	root_dir = vim.loop.cwd,
 }
 vim.lsp.enable("arduino_language_server")
-
---go files
-vim.lsp.enable("gopls")
-
---DISABLED DUE TO LOCAL MODEL BEING TOO SLOW
--- ai code completion setup
---local cmp_ai = require("cmp_ai.config")
---cmp_ai:setup({
---	max_lines = 30, -- keep context small for speed
---
---	provider = "Ollama",
---
---	provider_options = {
---		model = "deepseek-coder:1.3b",
---
---		-- Qwen3-Coder benefits from FIM-style formatting
---		prompt = function(before, after)
---			return before .. "\n<fim_suffix>\n" .. after .. "\n<fim_middle>"
---		end,
---	},
---
---	-- IMPORTANT: avoid lag spikes consider changing to false
---	run_on_every_keystroke = false,
---	debounce_ms = 250,
---	notify = false,
---	notify_callback = function(msg)
---		vim.notify(msg)
---	end,
---
---	ignored_file_types = {
---		help = true,
---	},
---})
 
 -- nvim-cmp Setup
 local cmp = require("cmp")
