@@ -18,12 +18,13 @@ require("codecompanion").setup({
 							"acp",
 						},
 					},
+					model = "qwen3-coder:latest",
 				})
 			end,
 		},
 		ollama = function()
 			return require("codecompanion.adapters").extend("ollama", {
-				name = "ollama-local",
+				name = "ollama",
 				url = "http://127.0.0.1:11434",
 				schema = {
 					model = "qwen3-coder",
@@ -213,7 +214,7 @@ vim.keymap.set("n", "<leader>as", vim.cmd.CodeCompanionStop, {
 })
 
 vim.keymap.set("v", "<leader>ad", function()
-	require("codecompanion").prompt("docstrings")
+	require("codecompanion").prompt("docs")
 end, { desc = "Write docstring and comments for selection" })
 
 vim.keymap.set("v", "<leader>ae", function()
@@ -232,6 +233,11 @@ vim.keymap.set("v", "<leader>ai", function()
 	require("codecompanion").prompt("inline")
 end, { desc = "Inline prompt" })
 
-vim.keymap.set("n", "<leader>aa", "<cmd>CodeCompanionActions<cr>", { desc = "CodeCompanion actions", silent = true })
+vim.keymap.set(
+	{ "n", "v" },
+	"<leader>aa",
+	"<cmd>CodeCompanionActions<cr>",
+	{ desc = "CodeCompanion actions", silent = true }
+)
 
 codecompanion_spinner()
