@@ -47,3 +47,5 @@ map("n", "<leader>sqb", function()
 	vim.cmd("vimgrep /" .. pattern .. "/gj ##")
 	vim.cmd("copen")
 end, { desc = "Search quickfix in all open buffers" })
+
+map("n", "<leader>nh", "<cmd>nohlsearch<CR>", { desc = "Clear search highlights" })

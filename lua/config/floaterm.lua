@@ -5,6 +5,31 @@ local shell_state = { buf = nil, win = nil, is_open = false }
 -- Create autocommand group
 local augroup = vim.api.nvim_create_augroup("FloatTerminal", { clear = true })
 
+-- ─────────── Shared floating window helper ───────────
+local function create_floating_win(buf)
+	local width = math.floor(vim.o.columns * 0.8)
+	local height = math.floor(vim.o.lines * 0.8)
+	local row = math.floor((vim.o.lines - height) / 2)
+	local col = math.floor((vim.o.columns - width) / 2)
+
+	local win = vim.api.nvim_open_win(buf, true, {
+		relative = "editor",
+		width = width,
+		height = height,
+		row = row,
+		col = col,
+		style = "minimal",
+		border = "rounded",
+	})
+
+	vim.wo[win].winblend = 0
+	vim.wo[win].winhighlight = "Normal:FloatingTermNormal,FloatBorder:FloatingTermBorder"
+	vim.api.nvim_set_hl(0, "FloatingTermNormal", { bg = "none" })
+	vim.api.nvim_set_hl(0, "FloatingTermBorder", { bg = "none" })
+
+	return win
+end
+
 -- ─────────── TermOpen styling ───────────
 vim.api.nvim_create_autocmd("TermOpen", {
 	group = augroup,
@@ -29,25 +54,7 @@ local function FloatingLazyGit()
 	vim.bo[lazygit_state.buf].bufhidden = "hide"
 
 	-- Floating window dimensions
-	local width = math.floor(vim.o.columns * 0.8)
-	local height = math.floor(vim.o.lines * 0.8)
-	local row = math.floor((vim.o.lines - height) / 2)
-	local col = math.floor((vim.o.columns - width) / 2)
-
-	lazygit_state.win = vim.api.nvim_open_win(lazygit_state.buf, true, {
-		relative = "editor",
-		width = width,
-		height = height,
-		row = row,
-		col = col,
-		style = "minimal",
-		border = "rounded",
-	})
-
-	vim.wo[lazygit_state.win].winblend = 0
-	vim.wo[lazygit_state.win].winhighlight = "Normal:FloatingTermNormal,FloatBorder:FloatingTermBorder"
-	vim.api.nvim_set_hl(0, "FloatingTermNormal", { bg = "none" })
-	vim.api.nvim_set_hl(0, "FloatingTermBorder", { bg = "none" })
+	lazygit_state.win = create_floating_win(lazygit_state.buf)
 
 	-- Launch lazygit and clean up on exit
 	vim.fn.termopen("lazygit", {
@@ -91,25 +98,7 @@ local function FloatingTerminal()
 	end
 
 	-- Floating window dimensions
-	local width = math.floor(vim.o.columns * 0.8)
-	local height = math.floor(vim.o.lines * 0.8)
-	local row = math.floor((vim.o.lines - height) / 2)
-	local col = math.floor((vim.o.columns - width) / 2)
-
-	shell_state.win = vim.api.nvim_open_win(shell_state.buf, true, {
-		relative = "editor",
-		width = width,
-		height = height,
-		row = row,
-		col = col,
-		style = "minimal",
-		border = "rounded",
-	})
-
-	vim.wo[shell_state.win].winblend = 0
-	vim.wo[shell_state.win].winhighlight = "Normal:FloatingTermNormal,FloatBorder:FloatingTermBorder"
-	vim.api.nvim_set_hl(0, "FloatingTermNormal", { bg = "none" })
-	vim.api.nvim_set_hl(0, "FloatingTermBorder", { bg = "none" })
+	shell_state.win = create_floating_win(shell_state.buf)
 
 	-- Launch shell only if buffer is empty
 	local lines = vim.api.nvim_buf_get_lines(shell_state.buf, 0, -1, false)
