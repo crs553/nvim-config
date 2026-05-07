@@ -1,55 +1,133 @@
-vim.pack.add({ "https://codeberg.org/mfussenegger/nvim-dap.git" })
-vim.pack.add({ "https://github.com/leoluz/nvim-dap-go" })
-require("dap-go").setup({
-	-- Additional dap configurations can be added.
-	-- dap_configurations accepts a list of tables where each entry
-	-- represents a dap configuration. For more details do:
-	-- :help dap-configuration
-	dap_configurations = {
-		{
-			-- Must be "go" or it will be ignored by the plugin
-			type = "go",
-			name = "Attach remote",
-			mode = "remote",
-			request = "attach",
-		},
-	},
-	-- delve configurations
-	delve = {
-		-- the path to the executable dlv which will be used for debugging.
-		-- by default, this is the "dlv" executable on your PATH.
-		path = "dlv",
-		-- time to wait for delve to initialize the debug session.
-		-- default to 20 seconds
-		initialize_timeout_sec = 20,
-		-- a string that defines the port to start delve debugger.
-		-- default to string "${port}" which instructs nvim-dap
-		-- to start the process in a random available port.
-		-- if you set a port in your debug configuration, its value will be
-		-- assigned dynamically.
-		port = "${port}",
-		-- additional args to pass to dlv
-		args = {},
-		-- the build flags that are passed to delve.
-		-- defaults to empty string, but can be used to provide flags
-		-- such as "-tags=unit" to make sure the test suite is
-		-- compiled during debugging, for example.
-		-- passing build flags using args is ineffective, as those are
-		-- ignored by delve in dap mode.
-		-- avaliable ui interactive function to prompt for arguments get_arguments
-		build_flags = {},
-		-- whether the dlv process to be created detached or not. there is
-		-- an issue on delve versions < 1.24.0 for Windows where this needs to be
-		-- set to false, otherwise the dlv server creation will fail.
-		-- avaliable ui interactive function to prompt for build flags: get_build_flags
-		detached = vim.fn.has("win32") == 0,
-		-- the current working directory to run dlv from, if other than
-		-- the current working directory.
-		cwd = nil,
-	},
-	-- options related to running closest test
-	tests = {
-		-- enables verbosity when running the test.
-		verbose = false,
-	},
+vim.pack.add({
+  { src = "https://codeberg.org/mfussenegger/nvim-dap.git" },
+  { src = "https://github.com/leoluz/nvim-dap-go" },
+  { src = "https://github.com/mfussenegger/nvim-dap-python" },
+  { src = "https://github.com/rcarriga/nvim-dap-ui" },
+  { src = "https://github.com/theHamsta/nvim-dap-virtual-text" },
+  { src = "https://github.com/nvim-neotest/nvim-nio" },
 })
+
+local dap = require("dap")
+local dapui = require("dapui")
+
+-- ======================
+-- DAP UI Setup
+-- ======================
+dapui.setup({
+  icons = { expanded = "▾", collapsed = "▸", current_frame = "▸" },
+  controls = {
+    icons = {
+      pause = "⏸",
+      play = "▶",
+      step_into = "⏎",
+      step_over = "⏭",
+      step_out = "⏮",
+      step_back = "⏪",
+      run_last = "▶▶",
+      terminate = "⏹",
+      disconnect = "⏏",
+    },
+  },
+})
+
+-- Auto-open/close DAP UI
+dap.listeners.after.event_initialized["dapui"] = function()
+  dapui.open({ reset = true })
+end
+dap.listeners.after.event_terminated["dapui"] = function()
+  dapui.close()
+end
+dap.listeners.after.event_exited["dapui"] = function()
+  dapui.close()
+end
+
+-- ======================
+-- Virtual Text
+-- ======================
+require("nvim-dap-virtual-text").setup({
+  enabled = true,
+  virt_text_pos = "eol",
+  highlight_changed_variables = true,
+  show_stop_reason = true,
+})
+
+-- ======================
+-- Go DAP (nvim-dap-go)
+-- ======================
+require("dap-go").setup({
+  dap_configurations = {
+    {
+      type = "go",
+      name = "Attach remote",
+      mode = "remote",
+      request = "attach",
+    },
+  },
+  delve = {
+    path = "dlv",
+    initialize_timeout_sec = 20,
+    port = "${port}",
+    args = {},
+    build_flags = {},
+    detached = vim.fn.has("win32") == 0,
+    cwd = nil,
+  },
+  tests = {
+    verbose = false,
+  },
+})
+
+-- ======================
+-- Python DAP (nvim-dap-python)
+-- ======================
+require("dap-python").setup("python")
+-- Resolve python from virtualenvs
+_G._python_dap = function()
+  local venv_paths = {
+    vim.fn.getcwd() .. "/.venv/bin/python",
+    vim.fn.getcwd() .. "/venv/bin/python",
+    vim.fn.getcwd() .. "/.venv/Scripts/python.exe",
+    vim.fn.getcwd() .. "/venv/Scripts/python.exe",
+  }
+  for _, path in ipairs(venv_paths) do
+    if vim.fn.executable(path) == 1 then
+      return path
+    end
+  end
+  return "python"
+end
+vim.cmd([[command! -nargs=* DapPythonSetPython lua require("dap-python").setup(_G._python_dap())]])
+vim.cmd([[DapPythonSetPython]])
+
+-- ======================
+-- DAP Keymaps
+-- ======================
+vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Toggle breakpoint" })
+vim.keymap.set("n", "<leader>dB", function()
+  dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
+end, { desc = "Conditional breakpoint" })
+vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "Continue / Start" })
+vim.keymap.set("n", "<leader>dC", dap.run_to_cursor, { desc = "Run to cursor" })
+vim.keymap.set("n", "<leader>do", dap.step_over, { desc = "Step over" })
+vim.keymap.set("n", "<leader>di", dap.step_into, { desc = "Step into" })
+vim.keymap.set("n", "<leader>dO", dap.step_out, { desc = "Step out" })
+vim.keymap.set("n", "<leader>dt", dap.terminate, { desc = "Terminate" })
+vim.keymap.set("n", "<leader>dr", function()
+  dap.repl.toggle({}, "vsplit")
+end, { desc = "Toggle REPL" })
+vim.keymap.set("n", "<leader>du", dapui.toggle, { desc = "Toggle DAP UI" })
+vim.keymap.set("n", "<leader>de", function()
+  dapui.eval()
+end, { desc = "Evaluate expression (hover)" })
+vim.keymap.set("v", "<leader>de", function()
+  dapui.eval()
+end, { desc = "Evaluate expression (visual)" })
+vim.keymap.set("n", "<leader>dk", dap.up, { desc = "Move up stack frame" })
+vim.keymap.set("n", "<leader>dj", dap.down, { desc = "Move down stack frame" })
+vim.keymap.set("n", "<leader>dh", function()
+  local buf = dapui.elements.stacks.buffer()
+  local wins = vim.fn.win_findbuf(buf)
+  if #wins > 0 then
+    vim.api.nvim_set_current_win(wins[1])
+  end
+end, { desc = "Focus stacks" })

@@ -16,59 +16,15 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	group = au_group,
 	callback = function(args)
 		local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
-		if client:supports_method("textDocument/implementation") then
-			-- Create a keymap for vim.lsp.buf.implementation ...
-		end
 
-		-- Enable auto-completion. Note: Use CTRL-Y to select an item. |complete_CTRL-Y|
 		if client:supports_method("textDocument/completion") then
-			-- Optional: trigger autocompletion on EVERY keypress. May be slow!
-			-- local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
-			-- client.server_capabilities.completionProvider.triggerCharacters = chars
-
 			vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
-		end
-
-		-- Auto-format ("lint") on save.
-		-- Usually not needed if server supports "textDocument/willSaveWaitUntil".
-		if
-			not client:supports_method("textDocument/willSaveWaitUntil")
-			and client:supports_method("textDocument/formatting")
-		then
-			vim.api.nvim_create_autocmd("BufWritePre", {
-				group = au_group,
-				buffer = args.buf,
-				callback = function(args)
-					if vim.bo[args.buf].buftype ~= "" then
-						return
-					end
-					if not vim.bo[args.buf].modifiable then
-						return
-					end
-					if vim.api.nvim_buf_get_name(args.buf) == "" then
-						return
-					end
-
-					-- Skip MATLAB files (.m) or filetype "matlab"
-					local ft = vim.bo[args.buf].filetype
-					local name = vim.api.nvim_buf_get_name(args.buf)
-					if ft == "matlab" or name:match("%.m$") then
-						return
-					end
-
-					vim.lsp.buf.format({ bufnr = args.buf, timeout_ms = 10000 })
-				end,
-			})
 		end
 	end,
 })
 
 vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 	callback = function()
-		if not pcall(require, "nvim-treesitter.parsers") then
-			vim.notify("nvim-treesitter no parsers!", vim.log.levels.WARN)
-		end
-
 		if vim.o.diff then -- except in diff mode
 			return
 		end
@@ -87,7 +43,7 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 
 -- wrap, linebreak and spellcheck on markdown and text files
 vim.api.nvim_create_autocmd("FileType", {
-	group = augroup,
+	group = au_group,
 	pattern = { "markdown", "text", "gitcommit" },
 	callback = function()
 		vim.opt_local.wrap = true

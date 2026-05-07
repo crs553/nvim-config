@@ -58,7 +58,12 @@ local on_attach = function(_, bufnr)
 	map("n", "<leader>sh", vim.lsp.buf.signature_help, "Signature Help")
 end
 
+vim.lsp.config["bashls"] = {
+	on_attach = on_attach,
+	capabilities = capabilities,
+}
 vim.lsp.enable("bashls")
+
 -- ======================
 -- LSP Servers (vim.lsp.config API)
 -- ======================
@@ -76,8 +81,6 @@ vim.lsp.config["lua_ls"] = {
 	},
 }
 vim.lsp.enable("lua_ls")
-vim.lsp.enable("stylua")
-
 -- LTEX Plus
 vim.lsp.config["ltex_plus"] = {
 	on_attach = on_attach,

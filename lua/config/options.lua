@@ -48,7 +48,6 @@ opt.path:append("*") --include subdirs in search
 opt.selection = "inclusive" -- include last char in selection
 opt.mouse = "a" -- enable mouse support
 opt.clipboard:append("unnamedplus") -- use system clipboard
-opt.encoding = "utf-8" -- set encoding
 
 -- perceived (not measured) slowness on work pc
 --opt.guicursor =	"n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor,sm:block-blinkwait175-blinkoff150-blinkon175"
@@ -66,10 +65,19 @@ opt.showcmd = true -- Show (partial) command in the last line
 
 -- diagnostic tools for lsp
 vim.diagnostic.config({
-	virtual_text = true, -- Enable virtual text
+	virtual_text = true,
 	virtual_line = true,
-	signs = true, -- Show signs in the gutter
+	signs = true,
 	update_in_insert = false,
 	underline = true,
 	severity_sort = true,
+	float = {
+		border = "rounded",
+		source = "if_many",
+		header = "",
+		prefix = "",
+	},
 })
+
+-- Inlay hints (enabled by default, toggle with <leader>uh)
+vim.lsp.inlay_hint.enable(true, nil)

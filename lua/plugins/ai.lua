@@ -1,6 +1,5 @@
 vim.pack.add({
 	{ src = "https://github.com/nvim-lua/plenary.nvim" },
-	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
 	{ src = "https://github.com/olimorris/codecompanion.nvim", version = "v19.13.0" },
 	{ src = "https://github.com/nvim-mini/mini.diff" },
 })

@@ -1,6 +1,4 @@
 vim.pack.add({
-  {
-    src = "https://github.com/nvim-lua/plenary.nvim",
-    src = "https://github.com/theprimeagen/vim-be-good",
-  },
+  "https://github.com/nvim-lua/plenary.nvim",
+  "https://github.com/theprimeagen/vim-be-good",
 })
