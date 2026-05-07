@@ -8,7 +8,6 @@ require("mini.diff").setup()
 
 require("codecompanion").setup({
 	adapters = {
-		copilot = false,
 		acp = {
 			opencode = function()
 				return require("codecompanion.adapters").extend("opencode", {
@@ -18,16 +17,16 @@ require("codecompanion").setup({
 							"acp",
 						},
 					},
-					model = "qwen3-coder:latest",
+					model = "qwen2.5-coder-7b-instruct",
 				})
 			end,
 		},
-		ollama = function()
-			return require("codecompanion.adapters").extend("ollama", {
-				name = "ollama",
-				url = "http://127.0.0.1:11434",
+		lmstudio = function()
+			return require("codecompanion.adapters").extend("openai_compatible", {
+				name = "lmstudio",
+				url = "http://127.0.0.1:1234",
 				schema = {
-					model = "qwen3-coder",
+					model = "qwen2.5-coder-7b-instruct",
 				},
 				stream = true,
 			})
@@ -137,107 +136,4 @@ vim.api.nvim_create_autocmd("User", {
 		end)
 	end,
 })
-
-local spinner = {
-	completed = "󰗡 Completed",
-	error = " Error",
-	cancelled = "󰜺 Cancelled",
-}
-
----Format the adapter name and model for display with the spinner
----@param adapter CodeCompanion.Adapter
----@return string
-local function format_adapter(adapter)
-	local parts = {}
-	table.insert(parts, adapter.formatted_name)
-	if adapter.model and adapter.model ~= "" then
-		table.insert(parts, "(" .. adapter.model .. ")")
-	end
-	return table.concat(parts, " ")
-end
-
----Setup the spinner for CodeCompanion
----@return nil
-local function codecompanion_spinner()
-	local ok, progress = pcall(require, "fidget.progress")
-	if not ok then
-		return
-	end
-
-	spinner.handles = {}
-
-	local group = vim.api.nvim_create_augroup("dotfiles.codecompanion.spinner", {})
-
-	vim.api.nvim_create_autocmd("User", {
-		pattern = "CodeCompanionRequestStarted",
-		group = group,
-		callback = function(args)
-			local handle = progress.handle.create({
-				title = "",
-				message = "  Sending...",
-				lsp_client = {
-					name = format_adapter(args.data.adapter),
-				},
-			})
-			spinner.handles[args.data.id] = handle
-		end,
-	})
-
-	vim.api.nvim_create_autocmd("User", {
-		pattern = "CodeCompanionRequestFinished",
-		group = group,
-		callback = function(args)
-			local handle = spinner.handles[args.data.id]
-			spinner.handles[args.data.id] = nil
-			if handle then
-				if args.data.status == "success" then
-					handle.message = spinner.completed
-				elseif args.data.status == "error" then
-					handle.message = spinner.error
-				else
-					handle.message = spinner.cancelled
-				end
-				handle:finish()
-			end
-		end,
-	})
-end
-
--- =========================
--- KEYMAPS (Cursor-like workflow)
--- =========================
-
--- Stop generation
-vim.keymap.set("n", "<leader>as", vim.cmd.CodeCompanionStop, {
-	desc = "Stop AI",
-	silent = true,
-})
-
-vim.keymap.set("v", "<leader>ad", function()
-	require("codecompanion").prompt("docs")
-end, { desc = "Write docstring and comments for selection" })
-
-vim.keymap.set("v", "<leader>ae", function()
-	require("codecompanion").prompt("explain")
-end, { desc = "Explain the selection" })
-
-vim.keymap.set("n", "<leader>ag", function()
-	require("codecompanion").prompt("commit")
-end, { desc = "Generate commit message" })
-
-vim.keymap.set("v", "<leader>af", function()
-	require("codecompanion").prompt("fix")
-end, { desc = "Fix this code" })
-
-vim.keymap.set("v", "<leader>ai", function()
-	require("codecompanion").prompt("inline")
-end, { desc = "Inline prompt" })
-
-vim.keymap.set(
-	{ "n", "v" },
-	"<leader>aa",
-	"<cmd>CodeCompanionActions<cr>",
-	{ desc = "CodeCompanion actions", silent = true }
-)
-
-codecompanion_spinner()
+require("plugins.ai_keymaps")
