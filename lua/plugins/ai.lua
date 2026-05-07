@@ -55,7 +55,7 @@ require("codecompanion").setup({
 				chat_fold = " ",
 			},
 			fold_context = true,
-			fold_reasoning = false,
+			fold_reasoning = true,
 			opts = {
 				completion_provider = "default",
 			},
