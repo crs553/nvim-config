@@ -20,7 +20,7 @@ lint.linters_by_ft = {
 }
 
 -- Auto-lint on save and on insert leave
-vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave", "TextChanged" }, {
+vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
   group = vim.api.nvim_create_augroup("nvim-lint", { clear = true }),
   callback = function()
     -- Only lint if the buffer has a matching filetype

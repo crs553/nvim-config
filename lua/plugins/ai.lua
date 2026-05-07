@@ -94,7 +94,7 @@ require("codecompanion").setup({
 					".codecompanion.lua",
 				},
 			},
-			test_mode = true,
+			test_mode = false,
 		},
 	},
 
