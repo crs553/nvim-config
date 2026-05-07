@@ -104,7 +104,7 @@ vim.lsp.config["matlab_ls"] = {
 	capabilities = capabilities,
 	on_attach = on_attach,
 	cmd = { "matlab-language-server", "--stdio" },
-	root_dir = vim.loop.cwd,
+	root_dir = vim.uv.cwd,
 	settings = {
 		MATLAB = {
 			indexWorkspace = true,
@@ -138,7 +138,7 @@ vim.lsp.enable("pylsp")
 vim.lsp.config["arduino_language_server"] = {
 	on_attach = on_attach,
 	capabilities = capabilities,
-	root_dir = vim.loop.cwd,
+	root_dir = vim.uv.cwd,
 }
 vim.lsp.enable("arduino_language_server")
 
@@ -171,9 +171,8 @@ cmp.setup({
 		["<C-e>"] = cmp.mapping.abort(),
 	}),
 
-	-- PRIORITY ORDER (AI first)
+	-- PRIORITY ORDER
 	sources = cmp.config.sources({
-		{ name = "cmp_ai", priority = 1000 }, -- AI on top
 		{ name = "nvim_lsp", priority = 800 },
 		{ name = "luasnip", priority = 700 },
 	}, {
@@ -185,11 +184,10 @@ cmp.setup({
 	formatting = {
 		format = function(entry, vim_item)
 			vim_item.menu = ({
-				cmp_ai = "🤖 AI",
-				nvim_lsp = "🧠 LSP",
-				luasnip = "✂️ Snip",
-				buffer = "📄 Buf",
-				path = "📁 Path",
+				nvim_lsp = "󰛦 LSP",
+				luasnip = "󰩫 Snip",
+				buffer = "󰈙 Buf",
+				path = "󰉋 Path",
 			})[entry.source.name]
 
 			return vim_item

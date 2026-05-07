@@ -21,9 +21,6 @@ require("snacks").setup({
 local S = require("snacks")
 
 -- Top Pickers & Explorer
-vim.keymap.set("n", "<leader>,", function()
-	S.picker.buffers()
-end, { desc = "Buffers" })
 vim.keymap.set("n", "<leader>:", function()
 	S.picker.command_history()
 end, { desc = "Command History" })
