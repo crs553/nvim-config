@@ -47,10 +47,6 @@ opt.backspace = "indent,eol,start" -- better backspace behaviour
 opt.path:append("*") --include subdirs in search
 opt.selection = "inclusive" -- include last char in selection
 opt.mouse = "a" -- enable mouse support
-opt.clipboard:append("unnamedplus") -- use system clipboard
-
--- perceived (not measured) slowness on work pc
---opt.guicursor =	"n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor,sm:block-blinkwait175-blinkoff150-blinkon175"
 
 -- Folding: requires treesitter available at runtime; safe fallback if not
 opt.foldmethod = "expr" -- use expression for folding
