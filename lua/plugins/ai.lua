@@ -20,16 +20,26 @@ require("codecompanion").setup({
 				})
 			end,
 		},
-		lmstudio = function()
-			return require("codecompanion.adapters").extend("openai_compatible", {
-				name = "lmstudio",
-				url = "http://127.0.0.1:1234",
-				schema = {
-					model = "qwen2.5-coder-7b-instruct",
-				},
-				stream = true,
-			})
-		end,
+		http = {
+			lmstudio = function()
+				return require("codecompanion.adapters").extend("openai_compatible", {
+					name = "lmstudio-local",
+
+					env = {
+						url = "http://127.0.0.1:1234",
+						api_key = "lmstudio",
+					},
+
+					schema = {
+						model = {
+							default = "qwen2.5-coder-7b-instruct",
+						},
+					},
+
+					stream = true,
+				})
+			end,
+		},
 	},
 
 	interactions = {
