@@ -49,3 +49,21 @@ map("n", "<leader>sqb", function()
 end, { desc = "Search quickfix in all open buffers" })
 
 map("n", "<leader>nh", "<cmd>nohlsearch<CR>", { desc = "Clear search highlights" })
+
+-- COPY/PASTE KEYMAPS --
+map("n", "<leader>Y", function()
+	local view = vim.fn.winsaveview()
+	vim.cmd('keepjumps keepmarks normal! ggVG"+y')
+	vim.fn.winrestview(view)
+end, {
+	desc = "Yank entire buffer to system clipboard",
+})
+map("n", "<leader>y", '"+yy', { desc = "Yank line to system clipboard" })
+map("v", "<leader>y", '"+y', { desc = "Yank selection to system clipboard" })
+map("n", "<leader>p", '"+p', { desc = "Paste from system clipboard" })
+map("v", "<leader>p", '"+P', { desc = "Paste from system clipboard, replace selection" })
+
+-- VISUAL MODE - SELECTION MANIPULATION --
+map("v", "J", ":move '>+1<CR>gv=gv", { desc = "Move selection down" })
+
+map("v", "K", ":move '<-2<CR>gv=gv", { desc = "Move selection up" })
