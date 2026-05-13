@@ -96,7 +96,7 @@ map("n", "<leader>ml", function()
 end, { buffer = buf, desc = "MATLAB: run line" })
 
 -- <leader>ms: Run visual selection
-map("v", "<leader>ms", function()
+map({ "x", "o" }, "<leader>ms", function()
 	run_lines(vim.fn.getline("'<", "'>"))
 end, { buffer = buf, desc = "MATLAB: run selection" })
 

@@ -45,9 +45,9 @@ require("codecompanion").setup({
 				},
 			},
 		},
-		cmd = { adapter = "ollama" },
+		cmd = { adapter = "lmstudio" },
 		chat = {
-			adapter = "opencode",
+			adapter = "lmstudio",
 			auto_apply = false,
 			icons = {
 				chat_context = "💬", -- You can also apply an icon to the fold
@@ -61,7 +61,7 @@ require("codecompanion").setup({
 			show_reasoning = true,
 		},
 		inline = {
-			adapter = "ollama",
+			adapter = "lmstudio",
 			keymaps = {
 				accept = "<leader>ya",
 				reject = "<leader>yr",
