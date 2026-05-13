@@ -65,5 +65,8 @@ map("v", "<leader>p", '"+P', { desc = "Paste from system clipboard, replace sele
 
 -- VISUAL MODE - SELECTION MANIPULATION --
 map("v", "J", ":move '>+1<CR>gv=gv", { desc = "Move selection down" })
-
 map("v", "K", ":move '<-2<CR>gv=gv", { desc = "Move selection up" })
+
+-- Visual mode: indent/unindent selection and keep selection active
+map("v", "<Tab>", ">gv", { desc = "Indent selection" })
+map("x", "<S-Tab>", "<gv", { desc = "Unindent selection" })
