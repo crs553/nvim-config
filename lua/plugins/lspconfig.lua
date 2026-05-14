@@ -181,6 +181,7 @@ cmp.setup({
 	sources = cmp.config.sources({
 		{ name = "nvim_lsp", priority = 800 },
 		{ name = "luasnip", priority = 700 },
+		{ name = "codecompanion", priority = 600 },
 	}, {
 		{ name = "buffer", priority = 500 },
 		{ name = "path", priority = 300 },
