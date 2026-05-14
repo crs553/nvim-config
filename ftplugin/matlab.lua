@@ -8,7 +8,7 @@ local map = vim.keymap.set
 local buf = 0
 
 -- ============================================================
--- 1. Editor Settings
+-- Editor Settings
 -- ============================================================
 
 lopt.commentstring = "% %s"
@@ -23,7 +23,7 @@ lopt.foldenable = true
 lopt.foldlevel = 99
 
 -- ============================================================
--- 2. Section Navigation (%% cells)
+-- Section Navigation (%% cells)
 -- ============================================================
 
 map("n", "[%", function()
@@ -35,7 +35,7 @@ map("n", "]%", function()
 end, { buffer = buf, desc = "MATLAB: next section" })
 
 -- ============================================================
--- 3. Code Execution (via matlab -batch)
+-- Code Execution (via matlab -batch)
 -- ============================================================
 
 local function run_batch(filepath)
@@ -75,12 +75,14 @@ local function run_lines(lines)
 	run_batch(tmp)
 end
 
--- <leader>mr: Run current file
+-- ============================================================
+-- Matlab run commands
+-- ============================================================
+
 map("n", "<leader>mr", function()
 	run_batch(vim.fn.expand("%:p"))
 end, { buffer = buf, desc = "MATLAB: run file" })
 
--- <leader>mc: Run current %% section
 map("n", "<leader>mc", function()
 	local sline, eline = section_range()
 	if sline > eline then
@@ -89,19 +91,17 @@ map("n", "<leader>mc", function()
 	run_lines(vim.api.nvim_buf_get_lines(0, sline - 1, eline, false))
 end, { buffer = buf, desc = "MATLAB: run section" })
 
--- <leader>ml: Run current line
 map("n", "<leader>ml", function()
 	local line = vim.api.nvim_get_current_line()
 	run_lines({ line })
 end, { buffer = buf, desc = "MATLAB: run line" })
 
--- <leader>ms: Run visual selection
 map({ "x", "o" }, "<leader>ms", function()
 	run_lines(vim.fn.getline("'<", "'>"))
 end, { buffer = buf, desc = "MATLAB: run selection" })
 
 -- ============================================================
--- 4. Snippets
+-- Snippets
 -- ============================================================
 
 local ok, ls = pcall(require, "luasnip")
