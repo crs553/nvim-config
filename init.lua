@@ -11,7 +11,7 @@ require("config.floaterm")
 require("config.packclean")
 
 require("plugins.catppuccin")
--- require("plugins.codecompanion")
+require("plugins.comment")
 require("plugins.conform")
 require("plugins.dap")
 require("plugins.gitsigns")
