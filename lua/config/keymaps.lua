@@ -6,7 +6,7 @@ map("n", "<M-k>", "<cmd>cprev<CR>", { desc = "Quickfix Prev" })
 
 map("n", "<space><space>x", "<cmd>source %<CR>", { desc = "Source File" })
 map("n", "<space>x", ":.lua<CR>", { desc = "Run Line" })
-map({"x","o"}, "<space>x", ":lua<CR>", { desc = "Run Selection" })
+map({ "x", "o" }, "<space>x", ":lua<CR>", { desc = "Run Selection" })
 
 local function close_all_buffers_except_current()
 	local bufs = vim.api.nvim_list_bufs()
@@ -59,13 +59,13 @@ end, {
 	desc = "Yank entire buffer to system clipboard",
 })
 map("n", "<leader>y", '"+yy', { desc = "Yank line to system clipboard" })
-map({"x","o"}, "<leader>y", '"+y', { desc = "Yank selection to system clipboard" })
+map({ "x", "o" }, "<leader>y", '"+y', { desc = "Yank selection to system clipboard" })
 map("n", "<leader>p", '"+p', { desc = "Paste from system clipboard" })
-map({"x","o"}, "<leader>p", '"+P', { desc = "Paste from system clipboard, replace selection" })
+map({ "x", "o" }, "<leader>p", '"+P', { desc = "Paste from system clipboard, replace selection" })
 
 -- VISUAL MODE - SELECTION MANIPULATION --
 map({ "x", "o" }, "J", ":move '>+1<CR>gv=gv", { desc = "Move selection down" })
-map({"x","o"}, "K", ":move '<-2<CR>gv=gv", { desc = "Move selection up" })
+map({ "x", "o" }, "K", ":move '<-2<CR>gv=gv", { desc = "Move selection up" })
 
 -- Visual mode: indent/unindent selection and keep selection active
 map({ "x", "o" }, "<Tab>", ">gv", { desc = "Indent selection" })
@@ -74,3 +74,11 @@ map({ "x", "o" }, "<S-Tab>", "<gv", { desc = "unindent selection" })
 -- captilise
 map("n", "<M-u>", "gUiww", { desc = "Capitalise the inner word" })
 map("n", "<M-l>", "guiww", { desc = "Decapitalise the inner word" })
+
+-- toggle commenting -- command needs implementing could use treesitter to aid
+--map("n", "<leader>cc", ":CommentToggle<CR>", { desc = "Toggle comment" })
+--map("x", "<leader>cc", ":'<,'>CommentToggle<CR>", { desc = "Toggle comment in selection" })
+
+-- Change buffer using leader keys
+map("n", "<leader>bn", ":bnext<CR>", { desc = "Next buffer" })
+map("n", "<leader>bp", ":bprevious<CR>", { desc = "Previous buffer" })
