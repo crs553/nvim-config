@@ -53,6 +53,10 @@
       "rev": "eaa34887d444cb002e1b165fac399ae4bbc771f7",
       "src": "https://github.com/williamboman/mason-lspconfig.nvim"
     },
+    "mason-nvim-lint": {
+      "rev": "cafbc5d82d8eb4af0daf0057332a325ddf2f436b",
+      "src": "https://github.com/rshkarin/mason-nvim-lint"
+    },
     "mason.nvim": {
       "rev": "e54f5bf5f12c560da31c17eee5b3e1bd369f3ff9",
       "src": "https://github.com/williamboman/mason.nvim"
