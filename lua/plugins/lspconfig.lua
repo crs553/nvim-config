@@ -23,12 +23,12 @@ vim.pack.add({
 require("mason").setup()
 require("mason-lspconfig").setup({
 	ensure_installed = {
+		"arduino_language_server",
 		"bashls",
 		"lua_ls",
+		"ltex_plus",
 		"pylsp",
 		"marksman",
-		"ltex_plus",
-		"arduino_language_server",
 		"stylua",
 	},
 })
@@ -104,13 +104,19 @@ vim.lsp.config["matlab_ls"] = {
 	capabilities = capabilities,
 	on_attach = on_attach,
 	cmd = { "matlab-language-server", "--stdio" },
-	root_dir = vim.uv.cwd,
+	filetypes = { "matlab" },
+	root_dir = function(bufnr, on_dir)
+		local fname = vim.api.nvim_buf_get_name(bufnr)
+		local root_dir = vim.fs.root(fname, ".git")
+		on_dir(root_dir or vim.fn.getcwd())
+	end,
 	settings = {
 		MATLAB = {
-			indexWorkspace = true,
-			installPath = "C:\\Program Files\\MATLAB\\R2025b",
-			matlabConnectionTiming = "onStart",
+			indexWorkspace = false,
+			matlabconnectiontiming = "onStart",
+			prewarmGraphics = false,
 			telemetry = true,
+			installPath = "C:\\Program Files\\MATLAB\\R2025b",
 		},
 	},
 	single_file_support = true,
