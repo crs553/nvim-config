@@ -79,8 +79,5 @@ end, { desc = "Send diagnostics to CLI agent" })
 
 -- [C]odeCompanion [T]erminal
 map("n", "<leader>dct", function()
-	return require("codecompanion").cli(
-		"#{terminal} Sharing the output from the terminal. Can you fix it?",
-		{ focus = false, submit = true }
-	)
+	return require("codecompanion").cli("#{terminal}", { focus = false, submit = true })
 end, { desc = "Send terminal output to CLI agent" })
