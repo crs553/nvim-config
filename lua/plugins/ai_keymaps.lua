@@ -68,17 +68,17 @@ map("n", "<leader>aA", function()
 end, { desc = "Prompt the CLI agent" })
 
 -- [C]odeCompanion [A]dd
-vim.keymap.set({ "n", "v" }, "<leader>aca", function()
+map({ "n", "v" }, "<leader>aca", function()
 	return require("codecompanion").cli("#{this}", { focus = false })
 end, { desc = "Add context to the CLI agent" })
 
 -- [C]odeCompanion [D]iagnostics
-vim.keymap.set("n", "<leader>acd", function()
+map("n", "<leader>acd", function()
 	return require("codecompanion").cli("#{diagnostics} Can you fix these?", { focus = false, submit = true })
 end, { desc = "Send diagnostics to CLI agent" })
 
 -- [C]odeCompanion [T]erminal
-vim.keymap.set("n", "<leader>dct", function()
+map("n", "<leader>dct", function()
 	return require("codecompanion").cli(
 		"#{terminal} Sharing the output from the terminal. Can you fix it?",
 		{ focus = false, submit = true }
