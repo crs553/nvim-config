@@ -1,6 +1,5 @@
 vim.pack.add({
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
-	"https://github.com/echasnovski/mini.nvim",
 	"https://github.com/tadmccorkle/markdown.nvim",
 	"https://github.com/MeanderingProgrammer/render-markdown.nvim",
 })
