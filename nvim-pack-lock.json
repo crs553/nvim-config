@@ -70,6 +70,10 @@
       "rev": "117c301374ab8546891e2b34f63885ea83527432",
       "src": "https://github.com/nvim-mini/mini.diff"
     },
+    "mini.icons": {
+      "rev": "9c7b1b90b15bdd69c52f6e31889dbc9987c30ec4",
+      "src": "https://github.com/nvim-mini/mini.icons"
+    },
     "nvim-cmp": {
       "rev": "a1d504892f2bc56c2e79b65c6faded2fd21f3eca",
       "src": "https://github.com/hrsh7th/nvim-cmp"
