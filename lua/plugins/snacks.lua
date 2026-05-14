@@ -24,9 +24,9 @@ local S = require("snacks")
 vim.keymap.set("n", "<leader>:", function()
 	S.picker.command_history()
 end, { desc = "Command History" })
-vim.keymap.set("n", "<leader>n", function()
+vim.keymap.set("n", "<leader>fn", function()
 	S.picker.notifications()
-end, { desc = "Notification History" })
+end, { desc = "Find Notification History" })
 
 -- Find
 vim.keymap.set("n", "<leader>fb", function()

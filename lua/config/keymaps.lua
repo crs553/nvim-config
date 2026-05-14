@@ -48,7 +48,7 @@ map("n", "<leader>sqb", function()
 	vim.cmd("copen")
 end, { desc = "Search quickfix in all open buffers" })
 
-map("n", "<leader>nh", "<cmd>nohlsearch<CR>", { desc = "Clear search highlights" })
+map("n", "<leader>ch", "<cmd>nohlsearch<CR>", { desc = "Clear search highlights" })
 
 -- COPY/PASTE KEYMAPS --
 map("n", "<leader>Y", function()
