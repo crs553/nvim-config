@@ -24,6 +24,7 @@ map("n", "<leader>qb", close_all_buffers_except_current, { desc = "Close all oth
 map("n", "<leader>qc", function()
 	vim.fn.setqflist({})
 	vim.cmd("cclose")
+	vim.notify("Quickfix list cleared")
 end, { desc = "Clear quickfix list" })
 
 map("n", "<c-k>", ":wincmd k<CR>", { desc = "Move up in split", silent = true })
