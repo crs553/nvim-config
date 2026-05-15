@@ -23,7 +23,7 @@ require("codecompanion").setup({
 		http = {
 			lmstudio = function()
 				return require("codecompanion.adapters").extend("openai_compatible", {
-					name = "lmstudio-local",
+					name = "lmstudio",
 
 					env = {
 						url = "http://127.0.0.1:1234",
