@@ -20,6 +20,10 @@ map("n", "<leader>ab", function()
 	require("codecompanion").prompt("background")
 end, { desc = "Background chat" })
 
+map({ "n", "x", "o" }, "<leader>ad", function()
+	vim.cmd("CodeCompanionChat Toggle")
+end, { desc = "Foreground chat" })
+
 -- =========================
 -- VISUAL SELECTION PROMPTS
 -- =========================
