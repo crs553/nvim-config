@@ -4,6 +4,13 @@
 local map = vim.keymap.set
 
 -- =========================
+-- Author recommendation
+-- =========================
+
+map({ "n", "v" }, "<C-a>", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
+map("v", "ga", "<cmd>CodeCompanionChat Add<cr>", { noremap = true, silent = true })
+
+-- =========================
 -- CHAT
 -- =========================
 map("n", "<leader>aC", "<cmd>CodeCompanion<CR>", { desc = "Open AI chat", silent = true })
