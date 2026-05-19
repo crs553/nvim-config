@@ -13,6 +13,7 @@ vim.pack.add({
 	"https://github.com/nvim-telescope/telescope.nvim",
 	"https://github.com/nvim-telescope/telescope-fzf-native.nvim",
 })
+require("telescope").load_extension("fzf")
 local telescope = require("telescope")
 local actions = require("telescope.actions")
 local actions_layout = require("telescope.actions.layout")
@@ -22,13 +23,28 @@ local themes = require("telescope.themes")
 telescope.setup({
 	defaults = {
 		prompt_prefix = "    ",
-		selection_caret = "  ",
+		selection_caret = " ",
 		entry_prefix = "  ",
 
 		initial_mode = "insert",
 		sorting_strategy = "ascending",
-
 		layout_strategy = "flex",
+
+		path_display = { "smart" },
+		dynamic_preview_title = true,
+
+		vimgrep_arguments = {
+			"rg",
+			"--color=never",
+			"--no-heading",
+			"--with-filename",
+			"--line-number",
+			"--column",
+			"--smart-case",
+			"--hidden",
+			"--glob=!node_modules/*",
+		},
+
 		layout_config = {
 			horizontal = {
 				prompt_position = "top",
@@ -47,7 +63,16 @@ telescope.setup({
 			},
 		},
 
-		border = true,
+		winblend = 0,
+
+		file_ignore_patterns = {
+			"node_modules",
+			".git/",
+			"dist/",
+			"build/",
+			"__pycache__/",
+		},
+
 		borderchars = {
 			"─",
 			"│",
@@ -59,29 +84,16 @@ telescope.setup({
 			"╰",
 		},
 
-		winblend = 0,
-
-		file_ignore_patterns = {
-			"node_modules",
-			".git/",
-			"dist/",
-			"build/",
-			"__pycache__/",
-		},
-
 		mappings = {
 			i = {
 				["<C-j>"] = actions.move_selection_next,
 				["<C-k>"] = actions.move_selection_previous,
 
-				["<C-u>"] = false,
-				["<C-d>"] = false,
-
 				["<C-p>"] = actions_layout.toggle_preview,
 
+				["<C-q>"] = actions.send_to_qflist,
 				["<Esc>"] = actions.close,
 			},
-
 			n = {
 				["q"] = actions.close,
 			},
@@ -100,11 +112,13 @@ telescope.setup({
 			show_untracked = true,
 		},
 
-		buffers = {
-			theme = "dropdown",
+		buffers = themes.get_ivy({
 			previewer = false,
 			sort_lastused = true,
-		},
+			layout_config = {
+				height = 0.33,
+			},
+		}),
 
 		command_history = {
 			theme = "dropdown",
@@ -130,68 +144,49 @@ telescope.setup({
 		},
 	},
 })
-require("telescope").load_extension("fzf")
 
 -- helpers
 local function config_dir()
 	return vim.fn.stdpath("config")
 end
 
--- Core setup (you already had this; keeping it compatible)
-telescope.setup({
-	defaults = {
-		sorting_strategy = "ascending",
-		layout_config = {
-			prompt_position = "top",
-		},
-		mappings = {
-			i = {
-				["<C-j>"] = actions.move_selection_next,
-				["<C-k>"] = actions.move_selection_previous,
-				["<C-q>"] = actions.send_to_qflist,
-				["<Esc>"] = actions.close,
-			},
-		},
-	},
-})
-
 ---------------------------------------------------------------------
 -- PICKERS (Snacks → Telescope equivalents)
 ---------------------------------------------------------------------
 
-local map = vim.keymap
+local map = vim.keymap.set
 
 -- Command history
-map.set("n", "<leader>:", builtin.command_history, { desc = "Command History" })
+map("n", "<leader>:", builtin.command_history, { desc = "Command History" })
 
 -- Notifications (no native telescope equivalent → use messages)
-map.set("n", "<leader>fn", function()
+-- TODO: write my own plugin for this?
+map("n", "<leader>fn", function()
 	vim.cmd("messages")
 end, { desc = "Find Notification History" })
 
 -- Buffers
-map.set("n", "<leader>fb", function()
-	builtin.buffers(themes.get_dropdown({
-		previewer = false,
-		sort_mru = true,
-	}))
-end, { desc = "Buffers" })
+map("n", "<leader>fb", builtin.buffers, { desc = "Find Buffers" })
 
--- Config files
-map.set("n", "<leader>fc", function()
+map("n", "<leader>fib", function()
+	builtin.current_buffer_fuzzy_find(themes.get_ivy({}))
+end, { desc = "Find In Buffer" })
+
+map("n", "<leader>fc", function()
 	builtin.find_files({
 		cwd = config_dir(),
+		themes = themes.get_ivy(),
 	})
 end, { desc = "Find Config File" })
 
 -- Files
-map.set("n", "<leader>fd", builtin.find_files, { desc = "Find Files" })
+map("n", "<leader>fd", builtin.find_files, { desc = "Find Files" })
 
 -- Git files
-map.set("n", "<leader>fg", builtin.git_files, { desc = "Find Git Files" })
+map("n", "<leader>fg", builtin.git_files, { desc = "Find Git Files" })
 
 -- Projects (closest equivalent: find directories via fd fallback)
-map.set("n", "<leader>fp", function()
+map("n", "<leader>fp", function()
 	builtin.find_files({
 		hidden = true,
 		no_ignore = true,
@@ -199,16 +194,16 @@ map.set("n", "<leader>fp", function()
 end, { desc = "Projects (file-based)" })
 
 -- Recent files
-map.set("n", "<leader>fr", builtin.oldfiles, { desc = "Recent" })
+map("n", "<leader>fr", builtin.oldfiles, { desc = "Recent" })
 
 -- Grep
-map.set("n", "<leader>fs", builtin.live_grep, { desc = "Grep" })
+map("n", "<leader>fs", builtin.live_grep, { desc = "Grep" })
 
 -- Help
-map.set("n", "<leader>fh", builtin.help_tags, { desc = "Help Pages" })
+map("n", "<leader>fh", builtin.help_tags, { desc = "Help Pages" })
 
 -- Grep open buffers
-map.set("n", "<leader>fob", function()
+map("n", "<leader>fob", function()
 	builtin.grep_string({
 		search = "",
 		grep_open_files = true,
@@ -216,28 +211,28 @@ map.set("n", "<leader>fob", function()
 end, { desc = "Search in open buffers" })
 
 -- Keymaps
-map.set("n", "<leader>fk", builtin.keymaps, { desc = "Search Keymaps" })
+map("n", "<leader>fk", builtin.keymaps, { desc = "Search Keymaps" })
 
 ---------------------------------------------------------------------
 -- GIT (Telescope native equivalents)
 ---------------------------------------------------------------------
 
-map.set("n", "<leader>gb", builtin.git_branches, { desc = "Git Branches" })
-map.set("n", "<leader>gl", builtin.git_commits, { desc = "Git Log" })
+map("n", "<leader>gb", builtin.git_branches, { desc = "Git Branches" })
+map("n", "<leader>gl", builtin.git_commits, { desc = "Git Log" })
 
-map.set("n", "<leader>gL", function()
+map("n", "<leader>gL", function()
 	builtin.git_bcommits()
 end, { desc = "Git Log Line" })
 
-map.set("n", "<leader>gs", builtin.git_status, { desc = "Git Status" })
+map("n", "<leader>gs", builtin.git_status, { desc = "Git Status" })
 
-map.set("n", "<leader>gS", function()
+map("n", "<leader>gS", function()
 	vim.cmd("Git stash") -- fallback (Telescope doesn't have stash picker built-in)
 end, { desc = "Git Stash" })
 
-map.set("n", "<leader>gd", builtin.git_bcommits, { desc = "Git Diff (Hunks via commits)" })
+map("n", "<leader>gd", builtin.git_bcommits, { desc = "Git Diff (Hunks via commits)" })
 
-map.set("n", "<leader>gf", function()
+map("n", "<leader>gf", function()
 	builtin.git_bcommits({
 		bufnr = vim.api.nvim_get_current_buf(),
 	})
@@ -246,22 +241,22 @@ end, { desc = "Git Log File" })
 -- SEARCH / GREP
 ---------------------------------------------------------------------
 
-map.set("n", "<leader>sb", builtin.current_buffer_fuzzy_find, { desc = "Buffer Lines" })
+map("n", "<leader>sb", builtin.current_buffer_fuzzy_find, { desc = "Buffer Lines" })
 
-map.set("n", "<leader>sB", function()
+map("n", "<leader>sB", function()
 	builtin.grep_string({
 		search = "",
 		grep_open_files = true,
 	})
 end, { desc = "Grep Open Buffers" })
 
-map.set({ "n", "x" }, "<leader>sw", builtin.grep_string, { desc = "Visual selection or word" })
+map({ "n", "x" }, "<leader>sw", builtin.grep_string, { desc = "Visual selection or word" })
 
-map.set("n", '<leader>s"', builtin.registers, { desc = "Registers" })
+map("n", '<leader>s"', builtin.registers, { desc = "Registers" })
 
-map.set("n", "<leader>s/", builtin.search_history, { desc = "Search History" })
+map("n", "<leader>s/", builtin.search_history, { desc = "Search History" })
 
-map.set("n", "<leader>sa", builtin.autocommands, { desc = "Autocmds" })
+map("n", "<leader>sa", builtin.autocommands, { desc = "Autocmds" })
 
 ---------------------------------------------------------------------
 -- LSP (Telescope builtins)
@@ -277,12 +272,16 @@ local function map_lsp(telescope_fn, fallback)
 		end
 	end
 end
-map.set("n", "grd", map_lsp("lsp_definitions", vim.lsp.buf.definition), { desc = "Goto Definition" })
+map("n", "grd", map_lsp("lsp_definitions", vim.lsp.buf.definition), { desc = "Goto Definition" })
 
-map.set("n", "grD", map_lsp("lsp_declarations", vim.lsp.buf.declaration), { desc = "Goto Declaration" })
+map("n", "grD", map_lsp("lsp_declarations", vim.lsp.buf.declaration), { desc = "Goto Declaration" })
 
-map.set("n", "gri", map_lsp("lsp_implementations", vim.lsp.buf.implementation), { desc = "Goto Implementation" })
+map("n", "gri", map_lsp("lsp_implementations", vim.lsp.buf.implementation), { desc = "Goto Implementation" })
 
-map.set("n", "gry", map_lsp("lsp_type_definitions", vim.lsp.buf.type_definition), { desc = "Goto Type Definition" })
+map("n", "gry", map_lsp("lsp_type_definitions", vim.lsp.buf.type_definition), { desc = "Goto Type Definition" })
 
-map.set("n", "grx", map_lsp("lsp_references", vim.lsp.buf.references), { desc = "References", nowait = true })
+map("n", "grx", map_lsp("lsp_references", vim.lsp.buf.references), { desc = "References", nowait = true })
+
+map("n", "<leader>ce", function()
+	builtin.diagnostics()
+end, { desc = "All Diagnostics" })
