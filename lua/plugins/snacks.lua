@@ -8,7 +8,7 @@ require("snacks").setup({
 	indent = { enabled = true },
 	input = { enabled = true },
 	notifier = { enabled = true, timeout = 3000 },
-	picker = { enabled = true },
+	picker = { enabled = false }, -- replacing with telescope
 	quickfile = { enabled = true },
 	scope = { enabled = true },
 	scroll = { enabled = true },
@@ -20,112 +20,6 @@ require("snacks").setup({
 -- Keymaps
 local S = require("snacks")
 local map = vim.keymap
-
--- Top Pickers & Explorer
-map.set("n", "<leader>:", function()
-	S.picker.command_history()
-end, { desc = "Command History" })
-map.set("n", "<leader>fn", function()
-	S.picker.notifications()
-end, { desc = "Find Notification History" })
-
--- Find
-map.set("n", "<leader>fb", function()
-	S.picker.buffers()
-end, { desc = "Buffers" })
-map.set("n", "<leader>fc", function()
-	S.picker.files({ cwd = vim.fn.stdpath("config") })
-end, { desc = "Find Config File" })
-map.set("n", "<leader>fd", function()
-	S.picker.files()
-end, { desc = "Find Files" })
-map.set("n", "<leader>fg", function()
-	S.picker.git_files()
-end, { desc = "Find Git Files" })
-map.set("n", "<leader>fp", function()
-	S.picker.projects()
-end, { desc = "Projects" })
-map.set("n", "<leader>fr", function()
-	S.picker.recent()
-end, { desc = "Recent" })
-map.set("n", "<leader>fs", function()
-	S.picker.grep()
-end, { desc = "Grep" })
-map.set("n", "<leader>fh", function()
-	S.picker.help()
-end, { desc = "Help Pages" })
-map.set("n", "<leader>fob", function()
-	S.picker.grep({ buffers = true })
-end, { desc = "Search in open buffers" })
-map.set("n", "<leader>fk", function()
-	S.picker.keymaps()
-end, { desc = "Search Keymaps" })
-
--- Git
-map.set("n", "<leader>gb", function()
-	S.picker.git_branches()
-end, { desc = "Git Branches" })
-map.set("n", "<leader>gl", function()
-	S.picker.git_log()
-end, { desc = "Git Log" })
-map.set("n", "<leader>gL", function()
-	S.picker.git_log_line()
-end, { desc = "Git Log Line" })
-map.set("n", "<leader>gs", function()
-	S.picker.git_status()
-end, { desc = "Git Status" })
-map.set("n", "<leader>gS", function()
-	S.picker.git_stash()
-end, { desc = "Git Stash" })
-map.set("n", "<leader>gd", function()
-	S.picker.git_diff()
-end, { desc = "Git Diff (Hunks)" })
-map.set("n", "<leader>gf", function()
-	S.picker.git_log_file()
-end, { desc = "Git Log File" })
-
--- Grep/Search
-map.set("n", "<leader>sb", function()
-	S.picker.lines()
-end, { desc = "Buffer Lines" })
-map.set("n", "<leader>sB", function()
-	S.picker.grep_buffers()
-end, { desc = "Grep Open Buffers" })
-map.set({ "n", "x" }, "<leader>sw", function()
-	S.picker.grep_word()
-end, { desc = "Visual selection or word" })
-map.set("n", '<leader>s"', function()
-	S.picker.registers()
-end, { desc = "Registers" })
-map.set("n", "<leader>s/", function()
-	S.picker.search_history()
-end, { desc = "Search History" })
-map.set("n", "<leader>sa", function()
-	S.picker.autocmds()
-end, { desc = "Autocmds" })
-
--- LSP
-map.set("n", "grd", function()
-	S.picker.lsp_definitions()
-end, { desc = "Goto Definition" })
-map.set("n", "grD", function()
-	S.picker.lsp_declarations()
-end, { desc = "Goto Declaration" })
-map.set("n", "grx", function()
-	S.picker.lsp_references()
-end, { nowait = true, desc = "References" })
-map.set("n", "gri", function()
-	S.picker.lsp_implementations()
-end, { desc = "Goto Implementation" })
-map.set("n", "gry", function()
-	S.picker.lsp_type_definitions()
-end, { desc = "Goto T[y]pe Definition" })
-map.set("n", "grs", function()
-	S.picker.lsp_symbols()
-end, { desc = "LSP Symbols" })
-map.set("n", "grS", function()
-	S.picker.lsp_workspace_symbols()
-end, { desc = "LSP Workspace Symbols" })
 
 -- Other
 map.set("n", "<leader>z", function()
