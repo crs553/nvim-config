@@ -91,11 +91,15 @@ telescope.setup({
 
 				["<C-p>"] = actions_layout.toggle_preview,
 
-				["<C-q>"] = actions.send_to_qflist,
+				["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
 				["<Esc>"] = actions.close,
 			},
 			n = {
-				["q"] = actions.close,
+				["<C-j>"] = actions.move_selection_next,
+				["<C-k>"] = actions.move_selection_previous,
+
+				["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
+				["<Esc>"] = actions.close,
 			},
 		},
 	},
@@ -171,6 +175,13 @@ map("n", "<leader>fb", builtin.buffers, { desc = "Find Buffers" })
 map("n", "<leader>fib", function()
 	builtin.current_buffer_fuzzy_find(themes.get_ivy({}))
 end, { desc = "Find In Buffer" })
+
+vim.keymap.set("n", "<leader>fiB", function()
+	builtin.live_grep({
+		grep_open_files = true,
+		prompt_title = "Live Grep Open Buffers",
+	})
+end, { desc = "Find In Buffers" })
 
 map("n", "<leader>fc", function()
 	builtin.find_files({

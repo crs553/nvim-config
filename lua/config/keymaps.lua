@@ -32,28 +32,6 @@ map("n", "<c-j>", ":wincmd j<CR>", { desc = "Move down in split ", silent = true
 map("n", "<c-h>", ":wincmd h<CR>", { desc = "Move left in split", silent = true })
 map("n", "<c-l>", ":wincmd l<CR>", { desc = "Move right in split", silent = true })
 
-map("n", "<leader>fqf", function()
-	local pattern = vim.fn.input("Search in file: ")
-	if pattern == "" then
-		return
-	end
-	vim.fn.setreg("/", pattern)
-	vim.cmd("cexpr []")
-	vim.cmd("vimgrep /" .. pattern .. "/ %")
-	vim.cmd("copen")
-end, { desc = "Search quickfix in current buffer" })
-
-map("n", "<leader>sqb", function()
-	local pattern = vim.fn.input("Search in buffers: ")
-	if pattern == "" then
-		return
-	end
-	vim.fn.setreg("/", pattern)
-	vim.cmd("cexpr []")
-	vim.cmd("vimgrep /" .. pattern .. "/gj ##")
-	vim.cmd("copen")
-end, { desc = "Search quickfix in all open buffers" })
-
 map("n", "<leader>ch", "<cmd>nohlsearch<CR>", { desc = "Clear search highlights" })
 
 -- COPY/PASTE KEYMAPS --
