@@ -41,6 +41,19 @@ dap.listeners.after.event_exited["dapui"] = function()
 	dapui.close()
 end
 
+dap.configurations.go = {
+	{
+		type = "go",
+		name = "Debug current file",
+		request = "launch",
+
+		program = "${fileDirname}",
+		cwd = "${workspaceFolder}",
+
+		args = {},
+	},
+}
+
 -- ======================
 -- Virtual Text
 -- ======================
