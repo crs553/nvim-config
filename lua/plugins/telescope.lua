@@ -213,14 +213,6 @@ map("n", "<leader>fs", builtin.live_grep, { desc = "Grep" })
 -- Help
 map("n", "<leader>fh", builtin.help_tags, { desc = "Help Pages" })
 
--- Grep open buffers
-map("n", "<leader>fob", function()
-	builtin.grep_string({
-		search = "",
-		grep_open_files = true,
-	})
-end, { desc = "Search in open buffers" })
-
 -- Keymaps
 map("n", "<leader>fk", builtin.keymaps, { desc = "Search Keymaps" })
 
@@ -267,7 +259,7 @@ map("n", '<leader>s"', builtin.registers, { desc = "Registers" })
 
 map("n", "<leader>s/", builtin.search_history, { desc = "Search History" })
 
-map("n", "<leader>sa", builtin.autocommands, { desc = "Autocmds" })
+map("n", "<leader>sa", builtin.autocommands, { desc = "Find Autocmds" })
 
 ---------------------------------------------------------------------
 -- LSP (Telescope builtins)
@@ -293,6 +285,6 @@ map("n", "gry", map_lsp("lsp_type_definitions", vim.lsp.buf.type_definition), { 
 
 map("n", "grx", map_lsp("lsp_references", vim.lsp.buf.references), { desc = "References", nowait = true })
 
-map("n", "<leader>ce", function()
+map({ "n", "v" }, "<leader>le", function()
 	builtin.diagnostics()
 end, { desc = "All Diagnostics" })
