@@ -144,27 +144,27 @@ vim.lsp.config["rust_analyzer"] = {
 vim.lsp.enable("rust_analyzer")
 
 -- MATLAB -- note I managed this externally as the Mason files were not working for me
---vim.lsp.config["matlab_ls"] = {
---	capabilities = capabilities,
---	on_attach = on_attach,
---	cmd = { "matlab-language-server", "--stdio" },
---	filetypes = { "matlab" },
---	root_dir = function(bufnr, on_dir)
---		local fname = vim.api.nvim_buf_get_name(bufnr)
---		local root_dir = vim.fs.root(fname, ".git")
---		on_dir(root_dir or vim.fn.getcwd())
---	end,
---	settings = {
---		MATLAB = {
---			indexWorkspace = false,
---			matlabconnectiontiming = "onDemand",
---			telemetry = true,
---			installPath = "C:\\Program Files\\MATLAB\\R2024b",
---		},
---	},
---	single_file_support = true,
---}
---vim.lsp.enable("matlab_ls")
+vim.lsp.config["matlab_ls"] = {
+	capabilities = capabilities,
+	on_attach = on_attach,
+	cmd = { "matlab-language-server", "--stdio" },
+	filetypes = { "matlab" },
+	root_dir = function(bufnr, on_dir)
+		local fname = vim.api.nvim_buf_get_name(bufnr)
+		local root_dir = vim.fs.root(fname, ".git")
+		on_dir(root_dir or vim.fn.getcwd())
+	end,
+	settings = {
+		MATLAB = {
+			indexWorkspace = false,
+			matlabconnectiontiming = "onDemand",
+			telemetry = true,
+			installPath = "C:\\Program Files\\MATLAB\\R2024b",
+		},
+	},
+	single_file_support = true,
+}
+vim.lsp.enable("matlab_ls")
 
 -- Python (pylsp + mypy)
 vim.lsp.config["pylsp"] = {
