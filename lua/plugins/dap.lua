@@ -119,7 +119,7 @@ vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Toggle breakp
 vim.keymap.set("n", "<leader>dB", function()
 	dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
 end, { desc = "Conditional breakpoint" })
-vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "Continue / Start" })
+vim.keymap.set("n", "<F5>", dap.continue, { desc = "Continue / Start" })
 vim.keymap.set("n", "<leader>dC", dap.run_to_cursor, { desc = "Run to cursor" })
 vim.keymap.set("n", "<leader>do", dap.step_over, { desc = "Step over" })
 vim.keymap.set("n", "<leader>di", dap.step_into, { desc = "Step into" })
