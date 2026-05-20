@@ -51,3 +51,9 @@ vim.api.nvim_create_autocmd("LspDetach", {
 		end
 	end,
 })
+
+-- make neovim help or a man page always open in vertical split
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "help", "man" },
+	command = "wincmd L",
+})
