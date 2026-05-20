@@ -4,6 +4,8 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 vim.g.have_nerd_font = true
+
+require("plugins.whichkey")
 require("config.keymaps")
 require("config.autocmds")
 require("config.options")
@@ -27,5 +29,4 @@ require("plugins.treesitter")
 require("plugins.telescope")
 require("plugins.undotree")
 require("plugins.vimbegood")
-require("plugins.whichkey")
 require("plugins.ai") -- at end just to ensure cmp is setup
