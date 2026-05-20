@@ -113,8 +113,7 @@ vim.lsp.config["matlab_ls"] = {
 	settings = {
 		MATLAB = {
 			indexWorkspace = false,
-			matlabconnectiontiming = "onCreate",
-			prewarmGraphics = false,
+			matlabconnectiontiming = "onDemand",
 			telemetry = true,
 			installPath = "C:\\Program Files\\MATLAB\\R2024b",
 		},

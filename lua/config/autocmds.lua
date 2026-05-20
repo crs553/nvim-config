@@ -41,13 +41,13 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
-vim.api.nvim_create_autocmd("LspDetach", {
-	group = vim.api.nvim_create_augroup("MatlabLspRestart", { clear = true }),
-	callback = function(args)
-		if vim.bo[args.buf].filetype == "matlab" then
-			vim.schedule(function()
-				vim.lsp.enable("matlab_ls")
-			end)
-		end
-	end,
-})
+--vim.api.nvim_create_autocmd("LspDetach", {
+--	group = vim.api.nvim_create_augroup("MatlabLspRestart", { clear = true }),
+--	callback = function(args)
+--		if vim.bo[args.buf].filetype == "matlab" then
+--			vim.schedule(function()
+--				vim.lsp.enable("matlab_ls")
+--			end)
+--		end
+--	end,
+--})
