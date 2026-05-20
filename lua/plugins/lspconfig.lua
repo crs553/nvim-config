@@ -27,8 +27,9 @@ require("mason-lspconfig").setup({
 		"bashls",
 		"lua_ls",
 		"ltex_plus",
-		"pylsp",
 		"marksman",
+		"pylsp",
+		"rust_analyzer",
 		"stylua",
 	},
 })
@@ -58,15 +59,47 @@ local on_attach = function(_, bufnr)
 	map("n", "<leader>ls", vim.lsp.buf.signature_help, "Signature Help")
 end
 
+-- Arduino Language Server
+vim.lsp.config["arduino_language_server"] = {
+	on_attach = on_attach,
+	capabilities = capabilities,
+	root_dir = vim.uv.cwd,
+}
+
+vim.lsp.enable("arduino_language_server")
 vim.lsp.config["bashls"] = {
 	on_attach = on_attach,
 	capabilities = capabilities,
 }
 vim.lsp.enable("bashls")
 
--- ======================
--- LSP Servers (vim.lsp.config API)
--- ======================
+vim.lsp.config["gopls"] = {
+	capabilities = capabilities,
+	on_attach = on_attach,
+	settings = {
+		gopls = {
+			analyses = {
+				unusedparams = true,
+				shadow = true,
+			},
+			staticcheck = true,
+			gofumpt = true,
+			completeUnimported = true,
+			usePlaceholders = true,
+			-- Enable inlay hints for better variable type visibility
+			hints = {
+				assignVariableTypes = true,
+				compositeLiteralFields = true,
+				compositeLiteralTypes = true,
+				constantValues = true,
+				functionTypeParameters = true,
+				parameterNames = true,
+				rangeVariableTypes = true,
+			},
+		},
+	},
+}
+vim.lsp.enable("gopls")
 
 -- Lua
 vim.lsp.config["lua_ls"] = {
@@ -99,28 +132,39 @@ vim.lsp.config["ltex_plus"] = {
 }
 vim.lsp.enable("ltex_plus")
 
--- MATLAB -- note I managed this externally as the Mason files were not working for me
-vim.lsp.config["matlab_ls"] = {
-	capabilities = capabilities,
+vim.lsp.config["rust_analyzer"] = {
 	on_attach = on_attach,
-	cmd = { "matlab-language-server", "--stdio" },
-	filetypes = { "matlab" },
-	root_dir = function(bufnr, on_dir)
-		local fname = vim.api.nvim_buf_get_name(bufnr)
-		local root_dir = vim.fs.root(fname, ".git")
-		on_dir(root_dir or vim.fn.getcwd())
-	end,
-	settings = {
-		MATLAB = {
-			indexWorkspace = false,
-			matlabconnectiontiming = "onDemand",
-			telemetry = true,
-			installPath = "C:\\Program Files\\MATLAB\\R2024b",
-		},
-	},
+	capabilities = capabilities,
+
+	cmd = { "rust-analyzer" },
+	filetypes = { "rust" },
+	root_markers = { "Cargo.toml", ".git" },
 	single_file_support = true,
 }
-vim.lsp.enable("matlab_ls")
+vim.lsp.enable("rust_analyzer")
+
+-- MATLAB -- note I managed this externally as the Mason files were not working for me
+--vim.lsp.config["matlab_ls"] = {
+--	capabilities = capabilities,
+--	on_attach = on_attach,
+--	cmd = { "matlab-language-server", "--stdio" },
+--	filetypes = { "matlab" },
+--	root_dir = function(bufnr, on_dir)
+--		local fname = vim.api.nvim_buf_get_name(bufnr)
+--		local root_dir = vim.fs.root(fname, ".git")
+--		on_dir(root_dir or vim.fn.getcwd())
+--	end,
+--	settings = {
+--		MATLAB = {
+--			indexWorkspace = false,
+--			matlabconnectiontiming = "onDemand",
+--			telemetry = true,
+--			installPath = "C:\\Program Files\\MATLAB\\R2024b",
+--		},
+--	},
+--	single_file_support = true,
+--}
+--vim.lsp.enable("matlab_ls")
 
 -- Python (pylsp + mypy)
 vim.lsp.config["pylsp"] = {
@@ -138,14 +182,6 @@ vim.lsp.config["pylsp"] = {
 	},
 }
 vim.lsp.enable("pylsp")
-
--- Arduino Language Server
-vim.lsp.config["arduino_language_server"] = {
-	on_attach = on_attach,
-	capabilities = capabilities,
-	root_dir = vim.uv.cwd,
-}
-vim.lsp.enable("arduino_language_server")
 
 -- nvim-cmp Setup
 local cmp = require("cmp")
