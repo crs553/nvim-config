@@ -4,22 +4,23 @@ vim.pack.add({
 
 require("conform").setup({
 	formatters_by_ft = {
-		lua = { "stylua" },
-		python = { "ruff_format", "ruff_organize_imports" },
+		bash = { "shfmt" },
+		css = { "prettier" },
+		go = { "goimports", "gofmt" }, -- Runs goimports first, then gofmt
+		html = { "prettier" },
 		javascript = { "prettier" },
-		typescript = { "prettier" },
 		javascriptreact = { "prettier" },
-		typescriptreact = { "prettier" },
 		json = { "prettier" },
 		jsonc = { "prettier" },
-		yaml = { "prettier" },
+		lua = { "stylua" },
 		markdown = { "prettier" },
-		html = { "prettier" },
-		css = { "prettier" },
-		bash = { "shfmt" },
-		sh = { "shfmt" },
+		--matlab = { "matlab_ls" },
+		python = { "ruff_format", "ruff_organize_imports" },
 		rust = { "rustfmt" },
-		matlab = { "matlab_ls" },
+		sh = { "shfmt" },
+		typescript = { "prettier" },
+		typescriptreact = { "prettier" },
+		yaml = { "prettier" },
 		-- go defaults to gopls formatting via LSP
 	},
 	format_on_save = {

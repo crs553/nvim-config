@@ -89,6 +89,6 @@ map("n", "<leader>acd", function()
 end, { desc = "Send diagnostics to CLI agent" })
 
 -- [C]odeCompanion [T]erminal
-map("n", "<leader>dct", function()
+map("n", "<leader>act", function()
 	return require("codecompanion").cli("#{terminal}", { focus = false, submit = true })
 end, { desc = "Send terminal output to CLI agent" })
