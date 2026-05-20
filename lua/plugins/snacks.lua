@@ -22,9 +22,6 @@ local S = require("snacks")
 local map = vim.keymap
 
 -- Other
-map.set("n", "<leader>z", function()
-	S.zen()
-end, { desc = "Toggle Zen Mode" })
 map.set("n", "<leader>.", function()
 	S.scratch()
 end, { desc = "Toggle Scratch Buffer" })
@@ -34,7 +31,7 @@ end, { desc = "Select Scratch Buffer" })
 map.set("n", "<leader>bd", function()
 	S.bufdelete()
 end, { desc = "Delete Buffer" })
-map.set("n", "<leader>cR", function()
+map.set("n", "<leader>br", function()
 	S.rename.rename_file()
 end, { desc = "Rename File" })
 map.set({ "n", "x", "o" }, "<leader>gB", function()

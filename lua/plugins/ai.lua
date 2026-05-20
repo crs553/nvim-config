@@ -145,5 +145,6 @@ vim.api.nvim_create_autocmd("User", {
 		end)
 	end,
 })
+
 require("plugins.ai_keymaps")
 vim.cmd([[cab cc CodeCompanion]])
