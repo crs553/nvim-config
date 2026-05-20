@@ -53,9 +53,9 @@ local on_attach = function(_, bufnr)
 	map("n", "<leader>lh", vim.lsp.buf.hover, "Hover")
 	map("n", "<leader>ld", vim.lsp.buf.definition, "Definition")
 	map("n", "<leader>lr", vim.lsp.buf.rename, "Rename")
-	map("n", "<leader>ca", vim.lsp.buf.code_action, "Code Action")
-	map("n", "grf", vim.lsp.buf.format, "Format Buffer")
-	map("n", "<leader>sh", vim.lsp.buf.signature_help, "Signature Help")
+	map("n", "<leader>la", vim.lsp.buf.code_action, "Code Action")
+	map("n", "<leader>lb", vim.lsp.buf.format, "Format Buffer (LSP)")
+	map("n", "<leader>ls", vim.lsp.buf.signature_help, "Signature Help")
 end
 
 vim.lsp.config["bashls"] = {
