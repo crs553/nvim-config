@@ -19,6 +19,7 @@ require("conform").setup({
 		bash = { "shfmt" },
 		sh = { "shfmt" },
 		rust = { "rustfmt" },
+		matlab = { "matlab_ls" },
 		-- go defaults to gopls formatting via LSP
 	},
 	format_on_save = {
