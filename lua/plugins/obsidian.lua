@@ -12,6 +12,7 @@ require("obsidian").setup({
 	workspaces = {
 		{
 			name = "notes",
+
 			path = notes_path,
 		},
 	},
@@ -28,7 +29,7 @@ end
 
 -- 📄 Core note actions
 map("n", "<leader>on", obs("New"), { desc = "New note" })
-map("n", "<leader>oo", obs("Open"), { desc = "Open note in Obsidian app" })
+--map("n", "<leader>oo", obs("Open"), { desc = "Open note in Obsidian app" })
 map("n", "<leader>ot", obs("Today"), { desc = "Today's note" })
 map("n", "<leader>oy", obs("Yesterday"), { desc = "Yesterday's note" })
 
