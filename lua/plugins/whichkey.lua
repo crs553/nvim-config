@@ -20,6 +20,7 @@ wk.add({
 	{ "<leader>fi", group = "Find In ..." },
 	{ "<leader>g", group = "Git" },
 	{ "<leader>l", group = "LSP" },
+	{ "<leader>o", group = "Obsidian" },
 	{ "<leader>q", group = "Quickfix" },
 	{ "<leader>s", group = "Search In ..." },
 	{ "<leader>u", group = "Undo ..." },
