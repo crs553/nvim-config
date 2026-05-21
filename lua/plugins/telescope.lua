@@ -113,7 +113,7 @@ telescope.setup({
 
 		git_files = {
 			theme = "dropdown",
-			show_untracked = true,
+			show_untracked = false,
 		},
 
 		buffers = themes.get_ivy({
@@ -133,6 +133,7 @@ telescope.setup({
 		},
 
 		live_grep = {
+			theme = "ivy",
 			additional_args = function()
 				return { "--hidden" }
 			end,
@@ -186,7 +187,6 @@ end, { desc = "Find In Buffers" })
 map("n", "<leader>fc", function()
 	builtin.find_files({
 		cwd = config_dir(),
-		themes = themes.get_ivy(),
 	})
 end, { desc = "Find Config File" })
 
@@ -208,14 +208,80 @@ end, { desc = "Projects (file-based)" })
 map("n", "<leader>fr", builtin.oldfiles, { desc = "Recent" })
 
 -- Grep
-map("n", "<leader>fs", builtin.live_grep, { desc = "Grep" })
+map("n", "<leader>fs", function()
+	builtin.live_grep()
+end, { desc = "Grep" })
 
 -- Help
-map("n", "<leader>fh", builtin.help_tags, { desc = "Help Pages" })
+map("n", "<leader>fh", function()
+	builtin.help_tags(themes.get_ivy({}))
+end, { desc = "Help Pages" })
 
 -- Keymaps
 map("n", "<leader>fk", builtin.keymaps, { desc = "Search Keymaps" })
 
+--Colorscheme
+map("n", "<leader>fz", function()
+	local colors = vim.fn.getcompletion("", "color")
+
+	local ignore = {
+		miniautumn = true,
+		minicyan = true,
+		minischeme = true,
+		minispring = true,
+		minisummer = true,
+		miniwinter = true,
+		randomhue = true,
+	}
+
+	colors = vim.tbl_filter(function(c)
+		return not ignore[c]
+	end, colors)
+
+	local previewed = nil
+
+	require("telescope.pickers")
+		.new({}, {
+			prompt_title = "Colorschemes",
+			finder = require("telescope.finders").new_table({
+				results = colors,
+			}),
+			sorter = require("telescope.config").values.generic_sorter({}),
+
+			attach_mappings = function(prompt_bufnr, map_fn)
+				local state = require("telescope.actions.state")
+
+				local function set_preview()
+					local entry = state.get_selected_entry()
+					if entry and entry.value ~= previewed then
+						previewed = entry.value
+						vim.cmd.colorscheme(entry.value)
+					end
+				end
+
+				-- preview while moving
+				map_fn("i", "<Down>", function()
+					actions.move_selection_next(prompt_bufnr)
+					set_preview()
+				end)
+
+				map_fn("i", "<Up>", function()
+					actions.move_selection_previous(prompt_bufnr)
+					set_preview()
+				end)
+
+				-- apply permanently
+				actions.select_default:replace(function()
+					local entry = state.get_selected_entry()
+					actions.close(prompt_bufnr)
+					vim.cmd.colorscheme(entry.value)
+				end)
+
+				return true
+			end,
+		})
+		:find()
+end, { desc = "Colorscheme picker (filtered + preview)" })
 ---------------------------------------------------------------------
 -- GIT (Telescope native equivalents)
 ---------------------------------------------------------------------
