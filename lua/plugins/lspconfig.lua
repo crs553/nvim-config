@@ -20,19 +20,21 @@ vim.pack.add({
 -- ======================
 -- Mason Setup
 -- ======================
-require("mason").setup()
-require("mason-lspconfig").setup({
-	ensure_installed = {
-		"arduino_language_server",
-		"bashls",
-		"lua_ls",
-		"ltex_plus",
-		"marksman",
-		"pylsp",
-		"rust_analyzer",
-		"stylua",
-	},
-})
+if not vim.g.is_nixos then
+	require("mason").setup()
+	require("mason-lspconfig").setup({
+		ensure_installed = {
+			"arduino_language_server",
+			"bashls",
+			"lua_ls",
+			"ltex_plus",
+			"marksman",
+			"pylsp",
+			"rust_analyzer",
+			"stylua",
+		},
+	})
+end
 
 -- ======================
 -- LSP Capabilities & on_attach
