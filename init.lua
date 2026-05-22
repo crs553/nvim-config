@@ -5,6 +5,17 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 vim.g.have_nerd_font = true
 
+-- NixOS detection: skip mason to avoid dynamically linked binary issues
+vim.g.is_nixos = (function()
+	if vim.fn.has("linux") == 0 then return false end
+	local ok, lines = pcall(vim.fn.readfile, "/etc/os-release")
+	if not ok then return false end
+	for _, l in ipairs(lines) do
+		if l:match("^ID=nixos") or l:match('^ID="nixos"') then return true end
+	end
+	return false
+end)()
+
 require("plugins.whichkey")
 require("config.keymaps")
 require("config.autocmds")

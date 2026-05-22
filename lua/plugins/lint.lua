@@ -3,15 +3,17 @@ vim.pack.add({
 	"https://github.com/rshkarin/mason-nvim-lint",
 })
 
-require("mason-nvim-lint").setup({
-	ensure_installed = {
-		"markdownlint",
-		"shellcheck",
-		"yamllint",
-		"jsonlint",
-	},
-	automatic_install = false,
-})
+if not vim.g.is_nixos then
+	require("mason-nvim-lint").setup({
+		ensure_installed = {
+			"markdownlint",
+			"shellcheck",
+			"yamllint",
+			"jsonlint",
+		},
+		automatic_install = false,
+	})
+end
 
 local lint = require("lint")
 

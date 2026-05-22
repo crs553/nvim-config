@@ -77,3 +77,7 @@ vim.diagnostic.config({
 
 -- Inlay hints (enabled by default, toggle with <leader>uh)
 vim.lsp.inlay_hint.enable(true, nil)
+
+
+-- Experimental ui for neovim
+require("vim._core.ui2").enable({})
