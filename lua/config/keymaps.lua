@@ -9,22 +9,22 @@ map("n", "<space>x", ":.lua<CR>", { desc = "Run Line" })
 map({ "x", "o" }, "<space>x", ":lua<CR>", { desc = "Run Selection" })
 
 local function close_all_buffers_except_current()
-	local bufs = vim.api.nvim_list_bufs()
-	local current_buf = vim.api.nvim_get_current_buf()
-	for _, buf in ipairs(bufs) do
-		if buf ~= current_buf then
-			vim.api.nvim_buf_delete(buf, { force = true })
-		end
-	end
-	vim.notify("Non-focused buffers deleted")
+  local bufs = vim.api.nvim_list_bufs()
+  local current_buf = vim.api.nvim_get_current_buf()
+  for _, buf in ipairs(bufs) do
+    if buf ~= current_buf then
+      vim.api.nvim_buf_delete(buf, { force = false })
+    end
+  end
+  vim.notify("Non-focused buffers deleted")
 end
 -- Map to a key (e.g., <leader>q)
 map("n", "<leader>qb", close_all_buffers_except_current, { desc = "Close all other buffers" })
 
 map("n", "<leader>qc", function()
-	vim.fn.setqflist({})
-	vim.cmd("cclose")
-	vim.notify("Quickfix list cleared")
+  vim.fn.setqflist({})
+  vim.cmd("cclose")
+  vim.notify("Quickfix list cleared")
 end, { desc = "Clear quickfix list" })
 
 map("n", "<c-k>", ":wincmd k<CR>", { desc = "Move up in split", silent = true })
@@ -36,11 +36,11 @@ map("n", "<leader>lh", "<cmd>nohlsearch<CR>", { desc = "Clear search highlights"
 
 -- COPY/PASTE KEYMAPS --
 map("n", "<leader>Y", function()
-	local view = vim.fn.winsaveview()
-	vim.cmd('keepjumps keepmarks normal! ggVG"+y')
-	vim.fn.winrestview(view)
+  local view = vim.fn.winsaveview()
+  vim.cmd('keepjumps keepmarks normal! ggVG"+y')
+  vim.fn.winrestview(view)
 end, {
-	desc = "Yank entire buffer to system clipboard",
+  desc = "Yank entire buffer to system clipboard",
 })
 map("n", "<leader>y", '"+yy', { desc = "Yank line to system clipboard" })
 map({ "x", "o" }, "<leader>y", '"+y', { desc = "Yank selection to system clipboard" })

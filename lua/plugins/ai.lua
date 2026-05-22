@@ -1,5 +1,4 @@
 vim.pack.add({
-	{ src = "https://github.com/nvim-lua/plenary.nvim" },
 	{ src = "https://github.com/olimorris/codecompanion.nvim", version = "v19.13.0" },
 	{ src = "https://github.com/nvim-mini/mini.diff" },
 })
@@ -26,7 +25,10 @@ require("codecompanion").setup({
 					name = "lmstudio",
 
 					env = {
-						url = "http://192.168.17.152:1234",
+						url = (function()
+							local ok, local_config = pcall(require, "config.local")
+							return (ok and local_config.ai and local_config.ai.lmstudio_url) or "http://192.168.17.152:1234"
+						end)(),
 						api_key = "lmstudio",
 					},
 

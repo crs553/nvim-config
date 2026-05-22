@@ -7,7 +7,7 @@ require("snacks").setup({
 	image = { enabled = true },
 	indent = { enabled = true },
 	input = { enabled = true },
-	notifier = { enabled = true, timeout = 3000 },
+	notifier = { enabled = false },
 	picker = { enabled = false }, -- replacing with telescope
 	quickfile = { enabled = true },
 	scope = { enabled = true },
@@ -37,9 +37,7 @@ end, { desc = "Rename File" })
 map.set({ "n", "x", "o" }, "<leader>gB", function()
 	S.gitbrowse()
 end, { desc = "Git Browse" })
-map.set("n", "<leader>un", function()
-	S.notifier.hide()
-end, { desc = "Dismiss All Notifications" })
+
 map.set("n", "<c-_>", function()
 	S.terminal()
 end, { desc = "which_key_ignore" })

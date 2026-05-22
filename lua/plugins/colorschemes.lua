@@ -10,6 +10,16 @@ require("catppuccin").setup({
 	integrations = {
 		treesitter = true,
 		native_lsp = { enabled = true },
+		telescope = true,
+		which_key = true,
+		cmp = true,
+		lualine = true,
+		gitsigns = true,
+		dap = { enabled = true },
+		oil = true,
+		markdown = true,
+		mini = { enabled = true },
+		snacks = { enabled = true },
 	},
 
 	custom_highlights = function(colors)

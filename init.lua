@@ -16,10 +16,10 @@ vim.g.is_nixos = (function()
 	return false
 end)()
 
-require("plugins.whichkey")
 require("config.keymaps")
 require("config.autocmds")
 require("config.options")
+require("config.notify") -- custom notification system (overrides vim.notify)
 require("config.floaterm")
 require("config.packclean")
 require("config.git")
@@ -43,3 +43,4 @@ require("plugins.undotree")
 require("plugins.vimbegood")
 require("plugins.ai") -- at end just to ensure cmp is setup
 require("plugins.obsidian")
+require("plugins.whichkey") -- last: needs all keymaps defined for group detection
