@@ -1,264 +1,253 @@
 -- LSP config
-vim.pack.add({ { src = "https://github.com/neovim/nvim-lspconfig" } })
+vim.pack.add { { src = 'https://github.com/neovim/nvim-lspconfig' } }
 
 -- Mason
-vim.pack.add({ { src = "https://github.com/williamboman/mason.nvim" } })
-vim.pack.add({ { src = "https://github.com/williamboman/mason-lspconfig.nvim" } })
+vim.pack.add { { src = 'https://github.com/williamboman/mason.nvim' } }
+vim.pack.add { { src = 'https://github.com/williamboman/mason-lspconfig.nvim' } }
 
 -- CMP + Snippets
-vim.pack.add({
-	{ src = "https://github.com/hrsh7th/nvim-cmp" },
-	{ src = "https://github.com/hrsh7th/cmp-nvim-lsp" },
-	{ src = "https://github.com/hrsh7th/cmp-buffer" },
-	{ src = "https://github.com/hrsh7th/cmp-path" },
-	{ src = "https://github.com/hrsh7th/cmp-cmdline" },
-	{ src = "https://github.com/L3MON4D3/LuaSnip" },
-	{ src = "https://github.com/rafamadriz/friendly-snippets" },
-	-- DISABLED DUE TO SLOWNESS WITH LOCAL MODEL{ src = "https://github.com/tzachar/cmp-ai" },
-})
+vim.pack.add {
+  { src = 'https://github.com/hrsh7th/nvim-cmp' },
+  { src = 'https://github.com/hrsh7th/cmp-nvim-lsp' },
+  { src = 'https://github.com/hrsh7th/cmp-buffer' },
+  { src = 'https://github.com/hrsh7th/cmp-path' },
+  { src = 'https://github.com/hrsh7th/cmp-cmdline' },
+  { src = 'https://github.com/L3MON4D3/LuaSnip' },
+  { src = 'https://github.com/rafamadriz/friendly-snippets' },
+  -- DISABLED DUE TO SLOWNESS WITH LOCAL MODEL{ src = "https://github.com/tzachar/cmp-ai" },
+}
 
 -- ======================
 -- Mason Setup
 -- ======================
 if not vim.g.is_nixos then
-	require("mason").setup()
-	require("mason-lspconfig").setup({
-		ensure_installed = {
-			"arduino_language_server",
-			"bashls",
-			"lua_ls",
-			"ltex_plus",
-			"marksman",
-			"pylsp",
-			"rust_analyzer",
-			"stylua",
-		},
-	})
+  require('mason').setup()
+  require('mason-lspconfig').setup {
+    ensure_installed = {
+      'arduino_language_server',
+      'bashls',
+      'harper_ls',
+      'lua_ls',
+      'marksman',
+      'pylsp',
+      'rust_analyzer',
+      'stylua',
+    },
+  }
 end
 
 -- ======================
 -- LSP Capabilities & on_attach
 -- ======================
-local has_cmp_lsp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+local has_cmp_lsp, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
 if not has_cmp_lsp then
-	vim.notify("cmp_nvim_lsp not found!", vim.log.levels.WARN)
-	return
+  vim.notify('cmp_nvim_lsp not found!', vim.log.levels.WARN)
+  return
 end
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
 
 local on_attach = function(_, bufnr)
-	local map = function(mode, keys, func, desc)
-		vim.keymap.set(mode, keys, func, { buffer = bufnr, desc = "LSP: " .. desc })
-	end
+  local map = function(mode, keys, func, desc)
+    vim.keymap.set(mode, keys, func, { buffer = bufnr, desc = 'LSP: ' .. desc })
+  end
 
-	map("n", "<leader>lh", vim.lsp.buf.hover, "Hover")
-	map("n", "<leader>ld", vim.lsp.buf.definition, "Definition")
-	map("n", "<leader>lr", vim.lsp.buf.rename, "Rename")
-	map("n", "<leader>la", vim.lsp.buf.code_action, "Code Action")
-	map("n", "<leader>lb", vim.lsp.buf.format, "Format Buffer (LSP)")
-	map("n", "<leader>ls", vim.lsp.buf.signature_help, "Signature Help")
+  map('n', '<leader>lh', vim.lsp.buf.hover, 'Hover')
+  map('n', '<leader>ld', vim.lsp.buf.definition, 'Definition')
+  map('n', '<leader>lr', vim.lsp.buf.rename, 'Rename')
+  map('n', '<leader>la', vim.lsp.buf.code_action, 'Code Action')
+  map('n', '<leader>lb', vim.lsp.buf.format, 'Format Buffer (LSP)')
+  map('n', '<leader>ls', vim.lsp.buf.signature_help, 'Signature Help')
 end
 
 -- Arduino Language Server
-vim.lsp.config["arduino_language_server"] = {
-	on_attach = on_attach,
-	capabilities = capabilities,
-	root_dir = vim.uv.cwd,
+vim.lsp.config['arduino_language_server'] = {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  root_dir = vim.uv.cwd,
 }
 
-vim.lsp.enable("arduino_language_server")
-vim.lsp.config["bashls"] = {
-	on_attach = on_attach,
-	capabilities = capabilities,
+vim.lsp.enable('arduino_language_server')
+vim.lsp.config['bashls'] = {
+  on_attach = on_attach,
+  capabilities = capabilities,
 }
-vim.lsp.enable("bashls")
+vim.lsp.enable('bashls')
 
-vim.lsp.config["gopls"] = {
-	capabilities = capabilities,
-	on_attach = on_attach,
-	settings = {
-		gopls = {
-			analyses = {
-				unusedparams = true,
-				shadow = true,
-			},
-			staticcheck = true,
-			gofumpt = true,
-			completeUnimported = true,
-			usePlaceholders = true,
-			-- Enable inlay hints for better variable type visibility
-			hints = {
-				assignVariableTypes = true,
-				compositeLiteralFields = true,
-				compositeLiteralTypes = true,
-				constantValues = true,
-				functionTypeParameters = true,
-				parameterNames = true,
-				rangeVariableTypes = true,
-			},
-		},
-	},
+vim.lsp.config['harper_ls'] = {
+  on_attach = on_attach,
+  capabilities = capabilities,
 }
-vim.lsp.enable("gopls")
+vim.lsp.enable('harper_ls')
+
+vim.lsp.config['gopls'] = {
+  capabilities = capabilities,
+  on_attach = on_attach,
+  settings = {
+    gopls = {
+      analyses = {
+        unusedparams = true,
+        shadow = true,
+      },
+      staticcheck = true,
+      gofumpt = true,
+      completeUnimported = true,
+      usePlaceholders = true,
+      -- Enable inlay hints for better variable type visibility
+      hints = {
+        assignVariableTypes = true,
+        compositeLiteralFields = true,
+        compositeLiteralTypes = true,
+        constantValues = true,
+        functionTypeParameters = true,
+        parameterNames = true,
+        rangeVariableTypes = true,
+      },
+    },
+  },
+}
+vim.lsp.enable('gopls')
 
 -- Lua
-vim.lsp.config["lua_ls"] = {
-	on_attach = on_attach,
-	capabilities = capabilities,
-	filetypes = { "lua" },
-	settings = {
-		Lua = {
-			workspace = { checkThirdParty = false },
-			telemetry = { enable = false },
-		},
-	},
+vim.lsp.config['lua_ls'] = {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = { 'lua' },
+  settings = {
+    Lua = {
+      workspace = { checkThirdParty = false },
+      telemetry = { enable = false },
+    },
+  },
 }
-vim.lsp.enable("lua_ls")
--- LTEX Plus
-vim.lsp.config["ltex_plus"] = {
-	on_attach = on_attach,
-	capabilities = capabilities,
-	filetypes = { "markdown", "tex", "text", "gitcommit", "bib" },
-	settings = {
-		ltex = {
-			language = "en-GB",
-			diagnosticSeverity = "information",
-			disabledRules = { "MORFOLOGIK_RULE_EN_GB", "OXFORD_SPELLING_NOUNS" },
-			dictionary = { ["en-GB"] = { "Neovim", "Lua", "Eurospin", "radiofrequency", "MagIQ" } },
-			setPreferences = { variant = "GB", allowVariants = false },
-			sentenceCacheSize = 2000,
-		},
-	},
-}
-vim.lsp.enable("ltex_plus")
+vim.lsp.enable('lua_ls')
 
-vim.lsp.config["rust_analyzer"] = {
-	on_attach = on_attach,
-	capabilities = capabilities,
+vim.lsp.config['rust_analyzer'] = {
+  on_attach = on_attach,
+  capabilities = capabilities,
 
-	cmd = { "rust-analyzer" },
-	filetypes = { "rust" },
-	root_markers = { "Cargo.toml", ".git" },
-	single_file_support = true,
+  cmd = { 'rust-analyzer' },
+  filetypes = { 'rust' },
+  root_markers = { 'Cargo.toml', '.git' },
+  single_file_support = true,
 }
-vim.lsp.enable("rust_analyzer")
+vim.lsp.enable('rust_analyzer')
 
 -- MATLAB -- note I managed this externally as the Mason files were not working for me
-vim.lsp.config["matlab_ls"] = {
-	capabilities = capabilities,
-	on_attach = on_attach,
-	cmd = { "matlab-language-server", "--stdio" },
-	filetypes = { "matlab" },
-	root_dir = function(bufnr, on_dir)
-		local fname = vim.api.nvim_buf_get_name(bufnr)
-		local root_dir = vim.fs.root(fname, ".git")
-		on_dir(root_dir or vim.fn.getcwd())
-	end,
-	settings = {
-		MATLAB = {
-			indexWorkspace = false,
-			matlabconnectiontiming = "onDemand",
-			telemetry = true,
-			installPath = "C:\\Program Files\\MATLAB\\R2024b",
-		},
-	},
-	single_file_support = true,
+vim.lsp.config['matlab_ls'] = {
+  capabilities = capabilities,
+  on_attach = on_attach,
+  cmd = { 'matlab-language-server', '--stdio' },
+  filetypes = { 'matlab' },
+  root_dir = function(bufnr, on_dir)
+    local fname = vim.api.nvim_buf_get_name(bufnr)
+    local root_dir = vim.fs.root(fname, '.git')
+    on_dir(root_dir or vim.fn.getcwd())
+  end,
+  settings = {
+    MATLAB = {
+      indexWorkspace = false,
+      matlabconnectiontiming = 'onDemand',
+      telemetry = true,
+      installPath = 'C:\\Program Files\\MATLAB\\R2024b',
+    },
+  },
+  single_file_support = true,
 }
-vim.lsp.enable("matlab_ls")
+vim.lsp.enable('matlab_ls')
 
 -- Python (pylsp + mypy)
-vim.lsp.config["pylsp"] = {
-	on_attach = on_attach,
-	capabilities = capabilities,
-	settings = {
-		pylsp = {
-			plugins = {
-				pycodestyle = { enabled = false },
-				mypy = { enabled = true, live_mode = true, dmypy = true, struct = true, report_progress = true },
-				black = { enabled = true },
-				isort = { enabled = true },
-			},
-		},
-	},
+vim.lsp.config['pylsp'] = {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  settings = {
+    pylsp = {
+      plugins = {
+        pycodestyle = { enabled = false },
+        mypy = { enabled = true, live_mode = true, dmypy = true, struct = true, report_progress = true },
+        black = { enabled = true },
+        isort = { enabled = true },
+      },
+    },
+  },
 }
-vim.lsp.enable("pylsp")
+vim.lsp.enable('pylsp')
 
 -- nvim-cmp Setup
-local cmp = require("cmp")
-local luasnip = require("luasnip")
-require("luasnip.loaders.from_vscode").lazy_load()
+local cmp = require('cmp')
+local luasnip = require('luasnip')
+require('luasnip.loaders.from_vscode').lazy_load()
 
-cmp.setup({
-	snippet = {
-		expand = function(args)
-			luasnip.lsp_expand(args.body)
-		end,
-	},
+cmp.setup {
+  snippet = {
+    expand = function(args)
+      luasnip.lsp_expand(args.body)
+    end,
+  },
 
-	mapping = cmp.mapping.preset.insert({
-		["<C-n>"] = cmp.mapping.select_next_item(),
-		["<C-p>"] = cmp.mapping.select_prev_item(),
-		["<C-b>"] = cmp.mapping.scroll_docs(-4),
-		["<C-f>"] = cmp.mapping.scroll_docs(4),
+  mapping = cmp.mapping.preset.insert {
+    ['<C-n>'] = cmp.mapping.select_next_item(),
+    ['<C-p>'] = cmp.mapping.select_prev_item(),
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
 
-		-- only accept with C-y
-		["<C-y>"] = cmp.mapping.confirm({ select = true }),
+    -- only accept with C-y
+    ['<C-y>'] = cmp.mapping.confirm { select = true },
 
-		-- enter disabled for completion (always fallback newline)
-		["<CR>"] = cmp.mapping(function(fallback)
-			fallback()
-		end, { "i", "s" }),
+    -- enter disabled for completion (always fallback newline)
+    ['<CR>'] = cmp.mapping(function(fallback)
+      fallback()
+    end, { 'i', 's' }),
 
-		["<C-e>"] = cmp.mapping.abort(),
-	}),
+    ['<C-e>'] = cmp.mapping.abort(),
+  },
 
-	-- PRIORITY ORDER
-	sources = cmp.config.sources({
-		{ name = "nvim_lsp", priority = 800 },
-		{ name = "luasnip", priority = 700 },
-		{ name = "codecompanion", priority = 600 },
-	}, {
-		{ name = "buffer", priority = 500 },
-		{ name = "path", priority = 300 },
-	}),
+  -- PRIORITY ORDER
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp', priority = 800 },
+    { name = 'luasnip', priority = 700 },
+    { name = 'codecompanion', priority = 600 },
+  }, {
+    { name = 'buffer', priority = 500 },
+    { name = 'path', priority = 300 },
+  }),
 
-	-- CLEAR LABELS IN MENU
-	formatting = {
-		format = function(entry, vim_item)
-			vim_item.menu = ({
-				nvim_lsp = "󰛦 LSP",
-				luasnip = "󰩫 Snip",
-				buffer = "󰈙 Buf",
-				path = "󰉋 Path",
-			})[entry.source.name]
+  -- CLEAR LABELS IN MENU
+  formatting = {
+    format = function(entry, vim_item)
+      vim_item.menu = ({
+        nvim_lsp = '󰛦 LSP',
+        luasnip = '󰩫 Snip',
+        buffer = '󰈙 Buf',
+        path = '󰉋 Path',
+      })[entry.source.name]
 
-			return vim_item
-		end,
-	},
+      return vim_item
+    end,
+  },
 
-	-- BETTER SORTING (keeps AI stable at top)
-	sorting = {
-		priority_weight = 2,
-		comparators = {
-			require("cmp").config.compare.offset,
-			require("cmp").config.compare.exact,
-			require("cmp").config.compare.score,
-			require("cmp").config.compare.recently_used,
-			require("cmp").config.compare.kind,
-			require("cmp").config.compare.sort_text,
-			require("cmp").config.compare.length,
-			require("cmp").config.compare.order,
-		},
-	},
+  -- BETTER SORTING (keeps AI stable at top)
+  sorting = {
+    priority_weight = 2,
+    comparators = {
+      require('cmp').config.compare.offset,
+      require('cmp').config.compare.exact,
+      require('cmp').config.compare.score,
+      require('cmp').config.compare.recently_used,
+      require('cmp').config.compare.kind,
+      require('cmp').config.compare.sort_text,
+      require('cmp').config.compare.length,
+      require('cmp').config.compare.order,
+    },
+  },
 
-	experimental = {
-		ghost_text = true,
-	},
-}) -- CMP cmdline support
-cmp.setup.cmdline({ "/", "?" }, { mapping = cmp.mapping.preset.cmdline(), sources = { { name = "buffer" } } })
-cmp.setup.cmdline(":", {
-	mapping = cmp.mapping.preset.cmdline(),
-	sources = cmp.config.sources({ { name = "path" } }, { { name = "cmdline" } }),
+  experimental = {
+    ghost_text = true,
+  },
+} -- CMP cmdline support
+cmp.setup.cmdline({ '/', '?' }, { mapping = cmp.mapping.preset.cmdline(), sources = { { name = 'buffer' } } })
+cmp.setup.cmdline(':', {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = cmp.config.sources({ { name = 'path' } }, { { name = 'cmdline' } }),
 })
