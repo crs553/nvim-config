@@ -1,8 +1,3 @@
-vim.pack.add({
-	"https://github.com/mfussenegger/nvim-lint",
-	"https://github.com/rshkarin/mason-nvim-lint",
-})
-
 if not vim.g.is_nixos then
 	require("mason-nvim-lint").setup({
 		ensure_installed = {

@@ -1,7 +1,3 @@
-vim.pack.add({
-  { src = "https://github.com/olimorris/codecompanion.nvim", version = "v19.13.0" },
-  { src = "https://github.com/nvim-mini/mini.diff" },
-})
 require("mini.diff").setup()
 
 require("codecompanion").setup({

@@ -1,8 +1,3 @@
-vim.pack.add({
-	"https://github.com/nvim-lualine/lualine.nvim",
-	"https://github.com/nvim-tree/nvim-web-devicons", -- optional, for icons
-})
-
 -- Lualine setup
 require("lualine").setup({
 	options = {

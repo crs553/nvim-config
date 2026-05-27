@@ -1,7 +1,3 @@
-vim.pack.add({
-	{ src = "https://github.com/obsidian-nvim/obsidian.nvim", version = "v3.16.3" },
-})
-
 local ok, local_config = pcall(require, "config.local")
 local vaults = ok and local_config.obsidian or {}
 

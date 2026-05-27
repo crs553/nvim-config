@@ -1,22 +1,3 @@
--- LSP config
-vim.pack.add { { src = 'https://github.com/neovim/nvim-lspconfig' } }
-
--- Mason
-vim.pack.add { { src = 'https://github.com/williamboman/mason.nvim' } }
-vim.pack.add { { src = 'https://github.com/williamboman/mason-lspconfig.nvim' } }
-
--- CMP + Snippets
-vim.pack.add {
-  { src = 'https://github.com/hrsh7th/nvim-cmp' },
-  { src = 'https://github.com/hrsh7th/cmp-nvim-lsp' },
-  { src = 'https://github.com/hrsh7th/cmp-buffer' },
-  { src = 'https://github.com/hrsh7th/cmp-path' },
-  { src = 'https://github.com/hrsh7th/cmp-cmdline' },
-  { src = 'https://github.com/L3MON4D3/LuaSnip' },
-  { src = 'https://github.com/rafamadriz/friendly-snippets' },
-  -- DISABLED DUE TO SLOWNESS WITH LOCAL MODEL{ src = "https://github.com/tzachar/cmp-ai" },
-}
-
 -- ======================
 -- Mason Setup
 -- ======================
@@ -179,6 +160,24 @@ local cmp = require('cmp')
 local luasnip = require('luasnip')
 require('luasnip.loaders.from_vscode').lazy_load()
 
+-- cmp-ai: AI completion via LM Studio
+local cmp_ai = require('cmp_ai.config')
+
+cmp_ai:setup {
+  provider = 'openai',
+  provider_options = {
+    url = 'http://127.0.0.1:1234/v1/chat/completions',
+    model = 'qwen2.5-coder-7b-instruct',
+    api_key = 'lmstudio',
+    max_tokens = 64,
+    temperature = 0.1,
+  },
+  run_on_every_keystroke = true,
+  max_timeout_seconds = 5,
+  max_lines = 100,
+  max_chars = 1000,
+}
+
 cmp.setup {
   snippet = {
     expand = function(args)
@@ -205,6 +204,7 @@ cmp.setup {
 
   -- PRIORITY ORDER
   sources = cmp.config.sources({
+    { name = 'cmp_ai', priority = 850 },
     { name = 'nvim_lsp', priority = 800 },
     { name = 'luasnip', priority = 700 },
     { name = 'codecompanion', priority = 600 },
@@ -217,6 +217,7 @@ cmp.setup {
   formatting = {
     format = function(entry, vim_item)
       vim_item.menu = ({
+        cmp_ai = '󰚩 AI',
         nvim_lsp = '󰛦 LSP',
         luasnip = '󰩫 Snip',
         buffer = '󰈙 Buf',

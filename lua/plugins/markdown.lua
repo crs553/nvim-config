@@ -1,8 +1,3 @@
-vim.pack.add({
-	"https://github.com/tadmccorkle/markdown.nvim",
-	"https://github.com/MeanderingProgrammer/render-markdown.nvim",
-})
-
 -- Setup markdown.nvim on markdown files
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "markdown",

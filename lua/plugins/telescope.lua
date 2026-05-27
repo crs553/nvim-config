@@ -7,12 +7,6 @@ local hooks = function(ev)
   end
 end
 vim.api.nvim_create_autocmd('PackChanged', { callback = hooks })
-
-vim.pack.add {
-  'https://github.com/nvim-lua/plenary.nvim',
-  'https://github.com/nvim-telescope/telescope.nvim',
-  'https://github.com/nvim-telescope/telescope-fzf-native.nvim',
-}
 require('telescope').load_extension('fzf')
 local telescope = require('telescope')
 local actions = require('telescope.actions')
@@ -110,8 +104,8 @@ telescope.setup {
       follow = true,
       layout_strategy = 'vertical',
       layout_config = {
-        width = 0.5,
-        height = 0.5,
+        width = 0.75,
+        height = 0.75,
         preview_height = 0.45,
         prompt_position = 'top',
       },
@@ -121,8 +115,8 @@ telescope.setup {
       show_untracked = false,
       layout_strategy = 'vertical',
       layout_config = {
-        width = 0.5,
-        height = 0.5,
+        width = 0.75,
+        height = 0.75,
         preview_height = 0.45,
         prompt_position = 'top',
       },
@@ -139,8 +133,8 @@ telescope.setup {
     command_history = {
       layout_strategy = 'vertical',
       layout_config = {
-        width = 0.5,
-        height = 0.5,
+        width = 0.75,
+        height = 0.75,
         preview_height = 0.45,
         prompt_position = 'top',
       },
@@ -149,8 +143,8 @@ telescope.setup {
     help_tags = {
       layout_strategy = 'vertical',
       layout_config = {
-        width = 0.5,
-        height = 0.5,
+        width = 0.75,
+        height = 0.75,
         preview_height = 0.45,
         prompt_position = 'top',
       },

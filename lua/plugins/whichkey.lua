@@ -1,8 +1,3 @@
-vim.pack.add({
-	"https://github.com/folke/which-key.nvim",
-	"https://github.com/nvim-mini/mini.icons",
-})
-
 local wk = require("which-key")
 wk.setup({})
 
