@@ -1,6 +1,7 @@
 -- Lualine setup
 require('lualine').setup {
   options = {
+    icons_enabled = true,
     theme = 'auto',
     section_separators = { left = '', right = '' },
     component_separators = { left = '', right = '' },
@@ -8,9 +9,7 @@ require('lualine').setup {
     disabled_filetypes = {
       'NvimTree',
       'neo-tree',
-      'TelescopePrompt',
       'alpha',
-      'dashboard',
     },
   },
   sections = {
@@ -25,16 +24,9 @@ require('lualine').setup {
       'filetype',
       { 'progress', separator = ' ', padding = 1 },
       { 'diagnostics', sources = { 'nvim_diagnostic', 'nvim_lsp' } },
+      'lsp_status',
     },
     lualine_y = {},
-    lualine_z = { 'location' },
-  },
-  tabline = {
-    lualine_a = { 'buffers' },
-    lualine_b = {},
-    lualine_c = {},
-    lualine_x = {},
-    lualine_y = {},
-    lualine_z = { 'tabs' },
+    lualine_z = { 'location', 'searchcount' },
   },
 }
