@@ -44,7 +44,6 @@ require('plugins.surround')
 require('plugins.treesitter')
 require('plugins.telescope')
 require('plugins.undotree')
-require('plugins.vimbegood')
 require('plugins.ai') -- At end just to ensure cmp is setup
 require('plugins.obsidian')
 require('plugins.whichkey') -- Last: needs all keymaps defined for group detection

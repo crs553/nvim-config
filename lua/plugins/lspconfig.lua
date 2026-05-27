@@ -172,7 +172,7 @@ cmp_ai:setup {
     max_tokens = 64,
     temperature = 0.1,
   },
-  run_on_every_keystroke = true,
+  run_on_every_keystroke = false,
   max_timeout_seconds = 5,
   max_lines = 100,
   max_chars = 1000,
