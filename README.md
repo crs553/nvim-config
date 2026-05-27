@@ -19,9 +19,9 @@ return {
 
 Fields:
 
-| Field | Purpose |
-|-------|---------|
-| `obsidian.notes` | Path to your Obsidian vault |
+| Field             | Purpose                                                   |
+| ----------------- | --------------------------------------------------------- |
+| `obsidian.notes`  | Path to your Obsidian vault                               |
 | `ai.lmstudio_url` | URL of your LM Studio (or other OpenAI-compatible) server |
 
 The config falls back to sensible defaults if `local.lua` is missing.
@@ -75,6 +75,7 @@ Verify servers/linters are installed.
 ### NixOS
 
 On NixOS, Mason is skipped automatically. Ensure system packages are installed for:
+
 - `lua-language-server` (Lua LSP)
 - `stylua` (Lua formatter)
 - `rust-analyzer` (Rust LSP)
