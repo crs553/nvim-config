@@ -221,14 +221,49 @@ map('n', '<leader>fg', builtin.git_files, { desc = 'Find Git Files' })
 
 -- Projects (closest equivalent: find directories via fd fallback)
 map('n', '<leader>fp', function()
-  builtin.find_files {
-    hidden = true,
-    no_ignore = true,
+  local dirs = {}
+  local search_dirs = {
+    vim.fn.expand('~/Projects'),
+    vim.fn.expand('~/.dotfiles'),
   }
-end, { desc = 'Projects (file-based)' })
+  for _, dir in ipairs(search_dirs) do
+    local handle = vim.uv.fs_scandir(dir)
+    if handle then
+      while true do
+        local name, type = vim.uv.fs_scandir_next(handle)
+        if not name then
+          break
+        end
+        if type == 'directory' then
+          table.insert(dirs, dir .. '/' .. name)
+        end
+      end
+    end
+  end
+  require('telescope.pickers')
+    .new(
+      {},
+      themes.get_ivy {
+        prompt_title = 'Projects',
+        finder = require('telescope.finders').new_table { results = dirs },
+        sorter = require('telescope.config').values.generic_sorter {},
+        attach_mappings = function(prompt_bufnr)
+          actions.select_default:replace(function()
+            local entry = require('telescope.actions.state').get_selected_entry()
+            actions.close(prompt_bufnr)
+            if entry then
+              vim.api.nvim_set_current_dir(entry.value)
+            end
+          end)
+          return true
+        end,
+      }
+    )
+    :find()
+end, { desc = 'Switch project root' })
 
 -- Recent files
-map('n', '<leader>fr', builtin.oldfiles, { desc = 'Recent' })
+--map('n', '<leader>fr', builtin.oldfiles, { desc = 'Recent' })
 
 -- Grep
 map('n', '<leader>fs', function()
