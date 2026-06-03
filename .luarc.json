@@ -1,5 +1,19 @@
 {
-  "diagnostics.globals": [
-    "vim"
-  ]
+  "$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
+  "runtime": {
+    "version": "LuaJIT",
+    "pathStrict": true
+  },
+  "diagnostics": {
+    "globals": ["vim"]
+  },
+  "workspace": {
+    "checkThirdParty": false
+  },
+  "hint": {
+    "enable": true
+  },
+  "telemetry": {
+    "enable": false
+  }
 }
