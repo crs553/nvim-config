@@ -12,6 +12,7 @@ if not vim.g.is_nixos then
       'marksman',
       'rust_analyzer',
       'ruff',
+      'biome',
       'typescript-language-server',
       'vscode-langservers-extracted',
       'yaml-language-server',
@@ -182,6 +183,50 @@ vim.lsp.config['yamlls'] = {
   },
 }
 vim.lsp.enable('yamlls')
+
+-- Biome (linting + formatting for JS/TS/JSON/CSS/HTML)
+-- Requires biome.json / biome.jsonc in project root to activate.
+vim.lsp.config['biome'] = {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = {
+    'astro',
+    'css',
+    'graphql',
+    'html',
+    'javascript',
+    'javascriptreact',
+    'json',
+    'jsonc',
+    'svelte',
+    'typescript',
+    'typescriptreact',
+    'vue',
+  },
+  root_markers = {
+    'biome.json',
+    'biome.jsonc',
+    '.biome.json',
+    '.biome.jsonc',
+  },
+  single_file_support = false,
+}
+vim.lsp.enable('biome')
+
+-- Disable ts_ls formatting for buffers where biome is active
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('biome_override', { clear = true }),
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client and client.name == 'biome' then
+      local ts_clients = vim.lsp.get_clients({ name = 'ts_ls', bufnr = args.buf })
+      for _, ts_client in ipairs(ts_clients) do
+        ts_client.server_capabilities.documentFormattingProvider = false
+        ts_client.server_capabilities.documentRangeFormattingProvider = false
+      end
+    end
+  end,
+})
 
 vim.lsp.config['rust_analyzer'] = {
   on_attach = on_attach,
