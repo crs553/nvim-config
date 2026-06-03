@@ -97,7 +97,10 @@ vim.lsp.config['lua_ls'] = {
   filetypes = { 'lua' },
   settings = {
     Lua = {
-      workspace = { checkThirdParty = false },
+      workspace = {
+        checkThirdParty = false,
+        library = vim.api.nvim_get_runtime_file("lua", true),
+      },
       telemetry = { enable = false },
     },
   },
