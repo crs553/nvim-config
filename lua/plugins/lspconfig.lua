@@ -10,9 +10,11 @@ if not vim.g.is_nixos then
       'harper_ls',
       'lua_ls',
       'marksman',
-      'pylsp',
       'rust_analyzer',
-      'stylua',
+      'ruff',
+      'typescript-language-server',
+      'vscode-langservers-extracted',
+      'yaml-language-server',
     },
   }
 end
@@ -99,7 +101,7 @@ vim.lsp.config['lua_ls'] = {
     Lua = {
       workspace = {
         checkThirdParty = false,
-        library = vim.api.nvim_get_runtime_file("lua", true),
+        library = vim.api.nvim_get_runtime_file('lua', true),
       },
       telemetry = { enable = false },
     },
@@ -107,14 +109,96 @@ vim.lsp.config['lua_ls'] = {
 }
 vim.lsp.enable('lua_ls')
 
+-- TypeScript/JavaScript
+vim.lsp.config['ts_ls'] = {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  root_markers = { 'tsconfig.json', 'jsconfig.json', 'package.json', '.git' },
+  single_file_support = true,
+  settings = {
+    typescript = {
+      inlayHints = {
+        parameterNames = { enabled = 'all' },
+        parameterTypes = { enabled = true },
+        variableTypes = { enabled = true },
+        propertyDeclarationTypes = { enabled = true },
+        functionLikeReturnTypes = { enabled = true },
+        enumMemberValues = { enabled = true },
+      },
+    },
+    javascript = {
+      inlayHints = {
+        parameterNames = { enabled = 'all' },
+        parameterTypes = { enabled = true },
+        variableTypes = { enabled = true },
+        propertyDeclarationTypes = { enabled = true },
+        functionLikeReturnTypes = { enabled = true },
+        enumMemberValues = { enabled = true },
+      },
+    },
+  },
+}
+vim.lsp.enable('ts_ls')
+
+-- CSS
+vim.lsp.config['cssls'] = {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  single_file_support = true,
+}
+vim.lsp.enable('cssls')
+
+-- HTML
+vim.lsp.config['html'] = {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  single_file_support = true,
+}
+vim.lsp.enable('html')
+
+-- JSON
+vim.lsp.config['jsonls'] = {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  single_file_support = true,
+  settings = {
+    json = {
+      validate = { enable = true },
+    },
+  },
+}
+vim.lsp.enable('jsonls')
+
+-- YAML
+vim.lsp.config['yamlls'] = {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  single_file_support = true,
+  settings = {
+    yaml = {
+      schemaStore = { enable = true, url = '' },
+      validate = true,
+    },
+  },
+}
+vim.lsp.enable('yamlls')
+
 vim.lsp.config['rust_analyzer'] = {
   on_attach = on_attach,
   capabilities = capabilities,
-
   cmd = { 'rust-analyzer' },
   filetypes = { 'rust' },
   root_markers = { 'Cargo.toml', '.git' },
   single_file_support = true,
+  settings = {
+    rust_analyzer = {
+      cargo = { allFeatures = true },
+      check = {
+        command = 'clippy',
+      },
+      procMacro = { enable = true },
+    },
+  },
 }
 vim.lsp.enable('rust_analyzer')
 
@@ -124,10 +208,8 @@ vim.lsp.config['matlab_ls'] = {
   on_attach = on_attach,
   cmd = { 'matlab-language-server', '--stdio' },
   filetypes = { 'matlab' },
-  root_dir = function(bufnr, on_dir)
-    local fname = vim.api.nvim_buf_get_name(bufnr)
-    local root_dir = vim.fs.root(fname, '.git')
-    on_dir(root_dir or vim.fn.getcwd())
+  root_dir = function(bufnr)
+    return vim.fs.root(bufnr, '.git') or vim.fn.getcwd()
   end,
   settings = {
     MATLAB = {
@@ -141,22 +223,25 @@ vim.lsp.config['matlab_ls'] = {
 }
 vim.lsp.enable('matlab_ls')
 
--- Python (pylsp + mypy)
-vim.lsp.config['pylsp'] = {
+-- Python (ruff)
+-- ruff provides linting, formatting, and import organization.
+-- For code intelligence (completions, goto-def, hover), pair with basedpyright.
+vim.lsp.config['ruff'] = {
   on_attach = on_attach,
   capabilities = capabilities,
+  filetypes = { 'python' },
+  root_markers = { 'pyproject.toml', 'ruff.toml', '.ruff.toml', 'setup.py', 'setup.cfg', '.git' },
+  single_file_support = true,
   settings = {
-    pylsp = {
-      plugins = {
-        pycodestyle = { enabled = false },
-        mypy = { enabled = true, live_mode = true, dmypy = true, struct = true, report_progress = true },
-        black = { enabled = true },
-        isort = { enabled = true },
-      },
+    ruff = {
+      format = { enable = true },
+      fixAll = true,
+      organizeImports = true,
+      lint = { enable = true },
     },
   },
 }
-vim.lsp.enable('pylsp')
+vim.lsp.enable('ruff')
 
 -- nvim-cmp Setup
 local cmp = require('cmp')

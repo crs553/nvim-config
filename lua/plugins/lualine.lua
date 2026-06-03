@@ -24,7 +24,19 @@ require('lualine').setup {
       'filetype',
       { 'progress', separator = ' ', padding = 1 },
       { 'diagnostics', sources = { 'nvim_diagnostic', 'nvim_lsp' } },
-      'lsp_status',
+      {
+        function()
+          local clients = vim.lsp.get_clients({ bufnr = 0 })
+          if #clients == 0 then
+            return '󰛦 None'
+          end
+          local names = {}
+          for _, client in ipairs(clients) do
+            table.insert(names, client.name)
+          end
+          return '󰛦 ' .. table.concat(names, ' ')
+        end,
+      },
     },
     lualine_y = {},
     lualine_z = { 'location', 'searchcount' },
