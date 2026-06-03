@@ -1,23 +1,21 @@
 require("conform").setup({
 	formatters_by_ft = {
 		bash = { "shfmt" },
-		css = { "prettier" },
-		go = { "goimports", "gofmt" }, -- Runs goimports first, then gofmt
-		html = { "prettier" },
-		javascript = { "prettier" },
-		javascriptreact = { "prettier" },
-		json = { "prettier" },
-		jsonc = { "prettier" },
+		css = { "biome" },
+		go = { "goimports", "gofmt" },
+		html = { "biome" },
+		javascript = { "biome" },
+		javascriptreact = { "biome" },
+		json = { "biome" },
+		jsonc = { "biome" },
 		lua = { "stylua" },
 		markdown = { "prettier" },
-		--matlab = { "matlab_ls" },
 		python = { "ruff_format", "ruff_organize_imports" },
 		rust = { "rustfmt" },
 		sh = { "shfmt" },
-		typescript = { "prettier" },
-		typescriptreact = { "prettier" },
+		typescript = { "biome" },
+		typescriptreact = { "biome" },
 		yaml = { "prettier" },
-		-- go defaults to gopls formatting via LSP
 	},
 	format_on_save = {
 		lsp_fallback = true,

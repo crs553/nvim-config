@@ -1,7 +1,6 @@
 if not vim.g.is_nixos then
 	require("mason-nvim-lint").setup({
 		ensure_installed = {
-			"eslint",
 			"markdownlint",
 			"shellcheck",
 			"yamllint",
@@ -15,10 +14,6 @@ local lint = require("lint")
 
 lint.linters_by_ft = {
 	python = { "ruff" },
-	javascript = { "eslint" },
-	typescript = { "eslint" },
-	javascriptreact = { "eslint" },
-	typescriptreact = { "eslint" },
 	-- lua = { "luacheck" }, -- doesn't work on windows
 	sh = { "shellcheck" },
 	zsh = { "shellcheck" },
