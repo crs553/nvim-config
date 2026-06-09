@@ -225,6 +225,7 @@ map('n', '<leader>fp', function()
   local search_dirs = {
     vim.fn.expand('~/Projects'),
     vim.fn.expand('~/.dotfiles'),
+    vim.fn.expand('~/Documents/git-repos'),
   }
   for _, dir in ipairs(search_dirs) do
     local handle = vim.uv.fs_scandir(dir)
