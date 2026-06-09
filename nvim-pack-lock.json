@@ -5,7 +5,7 @@
       "src": "https://github.com/L3MON4D3/LuaSnip"
     },
     "catppuccin": {
-      "rev": "426dbebe06b5c69fd846ceb17b42e12f890aedf1",
+      "rev": "0303a7208dba448c459767486a38a6ec05c4216b",
       "src": "https://github.com/catppuccin/nvim"
     },
     "cmp-ai": {
@@ -34,7 +34,7 @@
       "version": "'v19.13.0'"
     },
     "conform.nvim": {
-      "rev": "18aeab3d63d350dcf44d64c462cc489a3412af40",
+      "rev": "619363c30309d29ffa631e67c8183f2a72caa373",
       "src": "https://github.com/stevearc/conform.nvim"
     },
     "friendly-snippets": {
@@ -42,11 +42,11 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "gitsigns.nvim": {
-      "rev": "dd3f588bacbeb041be6facf1742e42097f62165d",
+      "rev": "25050e4ed39e628282831d4cbecb1850454ce915",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "lualine.nvim": {
-      "rev": "131a558e13f9f28b15cd235557150ccb23f89286",
+      "rev": "221ce6b2d999187044529f49da6554a92f740a96",
       "src": "https://github.com/nvim-lualine/lualine.nvim"
     },
     "markdown.nvim": {
@@ -54,7 +54,7 @@
       "src": "https://github.com/tadmccorkle/markdown.nvim"
     },
     "mason-lspconfig.nvim": {
-      "rev": "7b01e2974a47d489bb92f47a41e4c0088ea8f86e",
+      "rev": "0a695750d747db1e7e70bcf0267ef8951c95fc83",
       "src": "https://github.com/williamboman/mason-lspconfig.nvim"
     },
     "mason-nvim-lint": {
@@ -62,7 +62,7 @@
       "src": "https://github.com/rshkarin/mason-nvim-lint"
     },
     "mason.nvim": {
-      "rev": "cbf8d285e1462dd24acf3507817be2bbcb035919",
+      "rev": "16ba83bfc8a25f52bb545134f5bee082b195c460",
       "src": "https://github.com/williamboman/mason.nvim"
     },
     "mini.comment": {
@@ -103,11 +103,11 @@
       "src": "https://github.com/theHamsta/nvim-dap-virtual-text"
     },
     "nvim-lint": {
-      "rev": "d48f3a76189d03b2239f6df1b2f7e3fa8353743b",
+      "rev": "99cbc3ca8a76845fca50e496be7212bebf907dd3",
       "src": "https://github.com/mfussenegger/nvim-lint"
     },
     "nvim-lspconfig": {
-      "rev": "deb0df61b2d6691e745b16a42755e10ad38218e9",
+      "rev": "229b79051b380377664edc4cbd534930154921a1",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-nio": {
@@ -132,7 +132,7 @@
       "version": "'v3.16.3'"
     },
     "oil.nvim": {
-      "rev": "b91ee5a77a6a9605d9c1aaf4fda74b66082c8297",
+      "rev": "b73018b75affd13fa38e2fc94ef753b465f770d7",
       "src": "https://github.com/stevearc/oil.nvim"
     },
     "plenary.nvim": {
