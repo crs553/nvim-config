@@ -1,1 +1,1 @@
-require("quicker").setup()
+require('quicker').setup()

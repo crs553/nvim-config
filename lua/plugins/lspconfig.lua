@@ -13,9 +13,6 @@ if not vim.g.is_nixos then
       'rust_analyzer',
       'ruff',
       'biome',
-      'typescript-language-server',
-      'vscode-langservers-extracted',
-      'yaml-language-server',
     },
   }
 end
@@ -219,7 +216,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
     local client = vim.lsp.get_client_by_id(args.data.client_id)
     if client and client.name == 'biome' then
-      local ts_clients = vim.lsp.get_clients({ name = 'ts_ls', bufnr = args.buf })
+      local ts_clients = vim.lsp.get_clients { name = 'ts_ls', bufnr = args.buf }
       for _, ts_client in ipairs(ts_clients) do
         ts_client.server_capabilities.documentFormattingProvider = false
         ts_client.server_capabilities.documentRangeFormattingProvider = false

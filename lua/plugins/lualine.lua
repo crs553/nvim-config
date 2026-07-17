@@ -26,7 +26,7 @@ require('lualine').setup {
       { 'diagnostics', sources = { 'nvim_diagnostic', 'nvim_lsp' } },
       {
         function()
-          local clients = vim.lsp.get_clients({ bufnr = 0 })
+          local clients = vim.lsp.get_clients { bufnr = 0 }
           if #clients == 0 then
             return '󰛦 None'
           end
