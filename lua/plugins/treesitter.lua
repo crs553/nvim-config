@@ -24,7 +24,6 @@ require('nvim-treesitter').setup {
     'rust',
     'toml',
     'tsx',
-    'typescript',
     'vim',
     'vimdoc',
     'yaml',

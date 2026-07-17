@@ -2,17 +2,20 @@
 
 Personal Neovim configuration using `vim.pack` (Neovim 0.11+).
 
+[![CI](https://github.com/crs553/nvim-config/actions/workflows/ci.yml/badge.svg)](https://github.com/crs553/nvim-config/actions/workflows/ci.yml)
+
 ## Required file
 
 To keep machine-specific paths out of version control, create `lua/config/local.lua`:
+replace "<replace-\*>"
 
 ```lua
 return {
   obsidian = {
-    notes = "~/notes",
+    notes = "<replace-with-path>",
   },
   ai = {
-    lmstudio_url = "http://192.168.17.152:1234",
+    lmstudio_url = "<replace-with-web-address-and-port",
   },
 }
 ```

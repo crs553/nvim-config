@@ -1,3 +1,3 @@
-vim.cmd("packadd nvim.undotree")
+vim.cmd('packadd nvim.undotree')
 
-vim.keymap.set("n", "<leader>uu", require("undotree").open, { desc = "Toggle Undotree" })
+vim.keymap.set('n', '<leader>uu', require('undotree').open, { desc = 'Toggle Undotree' })

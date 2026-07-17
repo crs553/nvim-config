@@ -7,7 +7,7 @@ local hooks = function(ev)
   end
 end
 vim.api.nvim_create_autocmd('PackChanged', { callback = hooks })
-require('telescope').load_extension('fzf')
+pcall(require('telescope').load_extension, 'fzf')
 local telescope = require('telescope')
 local actions = require('telescope.actions')
 local actions_layout = require('telescope.actions.layout')
