@@ -11,7 +11,7 @@ require('codecompanion').setup {
               'acp',
             },
           },
-          model = 'qwen2.5-coder-7b-instruct',
+          model = 'qwen/qwen3.5-9b',
         })
       end,
     },
@@ -23,14 +23,14 @@ require('codecompanion').setup {
           env = {
             url = (function()
               local ok, local_config = pcall(require, 'config.local')
-              return (ok and local_config.ai and local_config.ai.lmstudio_url) or 'http://192.168.17.152:1234'
+              return (ok and local_config.ai and local_config.ai.lmstudio_url) or 'http://localhost:1234'
             end)(),
             api_key = 'lmstudio',
           },
 
           schema = {
             model = {
-              default = 'qwen2.5-coder-7b-instruct',
+              default = 'qwen/qwen3.5-9b',
             },
           },
 
@@ -62,11 +62,11 @@ require('codecompanion').setup {
         chat_fold = ' ',
       },
       fold_context = true,
-      fold_reasoning = true,
+      fold_reasoning = false,
       opts = {
         completion_provider = 'default',
       },
-      show_reasoning = true,
+      show_reasoning = false,
     },
     inline = {
       adapter = 'lmstudio',
@@ -95,7 +95,7 @@ require('codecompanion').setup {
     },
     opts = {
       date_format = '%A, %d %B %Y',
-      log_level = 'Debug',
+      log_level = 'INFO',
       language = 'British English',
       per_project_config = {
         files = {

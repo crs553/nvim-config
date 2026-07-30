@@ -297,10 +297,10 @@ cmp_ai:setup {
   provider = 'openai',
   provider_options = {
     url = 'http://127.0.0.1:1234/v1/chat/completions',
-    model = 'qwen2.5-coder-7b-instruct',
+    model = 'qwen/qwen3.5-9b',
     api_key = 'lmstudio',
     max_tokens = 64,
-    temperature = 0.1,
+    temperature = 0.2,
   },
   notify = false,
   run_on_every_keystroke = false,
