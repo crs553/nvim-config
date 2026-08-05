@@ -45,21 +45,24 @@ S.setup {
           { win = 'preview', title = '{preview}', height = 0.55, border = 'top' },
         },
       },
-      -- Telescope file pickers: centered box, preview at the bottom
+      -- Telescope file pickers: centered box, list left, preview on the right
       telescope = {
         layout = {
           backdrop = false,
-          width = 0.75,
+          width = 0.9,
           min_width = 80,
-          height = 0.75,
+          height = 0.8,
           min_height = 30,
           box = 'vertical',
           border = true,
           title = '{title} {live} {flags}',
           title_pos = 'center',
           { win = 'input', height = 1, border = 'bottom' },
-          { win = 'list', border = 'none' },
-          { win = 'preview', title = '{preview}', height = 0.45, border = 'top' },
+          {
+            box = 'horizontal',
+            { win = 'list', border = 'none' },
+            { win = 'preview', title = '{preview}', width = 0.55, border = 'left' },
+          },
         },
       },
     },
@@ -74,7 +77,7 @@ S.setup {
         layout = { preset = 'telescope' },
       },
       command_history = {
-        layout = { preset = 'telescope' },
+        layout = { preset = 'telescope', hidden = { 'preview' } },
       },
       grep = {
         hidden = true,
