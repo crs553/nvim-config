@@ -7,7 +7,6 @@ Personal Neovim configuration using `vim.pack` (Neovim 0.12+).
 ## Required file
 
 To keep machine-specific paths out of version control, create `lua/config/local.lua`:
-replace "<replace-\*>"
 
 ```lua
 return {
@@ -36,6 +35,42 @@ mason, cmp) are deferred until after startup via the `VeryLazy` event
 (`lua/config/lazy.lua`). cmp/luasnip additionally load on first `InsertEnter`.
 Pickers are provided by `snacks.picker` (telescope is no longer used); all
 `<leader>f*`/`<leader>g*`/`<leader>s*` and `gr*` bindings route through it.
+
+## Keymaps
+
+Leader is `<Space>`. See any group with `which-key` (press `<Space>` and wait).
+Main groups:
+
+| Prefix | Group                          |
+| ------ | ------------------------------ |
+| `<leader>a` | AI (CodeCompanion)         |
+| `<leader>b` | Buffers                    |
+| `<leader>c` | Comment                    |
+| `<leader>d` | DAP                        |
+| `<leader>f` | Find / pickers             |
+| `<leader>g` | Git                        |
+| `<leader>l` | LSP                        |
+| `<leader>m` | MATLAB                     |
+| `<leader>o` | Obsidian                   |
+| `<leader>q` | Quickfix                   |
+| `<leader>s` | Search in ...              |
+| `<leader>u` | Toggles / Undo / Notify    |
+| `<leader>v` | Vim Pack management        |
+| `<leader>x` | Run / source               |
+| `<leader>e` | Oil file explorer          |
+| `<leader>w` | Save file                  |
+| `<leader>fn` / `<leader>uN` | Notification history |
+
+## Project structure
+
+```
+init.lua                  Entry point; loads modules and fires `VeryLazy`
+lua/config/               Core config (options, keymaps, autocmds, lazy, notify, ...)
+lua/config/local.lua      Machine-specific values (gitignored)
+lua/plugins/              One file per plugin/feature
+ftplugin/                 Filetype-specific config (e.g. matlab)
+.github/workflows/ci.yml  Lint + startup check
+```
 
 ## Testing
 

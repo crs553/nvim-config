@@ -102,7 +102,6 @@ vim.pack.add {
 -- AI
 vim.pack.add {
   { src = gh 'olimorris/codecompanion.nvim', version = 'v19.13.0' },
-  { src = gh 'nvim-mini/mini.diff' },
 }
 
 -- DAP

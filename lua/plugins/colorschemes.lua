@@ -12,7 +12,6 @@ require('catppuccin').setup {
   integrations = {
     treesitter = true,
     native_lsp = { enabled = true },
-    telescope = true,
     which_key = true,
     cmp = true,
     lualine = true,
@@ -73,19 +72,6 @@ require('catppuccin').setup {
       FloatTitle = {
         fg = colors.mauve,
         bold = true,
-      },
-
-      -- Telescope
-      TelescopeBorder = {
-        fg = colors.mauve,
-      },
-
-      TelescopePromptBorder = {
-        fg = colors.mauve,
-      },
-
-      TelescopeSelection = {
-        bg = colors.surface0,
       },
 
       -- Completion menu

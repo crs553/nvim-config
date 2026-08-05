@@ -7,11 +7,6 @@ require('config.lazy').setup(function()
       section_separators = { left = '', right = '' },
       component_separators = { left = '', right = '' },
       globalstatus = true,
-      disabled_filetypes = {
-        'NvimTree',
-        'neo-tree',
-        'alpha',
-      },
     },
     sections = {
       lualine_a = { 'mode' },

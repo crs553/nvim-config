@@ -65,7 +65,3 @@ map('n', '<M-l>', 'guiww', { desc = 'Decapitalise the inner word' })
 -- Change buffer using leader keys
 map('n', '<leader>bn', ':bnext<CR>', { desc = 'Next buffer' })
 map('n', '<leader>bp', ':bprevious<CR>', { desc = 'Previous buffer' })
-
--- when in terminal mode use esc to return to normal mode
--- TODO: fix conflict with lazygit
---map("t", "<C-q>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })

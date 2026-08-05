@@ -8,8 +8,13 @@ local function config_dir() return vim.fn.stdpath 'config' end
 -- Command history
 map('n', '<leader>:', function() S.picker.command_history() end, { desc = 'Command History' })
 
--- Notifications (no picker equivalent -> use messages)
-map('n', '<leader>fn', function() vim.cmd 'messages' end, { desc = 'Find Notification History' })
+-- Notifications (route through the custom notify system)
+map(
+  'n',
+  '<leader>fn',
+  function() require('config.notify').history() end,
+  { desc = 'Find Notification History' }
+)
 
 -- Buffers
 map('n', '<leader>fb', function() S.picker.buffers() end, { desc = 'Find Buffers' })
@@ -46,7 +51,7 @@ map('n', '<leader>gl', function() S.picker.git_log() end, { desc = 'Git Log' })
 map('n', '<leader>gL', function() S.picker.git_log_line() end, { desc = 'Git Log Line' })
 map('n', '<leader>gs', function() S.picker.git_status() end, { desc = 'Git Status' })
 map('n', '<leader>gS', function() S.picker.git_stash() end, { desc = 'Git Stash' })
-map('n', '<leader>gd', function() S.picker.git_log_file() end, { desc = 'Git Log File' })
+map('n', '<leader>gd', function() S.picker.git_diff() end, { desc = 'Git Diff' })
 map('n', '<leader>gf', function() S.picker.git_log_file() end, { desc = 'Git Log File' })
 
 -- Search
@@ -104,3 +109,10 @@ map(
   { desc = 'References', nowait = true }
 )
 map({ 'n', 'v' }, '<leader>le', function() S.picker.diagnostics() end, { desc = 'All Diagnostics' })
+map('n', '<leader>lS', function() S.picker.lsp_symbols() end, { desc = 'Document Symbols' })
+map(
+  'n',
+  '<leader>lW',
+  function() S.picker.lsp_workspace_symbols() end,
+  { desc = 'Workspace Symbols' }
+)

@@ -1,8 +1,6 @@
 local lazy = require 'config.lazy'
 
 lazy.setup(function()
-  require('mini.diff').setup()
-
   require('codecompanion').setup {
     adapters = {
       acp = {
@@ -113,9 +111,6 @@ lazy.setup(function()
     display = {
       action_palette = {
         provider = 'snacks',
-      },
-      diff = {
-        provider = 'mini_diff',
       },
     },
 
