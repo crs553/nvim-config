@@ -5,6 +5,13 @@ on:
     branches: [main]
   pull_request:
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   ci:
     runs-on: ubuntu-latest
@@ -18,6 +25,13 @@ jobs:
         with:
           neovim: true
           version: stable
+
+      - name: Cache plugins
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/nvim/site/pack
+          key: pack-${{ hashFiles('**/nvim-pack-lock.json') }}
+          restore-keys: pack-
 
       - name: Install dependencies
         run: |
@@ -33,10 +47,12 @@ jobs:
         uses: JohnnyMorganz/stylua-action@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          version: latest
+          version: 2.5.2
           args: --check .
 
       - name: Verify config loads
+        env:
+          NVIM_SKIP_MASON: '1'
         run: |
           export XDG_CONFIG_HOME="$PWD/.ci"
           mkdir -p "$XDG_CONFIG_HOME"
@@ -45,4 +61,4 @@ jobs:
           set -o pipefail
           nvim --headless -c "qa" 2>&1 | tee nvim.log
 
-          ! grep -E "E[0-9]{4}:|Error in " nvim.log
+          ! grep -E "E[0-9]{4}:|Error in |Error detected|stack traceback|Attempt to" nvim.log
