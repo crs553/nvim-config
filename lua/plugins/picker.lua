@@ -12,12 +12,7 @@ map('n', '<leader>:', function() S.picker.command_history() end, { desc = 'Comma
 map('n', '<leader>fn', function() vim.cmd 'messages' end, { desc = 'Find Notification History' })
 
 -- Buffers
-map(
-  'n',
-  '<leader>fb',
-  function() S.picker.buffers { layout = 'ivy' } end,
-  { desc = 'Find Buffers' }
-)
+map('n', '<leader>fb', function() S.picker.buffers() end, { desc = 'Find Buffers' })
 map('n', '<leader>fib', function() S.picker.lines() end, { desc = 'Find In Buffer' })
 map('n', '<leader>fiB', function() S.picker.grep_buffers() end, { desc = 'Find In Buffers' })
 
@@ -37,7 +32,7 @@ map('n', '<leader>fr', function() S.picker.recent() end, { desc = 'Recent Files'
 map('n', '<leader>fs', function() S.picker.grep() end, { desc = 'Grep' })
 
 -- Help
-map('n', '<leader>fh', function() S.picker.help { layout = 'ivy' } end, { desc = 'Help Pages' })
+map('n', '<leader>fh', function() S.picker.help() end, { desc = 'Help Pages' })
 
 -- Keymaps
 map('n', '<leader>fk', function() S.picker.keymaps() end, { desc = 'Search Keymaps' })
