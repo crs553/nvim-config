@@ -1,7 +1,7 @@
 -- ======================
 -- Mason Setup
 -- ======================
-if not vim.g.is_nixos then
+if not vim.g.is_nixos and vim.env.NVIM_SKIP_MASON ~= '1' then
   require('mason').setup()
   require('mason-lspconfig').setup {
     ensure_installed = {

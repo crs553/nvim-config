@@ -1,4 +1,4 @@
-if not vim.g.is_nixos then
+if not vim.g.is_nixos and vim.env.NVIM_SKIP_MASON ~= '1' then
   require('mason-nvim-lint').setup {
     ensure_installed = {
       'markdownlint',
