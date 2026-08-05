@@ -70,10 +70,6 @@
       "src": "https://github.com/nvim-mini/mini.comment",
       "version": "'stable'"
     },
-    "mini.diff": {
-      "rev": "626b8a5b93874c4d05ca25aedec56cfff0b378fb",
-      "src": "https://github.com/nvim-mini/mini.diff"
-    },
     "mini.icons": {
       "rev": "98faae31e9be1cc054ae63485e58ceb185efcad0",
       "src": "https://github.com/nvim-mini/mini.icons"
