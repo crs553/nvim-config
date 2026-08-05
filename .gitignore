@@ -1,1 +1,17 @@
 lua/config/local.lua
+
+# IDEs
+/.vs/
+/.vscode/
+/.idea/
+.nvimrc
+.exrc
+.nvim.lua
+
+.DS_Store
+*.mo
+.*.sw?
+*~
+*.pyc
+*.o
+*.so
