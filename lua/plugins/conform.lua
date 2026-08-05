@@ -24,9 +24,14 @@ require('conform').setup {
 }
 
 -- Keymap: manually format buffer
-vim.keymap.set({ 'n', 'x', 'o' }, '<leader>lf', function()
-  require('conform').format {
-    lsp_fallback = true,
-    timeout_ms = 2000,
-  }
-end, { desc = 'Format buffer' })
+vim.keymap.set(
+  { 'n', 'x', 'o' },
+  '<leader>lf',
+  function()
+    require('conform').format {
+      lsp_fallback = true,
+      timeout_ms = 2000,
+    }
+  end,
+  { desc = 'Format buffer' }
+)

@@ -1,7 +1,7 @@
 local notify = {}
 
 local history = {}
-local ns = vim.api.nvim_create_namespace('notify')
+local ns = vim.api.nvim_create_namespace 'notify'
 local prefix_width = 18
 
 local level_labels = {
@@ -21,22 +21,18 @@ local border_hl = {
 }
 
 local function wrap(text, width)
-  if width < 1 then
-    return { '' }
-  end
+  if width < 1 then return { '' } end
   local lines = {}
-  for paragraph in text:gmatch('[^\n]+') do
+  for paragraph in text:gmatch '[^\n]+' do
     while #paragraph > width do
-      local break_at = paragraph:sub(1, width):match('^.+%s()')
+      local break_at = paragraph:sub(1, width):match '^.+%s()'
       break_at = (break_at or width + 1) - 1
       table.insert(lines, paragraph:sub(1, break_at))
-      paragraph = paragraph:sub(break_at + 1):match('^%s*(.*)')
+      paragraph = paragraph:sub(break_at + 1):match '^%s*(.*)'
     end
     table.insert(lines, paragraph)
   end
-  if #lines == 0 then
-    lines = { text }
-  end
+  if #lines == 0 then lines = { text } end
   return lines
 end
 
@@ -53,7 +49,8 @@ function notify.notify(msg, level, opts)
   vim.api.nvim_buf_set_option(buf, 'modifiable', false)
   vim.api.nvim_set_option_value('filetype', 'notify', { buf = buf })
 
-  local title = opts.title and (' ' .. opts.title .. ' ') or (' ' .. (level_labels[level] or 'INFO') .. ' ')
+  local title = opts.title and (' ' .. opts.title .. ' ')
+    or (' ' .. (level_labels[level] or 'INFO') .. ' ')
   local hl = border_hl[level] or 'DiagnosticInfo'
 
   local win = vim.api.nvim_open_win(buf, false, {
@@ -75,12 +72,8 @@ function notify.notify(msg, level, opts)
 
   local timeout = opts.timeout or 3000
   vim.defer_fn(function()
-    if vim.api.nvim_win_is_valid(win) then
-      vim.api.nvim_win_close(win, true)
-    end
-    if vim.api.nvim_buf_is_valid(buf) then
-      vim.api.nvim_buf_delete(buf, { force = true })
-    end
+    if vim.api.nvim_win_is_valid(win) then vim.api.nvim_win_close(win, true) end
+    if vim.api.nvim_buf_is_valid(buf) then vim.api.nvim_buf_delete(buf, { force = true }) end
   end, timeout)
 end
 
@@ -89,9 +82,7 @@ function notify.dismiss()
     local ok_w, config = pcall(vim.api.nvim_win_get_config, win)
     if ok_w and config.relative == 'editor' and config.row == 1 then
       local ok_b, ft = pcall(vim.api.nvim_buf_get_option, vim.api.nvim_win_get_buf(win), 'filetype')
-      if ok_b and ft == 'notify' then
-        vim.api.nvim_win_close(win, true)
-      end
+      if ok_b and ft == 'notify' then vim.api.nvim_win_close(win, true) end
     end
   end
 end
@@ -154,19 +145,23 @@ function notify.history()
     title_pos = 'center',
   })
   vim.keymap.set('n', '<Esc>', function()
-    if vim.api.nvim_win_is_valid(win) then
-      vim.api.nvim_win_close(win, true)
-    end
+    if vim.api.nvim_win_is_valid(win) then vim.api.nvim_win_close(win, true) end
   end, { buffer = buf, nowait = true, silent = true })
 end
 
 vim.notify = notify.notify
 
-vim.keymap.set('n', '<leader>un', function()
-  notify.dismiss()
-end, { desc = 'Dismiss All Notifications' })
-vim.keymap.set('n', '<leader>uN', function()
-  notify.history()
-end, { desc = 'Notification History' })
+vim.keymap.set(
+  'n',
+  '<leader>un',
+  function() notify.dismiss() end,
+  { desc = 'Dismiss All Notifications' }
+)
+vim.keymap.set(
+  'n',
+  '<leader>uN',
+  function() notify.history() end,
+  { desc = 'Notification History' }
+)
 
 return notify

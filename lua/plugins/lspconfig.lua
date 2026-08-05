@@ -49,18 +49,18 @@ vim.lsp.config['arduino_language_server'] = {
   root_dir = vim.uv.cwd,
 }
 
-vim.lsp.enable('arduino_language_server')
+vim.lsp.enable 'arduino_language_server'
 vim.lsp.config['bashls'] = {
   on_attach = on_attach,
   capabilities = capabilities,
 }
-vim.lsp.enable('bashls')
+vim.lsp.enable 'bashls'
 
 vim.lsp.config['harper_ls'] = {
   on_attach = on_attach,
   capabilities = capabilities,
 }
-vim.lsp.enable('harper_ls')
+vim.lsp.enable 'harper_ls'
 
 vim.lsp.config['gopls'] = {
   capabilities = capabilities,
@@ -88,7 +88,7 @@ vim.lsp.config['gopls'] = {
     },
   },
 }
-vim.lsp.enable('gopls')
+vim.lsp.enable 'gopls'
 
 -- Lua
 vim.lsp.config['lua_ls'] = {
@@ -105,7 +105,7 @@ vim.lsp.config['lua_ls'] = {
     },
   },
 }
-vim.lsp.enable('lua_ls')
+vim.lsp.enable 'lua_ls'
 
 -- TypeScript/JavaScript
 vim.lsp.config['ts_ls'] = {
@@ -136,7 +136,7 @@ vim.lsp.config['ts_ls'] = {
     },
   },
 }
-vim.lsp.enable('ts_ls')
+vim.lsp.enable 'ts_ls'
 
 -- CSS
 vim.lsp.config['cssls'] = {
@@ -144,7 +144,7 @@ vim.lsp.config['cssls'] = {
   capabilities = capabilities,
   single_file_support = true,
 }
-vim.lsp.enable('cssls')
+vim.lsp.enable 'cssls'
 
 -- HTML
 vim.lsp.config['html'] = {
@@ -152,7 +152,7 @@ vim.lsp.config['html'] = {
   capabilities = capabilities,
   single_file_support = true,
 }
-vim.lsp.enable('html')
+vim.lsp.enable 'html'
 
 -- JSON
 vim.lsp.config['jsonls'] = {
@@ -165,7 +165,7 @@ vim.lsp.config['jsonls'] = {
     },
   },
 }
-vim.lsp.enable('jsonls')
+vim.lsp.enable 'jsonls'
 
 -- YAML
 vim.lsp.config['yamlls'] = {
@@ -179,7 +179,7 @@ vim.lsp.config['yamlls'] = {
     },
   },
 }
-vim.lsp.enable('yamlls')
+vim.lsp.enable 'yamlls'
 
 -- Biome (linting + formatting for JS/TS/JSON/CSS/HTML)
 -- Requires biome.json / biome.jsonc in project root to activate.
@@ -208,7 +208,7 @@ vim.lsp.config['biome'] = {
   },
   single_file_support = false,
 }
-vim.lsp.enable('biome')
+vim.lsp.enable 'biome'
 
 -- Disable ts_ls formatting for buffers where biome is active
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -242,7 +242,7 @@ vim.lsp.config['rust_analyzer'] = {
     },
   },
 }
-vim.lsp.enable('rust_analyzer')
+vim.lsp.enable 'rust_analyzer'
 
 -- MATLAB -- note I managed this externally as the Mason files were not working for me
 vim.lsp.config['matlab_ls'] = {
@@ -250,9 +250,7 @@ vim.lsp.config['matlab_ls'] = {
   on_attach = on_attach,
   cmd = { 'matlab-language-server', '--stdio' },
   filetypes = { 'matlab' },
-  root_dir = function(bufnr)
-    return vim.fs.root(bufnr, '.git') or vim.fn.getcwd()
-  end,
+  root_dir = function(bufnr) return vim.fs.root(bufnr, '.git') or vim.fn.getcwd() end,
   settings = {
     MATLAB = {
       indexWorkspace = false,
@@ -263,7 +261,7 @@ vim.lsp.config['matlab_ls'] = {
   },
   single_file_support = true,
 }
-vim.lsp.enable('matlab_ls')
+vim.lsp.enable 'matlab_ls'
 
 -- Python (ruff)
 -- ruff provides linting, formatting, and import organization.
@@ -283,15 +281,15 @@ vim.lsp.config['ruff'] = {
     },
   },
 }
-vim.lsp.enable('ruff')
+vim.lsp.enable 'ruff'
 
 -- nvim-cmp Setup
-local cmp = require('cmp')
-local luasnip = require('luasnip')
+local cmp = require 'cmp'
+local luasnip = require 'luasnip'
 require('luasnip.loaders.from_vscode').lazy_load()
 
 -- cmp-ai: AI completion via LM Studio
-local cmp_ai = require('cmp_ai.config')
+local cmp_ai = require 'cmp_ai.config'
 
 cmp_ai:setup {
   provider = 'openai',
@@ -311,9 +309,7 @@ cmp_ai:setup {
 
 cmp.setup {
   snippet = {
-    expand = function(args)
-      luasnip.lsp_expand(args.body)
-    end,
+    expand = function(args) luasnip.lsp_expand(args.body) end,
   },
 
   mapping = cmp.mapping.preset.insert {
@@ -326,9 +322,7 @@ cmp.setup {
     ['<C-y>'] = cmp.mapping.confirm { select = true },
 
     -- enter disabled for completion (always fallback newline)
-    ['<CR>'] = cmp.mapping(function(fallback)
-      fallback()
-    end, { 'i', 's' }),
+    ['<CR>'] = cmp.mapping(function(fallback) fallback() end, { 'i', 's' }),
 
     ['<C-e>'] = cmp.mapping.abort(),
   },
@@ -378,7 +372,10 @@ cmp.setup {
     ghost_text = true,
   },
 } -- CMP cmdline support
-cmp.setup.cmdline({ '/', '?' }, { mapping = cmp.mapping.preset.cmdline(), sources = { { name = 'buffer' } } })
+cmp.setup.cmdline(
+  { '/', '?' },
+  { mapping = cmp.mapping.preset.cmdline(), sources = { { name = 'buffer' } } }
+)
 cmp.setup.cmdline(':', {
   mapping = cmp.mapping.preset.cmdline(),
   sources = cmp.config.sources({ { name = 'path' } }, { { name = 'cmdline' } }),

@@ -43,7 +43,11 @@ vim.api.nvim_create_autocmd('TermOpen', {
 -- ─────────── LazyGit Floating Terminal ───────────
 local function FloatingLazyGit()
   -- Toggle if already open
-  if lazygit_state.is_open and lazygit_state.win and vim.api.nvim_win_is_valid(lazygit_state.win) then
+  if
+    lazygit_state.is_open
+    and lazygit_state.win
+    and vim.api.nvim_win_is_valid(lazygit_state.win)
+  then
     vim.api.nvim_win_close(lazygit_state.win, false)
     lazygit_state.is_open = false
     return
@@ -74,7 +78,7 @@ local function FloatingLazyGit()
   })
 
   lazygit_state.is_open = true
-  vim.cmd('startinsert')
+  vim.cmd 'startinsert'
 end
 
 -- Keymap for lazygit
@@ -110,7 +114,7 @@ local function FloatingTerminal()
     vim.api.nvim_set_current_win(shell_state.win)
 
     local shell
-    if vim.fn.has('win32') == 1 then
+    if vim.fn.has 'win32' == 1 then
       -- Prefer PowerShell on Windows
       shell = { 'powershell.exe' }
       -- Or use PowerShell 7 if you prefer:
@@ -125,7 +129,7 @@ local function FloatingTerminal()
   end
 
   shell_state.is_open = true
-  vim.cmd('startinsert')
+  vim.cmd 'startinsert'
 end -- Keymaps for normal terminal
 vim.keymap.set('n', '<M-i>', FloatingTerminal, {
   noremap = true,

@@ -23,7 +23,8 @@ require('codecompanion').setup {
           env = {
             url = (function()
               local ok, local_config = pcall(require, 'config.local')
-              return (ok and local_config.ai and local_config.ai.lmstudio_url) or 'http://localhost:1234'
+              return (ok and local_config.ai and local_config.ai.lmstudio_url)
+                or 'http://localhost:1234'
             end)(),
             api_key = 'lmstudio',
           },
@@ -126,11 +127,11 @@ require('codecompanion').setup {
 }
 -- Minimal telescope action palette: search + list, no preview
 do
-  local telescope_actions = require('telescope.actions')
-  local action_state = require('telescope.actions.state')
-  local config = require('codecompanion.config')
+  local telescope_actions = require 'telescope.actions'
+  local action_state = require 'telescope.actions.state'
+  local config = require 'codecompanion.config'
 
-  local provider = require('codecompanion.providers.action_palette.telescope')
+  local provider = require 'codecompanion.providers.action_palette.telescope'
   provider.picker = function(self, items, opts)
     opts = opts or {}
     require('telescope.pickers')
@@ -140,7 +141,9 @@ do
           layout_config = { width = 0.5, height = 0.25 },
         }),
         {
-          prompt_title = opts.prompt or config.display.action_palette.opts.title or 'CodeCompanion actions',
+          prompt_title = opts.prompt
+            or config.display.action_palette.opts.title
+            or 'CodeCompanion actions',
           finder = require('telescope.finders').new_table {
             results = items,
             entry_maker = function(entry)
@@ -151,9 +154,7 @@ do
           attach_mappings = function(bufnr, _)
             telescope_actions.select_default:replace(function()
               local selected = action_state.get_selected_entry()
-              if not selected then
-                return
-              end
+              if not selected then return end
               telescope_actions.close(bufnr)
               self:select(selected.value)
             end)
@@ -171,9 +172,7 @@ vim.api.nvim_create_autocmd('User', {
     local chat = require('codecompanion').buf_get_chat(args.data.bufnr)
     chat:add_callback('on_checkpoint', function(c, data)
       local context_window = data.adapter.meta and data.adapter.meta.context_window
-      if not context_window then
-        return
-      end
+      if not context_window then return end
 
       local usage = data.estimated_tokens / context_window
       if usage > 0.8 then
@@ -184,5 +183,5 @@ vim.api.nvim_create_autocmd('User', {
   end,
 })
 
-require('plugins.ai_keymaps')
-vim.cmd([[cab cc CodeCompanion]])
+require 'plugins.ai_keymaps'
+vim.cmd [[cab cc CodeCompanion]]

@@ -1,5 +1,5 @@
-local dap = require('dap')
-local dapui = require('dapui')
+local dap = require 'dap'
+local dapui = require 'dapui'
 
 -- ======================
 -- DAP UI Setup
@@ -22,15 +22,9 @@ dapui.setup {
 }
 
 -- Auto-open/close DAP UI
-dap.listeners.after.event_initialized['dapui'] = function()
-  dapui.open { reset = true }
-end
-dap.listeners.after.event_terminated['dapui'] = function()
-  dapui.close()
-end
-dap.listeners.after.event_exited['dapui'] = function()
-  dapui.close()
-end
+dap.listeners.after.event_initialized['dapui'] = function() dapui.open { reset = true } end
+dap.listeners.after.event_terminated['dapui'] = function() dapui.close() end
+dap.listeners.after.event_exited['dapui'] = function() dapui.close() end
 
 dap.configurations.go = {
   {
@@ -73,7 +67,7 @@ require('dap-go').setup {
     port = '${port}',
     args = {},
     build_flags = {},
-    detached = vim.fn.has('win32') == 0,
+    detached = vim.fn.has 'win32' == 0,
     cwd = nil,
   },
   tests = {
@@ -84,7 +78,7 @@ require('dap-go').setup {
 -- ======================
 -- Python DAP (nvim-dap-python)
 -- ======================
-require('dap-python').setup('python')
+require('dap-python').setup 'python'
 -- Resolve python from virtualenvs
 _G._python_dap = function()
   local venv_paths = {
@@ -94,44 +88,52 @@ _G._python_dap = function()
     vim.fn.getcwd() .. '/venv/Scripts/python.exe',
   }
   for _, path in ipairs(venv_paths) do
-    if vim.fn.executable(path) == 1 then
-      return path
-    end
+    if vim.fn.executable(path) == 1 then return path end
   end
   return 'python'
 end
-vim.cmd([[command! -nargs=* DapPythonSetPython lua require("dap-python").setup(_G._python_dap())]])
-vim.cmd([[DapPythonSetPython]])
+vim.cmd [[command! -nargs=* DapPythonSetPython lua require("dap-python").setup(_G._python_dap())]]
+vim.cmd [[DapPythonSetPython]]
 
 -- ======================
 -- DAP Keymaps
 -- ======================
 vim.keymap.set('n', '<leader>db', dap.toggle_breakpoint, { desc = 'Toggle breakpoint' })
-vim.keymap.set('n', '<leader>dB', function()
-  dap.set_breakpoint(vim.fn.input('Breakpoint condition: '))
-end, { desc = 'Conditional breakpoint' })
+vim.keymap.set(
+  'n',
+  '<leader>dB',
+  function() dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ') end,
+  { desc = 'Conditional breakpoint' }
+)
 vim.keymap.set('n', '<F5>', dap.continue, { desc = 'Continue / Start' })
 vim.keymap.set('n', '<leader>dC', dap.run_to_cursor, { desc = 'Run to cursor' })
 vim.keymap.set('n', '<leader>do', dap.step_over, { desc = 'Step over' })
 vim.keymap.set('n', '<leader>di', dap.step_into, { desc = 'Step into' })
 vim.keymap.set('n', '<leader>dO', dap.step_out, { desc = 'Step out' })
 vim.keymap.set('n', '<leader>dt', dap.terminate, { desc = 'Terminate' })
-vim.keymap.set('n', '<leader>dr', function()
-  dap.repl.toggle({}, 'vsplit')
-end, { desc = 'Toggle REPL' })
+vim.keymap.set(
+  'n',
+  '<leader>dr',
+  function() dap.repl.toggle({}, 'vsplit') end,
+  { desc = 'Toggle REPL' }
+)
 vim.keymap.set('n', '<leader>du', dapui.toggle, { desc = 'Toggle DAP UI' })
-vim.keymap.set('n', '<leader>de', function()
-  dapui.eval()
-end, { desc = 'Evaluate expression (hover)' })
-vim.keymap.set({ 'x', 'o' }, '<leader>de', function()
-  dapui.eval()
-end, { desc = 'Evaluate expression (visual)' })
+vim.keymap.set(
+  'n',
+  '<leader>de',
+  function() dapui.eval() end,
+  { desc = 'Evaluate expression (hover)' }
+)
+vim.keymap.set(
+  { 'x', 'o' },
+  '<leader>de',
+  function() dapui.eval() end,
+  { desc = 'Evaluate expression (visual)' }
+)
 vim.keymap.set('n', '<leader>dk', dap.up, { desc = 'Move up stack frame' })
 vim.keymap.set('n', '<leader>dj', dap.down, { desc = 'Move down stack frame' })
 vim.keymap.set('n', '<leader>dh', function()
   local buf = dapui.elements.stacks.buffer()
   local wins = vim.fn.win_findbuf(buf)
-  if #wins > 0 then
-    vim.api.nvim_set_current_win(wins[1])
-  end
+  if #wins > 0 then vim.api.nvim_set_current_win(wins[1]) end
 end, { desc = 'Focus stacks' })

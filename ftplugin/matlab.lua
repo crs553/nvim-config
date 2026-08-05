@@ -26,13 +26,19 @@ lopt.foldlevel = 99
 -- Section Navigation (%% cells)
 -- ============================================================
 
-map('n', '[%', function()
-  vim.fn.search('^\\s*%%', 'bW')
-end, { buffer = buf, desc = 'MATLAB: prev section' })
+map(
+  'n',
+  '[%',
+  function() vim.fn.search('^\\s*%%', 'bW') end,
+  { buffer = buf, desc = 'MATLAB: prev section' }
+)
 
-map('n', ']%', function()
-  vim.fn.search('^\\s*%%', 'W')
-end, { buffer = buf, desc = 'MATLAB: next section' })
+map(
+  'n',
+  ']%',
+  function() vim.fn.search('^\\s*%%', 'W') end,
+  { buffer = buf, desc = 'MATLAB: next section' }
+)
 
 -- ============================================================
 -- Code Execution (via matlab -batch)
@@ -51,7 +57,7 @@ local function section_range()
   local sline = 1
   for l = cl - 1, 1, -1 do
     local text = vim.api.nvim_buf_get_lines(0, l - 1, l, false)[1]
-    if text and text:match('^%%') then
+    if text and text:match '^%%' then
       sline = l + 1
       break
     end
@@ -60,7 +66,7 @@ local function section_range()
   local eline = total
   for l = cl + 1, total do
     local text = vim.api.nvim_buf_get_lines(0, l - 1, l, false)[1]
-    if text and text:match('^%%') then
+    if text and text:match '^%%' then
       eline = l - 1
       break
     end
@@ -79,15 +85,16 @@ end
 -- Matlab run commands
 -- ============================================================
 
-map('n', '<leader>mr', function()
-  run_batch(vim.fn.expand('%:p'))
-end, { buffer = buf, desc = 'MATLAB: run file' })
+map(
+  'n',
+  '<leader>mr',
+  function() run_batch(vim.fn.expand '%:p') end,
+  { buffer = buf, desc = 'MATLAB: run file' }
+)
 
 map('n', '<leader>mc', function()
   local sline, eline = section_range()
-  if sline > eline then
-    return
-  end
+  if sline > eline then return end
   run_lines(vim.api.nvim_buf_get_lines(0, sline - 1, eline, false))
 end, { buffer = buf, desc = 'MATLAB: run section' })
 
@@ -96,9 +103,12 @@ map('n', '<leader>ml', function()
   run_lines { line }
 end, { buffer = buf, desc = 'MATLAB: run line' })
 
-map({ 'x', 'o' }, '<leader>ms', function()
-  run_lines(vim.fn.getline("'<", "'>"))
-end, { buffer = buf, desc = 'MATLAB: run selection' })
+map(
+  { 'x', 'o' },
+  '<leader>ms',
+  function() run_lines(vim.fn.getline("'<", "'>")) end,
+  { buffer = buf, desc = 'MATLAB: run selection' }
+)
 
 -- ============================================================
 -- Snippets
