@@ -10,6 +10,19 @@ S.setup {
     -- Telescope-style prompt icon
     prompt = '    ',
     layouts = {
+      -- Pin the ivy bar flush to the bottom of the screen
+      -- (stock `row = -1` leaves a gap because the border is subtracted from the position)
+      ivy = {
+        layout = {
+          row = function(win)
+            local border = win:border_size()
+            return vim.o.lines
+              - math.floor(vim.o.lines * (win.opts.height or 0.4))
+              + border.top
+              + border.bottom
+          end,
+        },
+      },
       -- Telescope `flex` (horizontal): prompt top, preview on the right
       default = {
         layout = {
