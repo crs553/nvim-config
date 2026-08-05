@@ -22,9 +22,7 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
     local last_line = vim.api.nvim_buf_line_count(0)
 
     local row = last_pos[1]
-    if row < 1 or row > last_line then
-      return
-    end
+    if row < 1 or row > last_line then return end
 
     pcall(vim.api.nvim_win_set_cursor, 0, last_pos)
   end,
@@ -45,9 +43,7 @@ vim.api.nvim_create_autocmd('LspDetach', {
   group = vim.api.nvim_create_augroup('MatlabLspRestart', { clear = true }),
   callback = function(args)
     if vim.bo[args.buf].filetype == 'matlab' then
-      vim.schedule(function()
-        vim.lsp.enable('matlab_ls')
-      end)
+      vim.schedule(function() vim.lsp.enable 'matlab_ls' end)
     end
   end,
 })
