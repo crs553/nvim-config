@@ -16,7 +16,6 @@ vim.api.nvim_create_user_command(
         'branch',
         'log',
         'diff',
-        'staash',
         'stashl',
         'stash',
       }

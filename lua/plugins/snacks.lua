@@ -5,7 +5,20 @@ S.setup {
   indent = { enabled = true },
   input = { enabled = true },
   notifier = { enabled = false },
-  picker = { enabled = false }, -- replacing with telescope
+  picker = {
+    enabled = true,
+    sources = {
+      files = {
+        hidden = true,
+        follow = true,
+        exclude = { 'node_modules', 'dist', 'build', '__pycache__' },
+      },
+      grep = {
+        hidden = true,
+        exclude = { 'node_modules', 'dist', 'build', '__pycache__' },
+      },
+    },
+  },
   quickfile = { enabled = true },
   scope = { enabled = true },
   scroll = { enabled = true },

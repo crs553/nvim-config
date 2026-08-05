@@ -19,11 +19,6 @@ vim.api.nvim_create_autocmd('PackChanged', {
     local kind = ev.data.kind
     if kind ~= 'install' and kind ~= 'update' then return end
 
-    if name == 'telescope-fzf-native.nvim' and vim.fn.executable 'make' == 1 then
-      run_build(name, { 'make' }, ev.data.path)
-      return
-    end
-
     if name == 'LuaSnip' then
       if vim.fn.has 'win32' ~= 1 and vim.fn.executable 'make' == 1 then
         run_build(name, { 'make', 'install_jsregexp' }, ev.data.path)
@@ -80,15 +75,11 @@ vim.pack.add {
   gh 'rshkarin/mason-nvim-lint',
 }
 
--- Indentation guides
-vim.pack.add { gh 'lukas-reineke/indent-blankline.nvim' }
+-- Indentation guides (handled by snacks.indent)
 
 -- Treesitter
 vim.pack.add {
-  {
-    src = gh 'nvim-treesitter/nvim-treesitter',
-    commit = '4916d6592ede8c07973490d9322f187e07dfefac',
-  },
+  { src = gh 'nvim-treesitter/nvim-treesitter' },
 }
 
 -- LSP
@@ -122,12 +113,6 @@ vim.pack.add {
   { src = gh 'leoluz/nvim-dap-go' },
   { src = gh 'mfussenegger/nvim-dap-python' },
   { src = gh 'nvim-neotest/nvim-nio' },
-}
-
--- Telescope
-vim.pack.add {
-  gh 'nvim-telescope/telescope.nvim',
-  gh 'nvim-telescope/telescope-fzf-native.nvim',
 }
 
 -- File navigation

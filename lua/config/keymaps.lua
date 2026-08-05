@@ -32,7 +32,10 @@ map('n', '<c-j>', ':wincmd j<CR>', { desc = 'Move down in split ', silent = true
 map('n', '<c-h>', ':wincmd h<CR>', { desc = 'Move left in split', silent = true })
 map('n', '<c-l>', ':wincmd l<CR>', { desc = 'Move right in split', silent = true })
 
-map('n', '<Esc>', '<cmd>nohlsearch<CR>', { desc = 'Clear search highlights' })
+map('n', '<leader>w', '<cmd>write<CR>', { desc = 'Save file' })
+map('n', '<leader>e', '<cmd>Oil<CR>', { desc = 'File Explorer' })
+
+map('n', '<Esc>', '<cmd>nohlsearch<CR>', { desc = 'Clear search highlights', nowait = true })
 
 -- COPY/PASTE KEYMAPS --
 map('n', '<leader>Y', function()
@@ -55,13 +58,9 @@ map({ 'x', 'o' }, 'K', ":move '<-2<CR>gv=gv", { desc = 'Move selection up' })
 map({ 'x', 'o' }, '<Tab>', '>gv', { desc = 'Indent selection' })
 map({ 'x', 'o' }, '<S-Tab>', '<gv', { desc = 'unindent selection' })
 
--- captilise
+-- capitalise
 map('n', '<M-u>', 'gUiww', { desc = 'Capitalise the inner word' })
 map('n', '<M-l>', 'guiww', { desc = 'Decapitalise the inner word' })
-
--- toggle commenting -- command needs implementing could use treesitter to aid
---map("n", "<leader>cc", ":CommentToggle<CR>", { desc = "Toggle comment" })
---map("x", "<leader>cc", ":'<,'>CommentToggle<CR>", { desc = "Toggle comment in selection" })
 
 -- Change buffer using leader keys
 map('n', '<leader>bn', ':bnext<CR>', { desc = 'Next buffer' })

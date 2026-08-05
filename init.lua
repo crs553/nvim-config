@@ -17,6 +17,7 @@ end)()
 require 'config.keymaps'
 require 'config.autocmds'
 require 'config.options'
+require 'config.lazy' -- Deferred setup helper (fires `VeryLazy` after startup)
 require 'config.notify' -- Custom notification system (overrides vim.notify)
 require 'config.floaterm'
 require 'config.packclean'
@@ -28,7 +29,6 @@ require 'plugins.comment'
 require 'plugins.conform'
 require 'plugins.dap'
 require 'plugins.gitsigns'
-require 'plugins.indent_line'
 require 'plugins.lspconfig'
 require 'plugins.lint' -- After lspconfig due to mason requirement
 require 'plugins.lualine'
@@ -38,8 +38,11 @@ require 'plugins.quicker'
 require 'plugins.snacks'
 require 'plugins.surround'
 require 'plugins.treesitter'
-require 'plugins.telescope'
+require 'plugins.picker'
 require 'plugins.undotree'
 require 'plugins.ai' -- At end just to ensure cmp is setup
 require 'plugins.obsidian'
 require 'plugins.whichkey' -- Last: needs all keymaps defined for group detection
+
+-- Fire deferred setups + `User VeryLazy` after startup completes
+vim.schedule(function() require('config.lazy').fire() end)

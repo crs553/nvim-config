@@ -1,21 +1,25 @@
 -- ======================
 -- Mason Setup
 -- ======================
-if not vim.g.is_nixos and vim.env.NVIM_SKIP_MASON ~= '1' then
-  require('mason').setup()
-  require('mason-lspconfig').setup {
-    ensure_installed = {
-      'arduino_language_server',
-      'bashls',
-      'harper_ls',
-      'lua_ls',
-      'marksman',
-      'rust_analyzer',
-      'ruff',
-      'biome',
-    },
-  }
-end
+local lazy = require 'config.lazy'
+
+lazy.setup(function()
+  if not vim.g.is_nixos and vim.env.NVIM_SKIP_MASON ~= '1' then
+    require('mason').setup()
+    require('mason-lspconfig').setup {
+      ensure_installed = {
+        'arduino_language_server',
+        'bashls',
+        'harper_ls',
+        'lua_ls',
+        'marksman',
+        'rust_analyzer',
+        'ruff',
+        'biome',
+      },
+    }
+  end
+end)
 
 -- ======================
 -- LSP Capabilities & on_attach
@@ -283,100 +287,102 @@ vim.lsp.config['ruff'] = {
 }
 vim.lsp.enable 'ruff'
 
--- nvim-cmp Setup
-local cmp = require 'cmp'
-local luasnip = require 'luasnip'
-require('luasnip.loaders.from_vscode').lazy_load()
+-- nvim-cmp Setup (deferred until first insert to keep startup fast)
+lazy.on('InsertEnter', function()
+  local cmp = require 'cmp'
+  local luasnip = require 'luasnip'
+  require('luasnip.loaders.from_vscode').lazy_load()
 
--- cmp-ai: AI completion via LM Studio
-local cmp_ai = require 'cmp_ai.config'
+  -- cmp-ai: AI completion via LM Studio
+  local cmp_ai = require 'cmp_ai.config'
 
-cmp_ai:setup {
-  provider = 'openai',
-  provider_options = {
-    url = 'http://127.0.0.1:1234/v1/chat/completions',
-    model = 'qwen/qwen3.5-9b',
-    api_key = 'lmstudio',
-    max_tokens = 64,
-    temperature = 0.2,
-  },
-  notify = false,
-  run_on_every_keystroke = false,
-  max_timeout_seconds = 5,
-  max_lines = 100,
-  max_chars = 1000,
-}
-
-cmp.setup {
-  snippet = {
-    expand = function(args) luasnip.lsp_expand(args.body) end,
-  },
-
-  mapping = cmp.mapping.preset.insert {
-    ['<C-n>'] = cmp.mapping.select_next_item(),
-    ['<C-p>'] = cmp.mapping.select_prev_item(),
-    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-
-    -- only accept with C-y
-    ['<C-y>'] = cmp.mapping.confirm { select = true },
-
-    -- enter disabled for completion (always fallback newline)
-    ['<CR>'] = cmp.mapping(function(fallback) fallback() end, { 'i', 's' }),
-
-    ['<C-e>'] = cmp.mapping.abort(),
-  },
-
-  -- PRIORITY ORDER
-  sources = cmp.config.sources({
-    { name = 'cmp_ai', priority = 850 },
-    { name = 'nvim_lsp', priority = 800 },
-    { name = 'luasnip', priority = 700 },
-    { name = 'codecompanion', priority = 600 },
-  }, {
-    { name = 'buffer', priority = 500 },
-    { name = 'path', priority = 300 },
-  }),
-
-  -- CLEAR LABELS IN MENU
-  formatting = {
-    format = function(entry, vim_item)
-      vim_item.menu = ({
-        cmp_ai = '󰚩 AI',
-        nvim_lsp = '󰛦 LSP',
-        luasnip = '󰩫 Snip',
-        buffer = '󰈙 Buf',
-        path = '󰉋 Path',
-      })[entry.source.name]
-
-      return vim_item
-    end,
-  },
-
-  -- BETTER SORTING (keeps AI stable at top)
-  sorting = {
-    priority_weight = 2,
-    comparators = {
-      require('cmp').config.compare.offset,
-      require('cmp').config.compare.exact,
-      require('cmp').config.compare.score,
-      require('cmp').config.compare.recently_used,
-      require('cmp').config.compare.kind,
-      require('cmp').config.compare.sort_text,
-      require('cmp').config.compare.length,
-      require('cmp').config.compare.order,
+  cmp_ai:setup {
+    provider = 'openai',
+    provider_options = {
+      url = 'http://127.0.0.1:1234/v1/chat/completions',
+      model = 'qwen/qwen3.5-9b',
+      api_key = 'lmstudio',
+      max_tokens = 64,
+      temperature = 0.2,
     },
-  },
+    notify = false,
+    run_on_every_keystroke = false,
+    max_timeout_seconds = 5,
+    max_lines = 100,
+    max_chars = 1000,
+  }
 
-  experimental = {
-    ghost_text = true,
-  },
-} -- CMP cmdline support
-cmp.setup.cmdline(
-  { '/', '?' },
-  { mapping = cmp.mapping.preset.cmdline(), sources = { { name = 'buffer' } } }
-)
-cmp.setup.cmdline(':', {
-  mapping = cmp.mapping.preset.cmdline(),
-  sources = cmp.config.sources({ { name = 'path' } }, { { name = 'cmdline' } }),
-})
+  cmp.setup {
+    snippet = {
+      expand = function(args) luasnip.lsp_expand(args.body) end,
+    },
+
+    mapping = cmp.mapping.preset.insert {
+      ['<C-n>'] = cmp.mapping.select_next_item(),
+      ['<C-p>'] = cmp.mapping.select_prev_item(),
+      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+
+      -- only accept with C-y
+      ['<C-y>'] = cmp.mapping.confirm { select = true },
+
+      -- enter disabled for completion (always fallback newline)
+      ['<CR>'] = cmp.mapping(function(fallback) fallback() end, { 'i', 's' }),
+
+      ['<C-e>'] = cmp.mapping.abort(),
+    },
+
+    -- PRIORITY ORDER
+    sources = cmp.config.sources({
+      { name = 'cmp_ai', priority = 850 },
+      { name = 'nvim_lsp', priority = 800 },
+      { name = 'luasnip', priority = 700 },
+      { name = 'codecompanion', priority = 600 },
+    }, {
+      { name = 'buffer', priority = 500 },
+      { name = 'path', priority = 300 },
+    }),
+
+    -- CLEAR LABELS IN MENU
+    formatting = {
+      format = function(entry, vim_item)
+        vim_item.menu = ({
+          cmp_ai = '󰚩 AI',
+          nvim_lsp = '󰛦 LSP',
+          luasnip = '󰩫 Snip',
+          buffer = '󰈙 Buf',
+          path = '󰉋 Path',
+        })[entry.source.name]
+
+        return vim_item
+      end,
+    },
+
+    -- BETTER SORTING (keeps AI stable at top)
+    sorting = {
+      priority_weight = 2,
+      comparators = {
+        require('cmp').config.compare.offset,
+        require('cmp').config.compare.exact,
+        require('cmp').config.compare.score,
+        require('cmp').config.compare.recently_used,
+        require('cmp').config.compare.kind,
+        require('cmp').config.compare.sort_text,
+        require('cmp').config.compare.length,
+        require('cmp').config.compare.order,
+      },
+    },
+
+    experimental = {
+      ghost_text = true,
+    },
+  } -- CMP cmdline support
+  cmp.setup.cmdline(
+    { '/', '?' },
+    { mapping = cmp.mapping.preset.cmdline(), sources = { { name = 'buffer' } } }
+  )
+  cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({ { name = 'path' } }, { { name = 'cmdline' } }),
+  })
+end)

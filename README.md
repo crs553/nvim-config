@@ -1,6 +1,6 @@
 # nvim-config
 
-Personal Neovim configuration using `vim.pack` (Neovim 0.11+).
+Personal Neovim configuration using `vim.pack` (Neovim 0.12+).
 
 [![CI](https://github.com/crs553/nvim-config/actions/workflows/ci.yml/badge.svg)](https://github.com/crs553/nvim-config/actions/workflows/ci.yml)
 
@@ -29,6 +29,14 @@ Fields:
 
 The config falls back to sensible defaults if `local.lua` is missing.
 
+## Startup & lazy loading
+
+Heavy plugin `setup()` calls (obsidian, codecompanion, lualine, gitsigns, DAP,
+mason, cmp) are deferred until after startup via the `VeryLazy` event
+(`lua/config/lazy.lua`). cmp/luasnip additionally load on first `InsertEnter`.
+Pickers are provided by `snacks.picker` (telescope is no longer used); all
+`<leader>f*`/`<leader>g*`/`<leader>s*` and `gr*` bindings route through it.
+
 ## Testing
 
 ### Sanity check
@@ -39,7 +47,7 @@ Open Neovim and run:
 :checkhealth
 ```
 
-Verify no errors for key plugins (lspconfig, treesitter, telescope, etc.).
+Verify no errors for key plugins (lspconfig, treesitter, snacks, etc.).
 
 ### LSP
 

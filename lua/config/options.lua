@@ -12,7 +12,6 @@ opt.tabstop = 2 -- Number of spaces a <Tab> counts for
 opt.shiftwidth = 2 -- Number of spaces per indentation
 opt.softtabstop = 2 -- soft tab stop not tabs on tab/backspace
 opt.expandtab = true -- Convert tabs to spaces
-opt.smartindent = true
 opt.autoindent = true -- Copy indent from current line when starting a new line
 
 -- Text wrapping

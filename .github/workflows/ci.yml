@@ -41,7 +41,8 @@ jobs:
           curl \
           unzip \
           build-essential \
-          cmake
+          cmake \
+          lua-check
 
       - name: Check formatting
         uses: JohnnyMorganz/stylua-action@v5
@@ -49,6 +50,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           version: 2.5.2
           args: --check .
+
+      - name: Lint Lua
+        run: luacheck lua/ ftplugin/
 
       - name: Verify config loads
         env:

@@ -1,7 +1,12 @@
--- Setup markdown.nvim on markdown files
+-- Setup markdown.nvim once (not per-buffer), then render-markdown
+local setup_done = false
+
 vim.api.nvim_create_autocmd('FileType', {
   pattern = 'markdown',
   callback = function()
+    if setup_done then return end
+    setup_done = true
+
     require('markdown').setup {}
 
     -- Setup render-markdown after markdown.nvim is loaded

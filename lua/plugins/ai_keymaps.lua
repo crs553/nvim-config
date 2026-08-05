@@ -39,7 +39,7 @@ map(
 )
 
 map(
-  { 'n', 'x', 'o' },
+  'n',
   '<leader>ad',
   function() vim.cmd 'CodeCompanionChat Toggle' end,
   { desc = 'Foreground chat' }
@@ -126,7 +126,7 @@ map(
 )
 map(
   'n',
-  '<leader>aA',
+  '<leader>acp',
   function() return require('codecompanion').cli { prompt = true } end,
   { desc = 'Prompt the CLI agent' }
 )

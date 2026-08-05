@@ -1,16 +1,5 @@
--- Global objects defined by the C code
-read_globals = {
-  'vim',
-}
+-- `vim` is the Neovim API; treat it as a writable global so that
+-- `vim.opt`, `vim.opt_local`, `vim.fn`, `vim.api`, etc. all pass.
+globals = { 'vim' }
 
-globals = {
-  'vim.g',
-  'vim.b',
-  'vim.w',
-  'vim.o',
-  'vim.bo',
-  'vim.wo',
-  'vim.go',
-  'vim.env',
-  '_',
-}
+max_line_length = 200

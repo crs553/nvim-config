@@ -4,14 +4,21 @@ local vaults = ok and local_config.obsidian or {}
 local notes_path = vaults.notes and vim.fn.expand(vaults.notes)
 
 if notes_path and vim.fn.isdirectory(notes_path) == 1 then
-  require('obsidian').setup {
-    workspaces = {
-      {
-        name = 'notes',
-        path = notes_path,
-      },
-    },
-  }
+  require('config.lazy').setup(
+    function()
+      require('obsidian').setup {
+        workspaces = {
+          {
+            name = 'notes',
+            path = notes_path,
+          },
+        },
+        picker = {
+          name = 'snacks',
+        },
+      }
+    end
+  )
 end
 
 local map = vim.keymap.set
