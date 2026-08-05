@@ -45,39 +45,18 @@ S.setup {
           { win = 'preview', title = '{preview}', height = 0.55, border = 'top' },
         },
       },
-      -- Telescope file pickers: centered box, list left, preview on the right
-      telescope = {
-        layout = {
-          backdrop = false,
-          width = 0.9,
-          min_width = 80,
-          height = 0.8,
-          min_height = 30,
-          box = 'vertical',
-          border = true,
-          title = '{title} {live} {flags}',
-          title_pos = 'center',
-          { win = 'input', height = 1, border = 'bottom' },
-          {
-            box = 'horizontal',
-            { win = 'list', border = 'none' },
-            { win = 'preview', title = '{preview}', width = 0.55, border = 'left' },
-          },
-        },
-      },
     },
     sources = {
       files = {
         hidden = true,
         follow = true,
         exclude = { 'node_modules', 'dist', 'build', '__pycache__' },
-        layout = { preset = 'telescope' },
-      },
-      git_files = {
-        layout = { preset = 'telescope' },
       },
       command_history = {
-        layout = { preset = 'telescope', hidden = { 'preview' } },
+        layout = {
+          preset = function() return vim.o.columns >= 120 and 'default' or 'vertical' end,
+          hidden = { 'preview' },
+        },
       },
       grep = {
         hidden = true,
@@ -89,9 +68,6 @@ S.setup {
       },
       lines = {
         layout = 'ivy',
-      },
-      help = {
-        layout = { preset = 'telescope' },
       },
       buffers = {
         layout = { preset = 'ivy', layout = { height = 0.33 } },
