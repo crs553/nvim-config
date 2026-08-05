@@ -12,32 +12,32 @@ local function close_all_buffers_except_current()
   local bufs = vim.api.nvim_list_bufs()
   local current_buf = vim.api.nvim_get_current_buf()
   for _, buf in ipairs(bufs) do
-    if buf ~= current_buf then
-      vim.api.nvim_buf_delete(buf, { force = false })
-    end
+    if buf ~= current_buf then vim.api.nvim_buf_delete(buf, { force = false }) end
   end
-  vim.notify('Non-focused buffers deleted')
+  vim.notify 'Non-focused buffers deleted'
 end
 -- Map to a key (e.g., <leader>q)
 map('n', '<leader>qb', close_all_buffers_except_current, { desc = 'Close all other buffers' })
 
 map('n', '<leader>qc', function()
   vim.fn.setqflist {}
-  vim.cmd('cclose')
-  vim.notify('Quickfix list cleared')
+  vim.cmd 'cclose'
+  vim.notify 'Quickfix list cleared'
 end, { desc = 'Clear quickfix list' })
+
+map('n', '<leader>qd', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 map('n', '<c-k>', ':wincmd k<CR>', { desc = 'Move up in split', silent = true })
 map('n', '<c-j>', ':wincmd j<CR>', { desc = 'Move down in split ', silent = true })
 map('n', '<c-h>', ':wincmd h<CR>', { desc = 'Move left in split', silent = true })
 map('n', '<c-l>', ':wincmd l<CR>', { desc = 'Move right in split', silent = true })
 
-map('n', '<leader>qh', '<cmd>nohlsearch<CR>', { desc = 'Clear search highlights' })
+map('n', '<Esc>', '<cmd>nohlsearch<CR>', { desc = 'Clear search highlights' })
 
 -- COPY/PASTE KEYMAPS --
 map('n', '<leader>Y', function()
   local view = vim.fn.winsaveview()
-  vim.cmd('keepjumps keepmarks normal! ggVG"+y')
+  vim.cmd 'keepjumps keepmarks normal! ggVG"+y'
   vim.fn.winrestview(view)
 end, {
   desc = 'Yank entire buffer to system clipboard',
