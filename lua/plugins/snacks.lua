@@ -91,7 +91,7 @@ S.setup {
         layout = 'ivy',
       },
       help = {
-        layout = 'ivy',
+        layout = { preset = 'telescope' },
       },
       buffers = {
         layout = { preset = 'ivy', layout = { height = 0.33 } },
