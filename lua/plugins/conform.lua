@@ -18,9 +18,7 @@ require('conform').setup {
     yaml = { 'prettier' },
   },
   format_on_save = function(bufnr)
-    if vim.bo[bufnr].filetype == 'matlab' then
-      return nil
-    end
+    if vim.bo[bufnr].filetype == 'matlab' then return nil end
     return { lsp_fallback = true, timeout_ms = 2000 }
   end,
 }
