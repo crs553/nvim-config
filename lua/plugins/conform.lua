@@ -17,10 +17,12 @@ require('conform').setup {
     typescriptreact = { 'biome' },
     yaml = { 'prettier' },
   },
-  format_on_save = {
-    lsp_fallback = true,
-    timeout_ms = 2000,
-  },
+  format_on_save = function(bufnr)
+    if vim.bo[bufnr].filetype == 'matlab' then
+      return nil
+    end
+    return { lsp_fallback = true, timeout_ms = 2000 }
+  end,
 }
 
 -- Keymap: manually format buffer
