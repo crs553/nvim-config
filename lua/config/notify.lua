@@ -46,7 +46,7 @@ function notify.notify(msg, level, opts)
   local wrapped = wrap(msg, width - 2)
   local buf = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, wrapped)
-  vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+  vim.api.nvim_set_option_value('modifiable', false, { buf = buf }) -- replaces vim.api.nvim_buf_set_option(buf, 'modifiable', false)
   vim.api.nvim_set_option_value('filetype', 'notify', { buf = buf })
 
   local title = opts.title and (' ' .. opts.title .. ' ')
@@ -68,7 +68,11 @@ function notify.notify(msg, level, opts)
 
   vim.api.nvim_set_hl(ns, 'NotifyBorder', { link = hl })
   vim.api.nvim_win_set_hl_ns(win, ns)
-  vim.api.nvim_win_set_option(win, 'winhl', 'Normal:NormalFloat,FloatBorder:NotifyBorder')
+  vim.api.nvim_set_option_value(
+    'winhl',
+    'Normal:NormalFloat,FloatBorder:NotifyBorder',
+    { win = win }
+  )
 
   local timeout = opts.timeout or 3000
   vim.defer_fn(function()
@@ -79,10 +83,11 @@ end
 
 function notify.dismiss()
   for _, win in ipairs(vim.api.nvim_list_wins()) do
-    local ok_w, config = pcall(vim.api.nvim_win_get_config, win)
-    if ok_w and config.relative == 'editor' and config.row == 1 then
-      local ok_b, ft = pcall(vim.api.nvim_buf_get_option, vim.api.nvim_win_get_buf(win), 'filetype')
-      if ok_b and ft == 'notify' then vim.api.nvim_win_close(win, true) end
+    local ok, config = pcall(vim.api.nvim_win_get_config, win)
+    if ok and config.relative == 'editor' and config.row == 1 then
+      local buf = vim.api.nvim_win_get_buf(win)
+      local ok_ft, ft = pcall(vim.api.nvim_get_option_value, 'filetype', { buf = buf })
+      if ok_ft and ft == 'notify' then vim.api.nvim_win_close(win, true) end
     end
   end
 end
@@ -120,14 +125,19 @@ function notify.history()
 
   local buf = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, buflines)
-  vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+  vim.api.nvim_set_option_value('modifiable', false, { buf = buf })
+  local ns_id = vim.api.nvim_create_namespace 'notify_history'
 
   local line = 0
   for i = 1, #history do
     local hl = border_hl[levels[i]] or 'DiagnosticInfo'
     local nlines = #wrap(history[i].msg, content_width)
+
     for _ = 1, nlines do
-      vim.api.nvim_buf_add_highlight(buf, -1, hl, line, 0, prefix_width)
+      vim.api.nvim_buf_set_extmark(buf, ns_id, line, 0, {
+        end_col = prefix_width,
+        hl_group = hl,
+      })
       line = line + 1
     end
   end
