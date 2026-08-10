@@ -39,15 +39,6 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
-vim.api.nvim_create_autocmd('LspDetach', {
-  group = vim.api.nvim_create_augroup('MatlabLspRestart', { clear = true }),
-  callback = function(args)
-    if vim.bo[args.buf].filetype == 'matlab' then
-      vim.schedule(function() vim.lsp.enable 'matlab_ls' end)
-    end
-  end,
-})
-
 -- make neovim help or a man page always open in vertical split
 vim.api.nvim_create_autocmd('FileType', {
   pattern = { 'help', 'man' },

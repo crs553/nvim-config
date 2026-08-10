@@ -252,14 +252,18 @@ vim.lsp.enable 'rust_analyzer'
 vim.lsp.config['matlab_ls'] = {
   capabilities = capabilities,
   on_attach = on_attach,
-  cmd = { 'matlab-language-server', '--stdio' },
+  cmd = {
+    'C:/Users/charlie/scoop/apps/nodejs-lts/current/node.exe',
+    'C:/Users/charlie/Documents/MATLAB-language-server/out/index.js',
+    '--stdio',
+  },
   filetypes = { 'matlab' },
-  root_dir = function(bufnr) return vim.fs.root(bufnr, '.git') or vim.fn.getcwd() end,
+  root_markers = { '.git' },
   settings = {
     MATLAB = {
       indexWorkspace = false,
-      matlabconnectiontiming = 'onDemand',
-      telemetry = true,
+      matlabConnectionTiming = 'onDemand',
+      telemetry = false,
       installPath = 'C:\\Program Files\\MATLAB\\R2024b',
     },
   },
