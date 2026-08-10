@@ -5,7 +5,7 @@ local shell_state = { buf = nil, win = nil, is_open = false }
 -- Create autocommand group
 local augroup = vim.api.nvim_create_augroup('FloatTerminal', { clear = true })
 
--- ─────────── Shared floating window helper ───────────
+-- Shared floating window helper
 local function create_floating_win(buf)
   local width = math.floor(vim.o.columns * 0.8)
   local height = math.floor(vim.o.lines * 0.8)
@@ -30,7 +30,7 @@ local function create_floating_win(buf)
   return win
 end
 
--- ─────────── TermOpen styling ───────────
+-- TermOpen styling
 vim.api.nvim_create_autocmd('TermOpen', {
   group = augroup,
   callback = function()
@@ -40,7 +40,7 @@ vim.api.nvim_create_autocmd('TermOpen', {
   end,
 })
 
--- ─────────── LazyGit Floating Terminal ───────────
+-- LazyGit Floating Terminal
 local function FloatingLazyGit()
   -- Toggle if already open
   if
@@ -88,7 +88,7 @@ vim.keymap.set('n', '<leader>gg', FloatingLazyGit, {
   desc = 'Open lazygit in floating terminal',
 })
 
--- ─────────── Normal Floating Terminal ───────────
+-- Normal Floating Terminal
 local function FloatingTerminal()
   -- Toggle if already open
   if shell_state.is_open and shell_state.win and vim.api.nvim_win_is_valid(shell_state.win) then
