@@ -83,7 +83,7 @@ opt.showcmd = true -- Show (partial) command in the last line
 -- diagnostic tools for lsp
 vim.diagnostic.config {
   virtual_text = false,
-  virtual_line = true,
+  virtual_lines = { severity = { min = vim.diagnostic.severity.WARN } },
 
   signs = true,
 
