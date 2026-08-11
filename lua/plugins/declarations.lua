@@ -71,7 +71,7 @@ vim.pack.add {
   { src = gh 'stevearc/conform.nvim' },
 }
 vim.pack.add {
-  gh 'mfussenegger/nvim-lint',
+  'https://codeberg.org/mfussenegger/nvim-lint',
   gh 'rshkarin/mason-nvim-lint',
 }
 
@@ -80,7 +80,11 @@ vim.pack.add {
 -- Treesitter
 vim.pack.add {
   { src = gh 'nvim-treesitter/nvim-treesitter' },
+  { src = gh 'nvim-treesitter/nvim-treesitter-textobjects' },
 }
+
+-- Fidget (LSP progress + notification UI)
+vim.pack.add { { src = gh 'j-hui/fidget.nvim', version = 'v2.0.0' } }
 
 -- LSP
 vim.pack.add { { src = gh 'neovim/nvim-lspconfig' } }
@@ -105,12 +109,15 @@ vim.pack.add {
 }
 
 -- DAP
+-- nvim-dap is Jaehaks' fork: the MATLAB DAP adapter (nvim-dap-matlab) requires
+-- it for the "empty setBreakpoints" fix (upstream mfussenegger PR #1592 is unmerged).
 vim.pack.add {
-  { src = 'https://codeberg.org/mfussenegger/nvim-dap.git' },
+  { src = 'https://github.com/Jaehaks/nvim-dap.git' },
+  { src = gh 'Jaehaks/nvim-dap-matlab' },
   { src = gh 'rcarriga/nvim-dap-ui' },
   { src = gh 'theHamsta/nvim-dap-virtual-text' },
   { src = gh 'leoluz/nvim-dap-go' },
-  { src = gh 'mfussenegger/nvim-dap-python' },
+  { src = 'https://codeberg.org/mfussenegger/nvim-dap-python' },
   { src = gh 'nvim-neotest/nvim-nio' },
 }
 

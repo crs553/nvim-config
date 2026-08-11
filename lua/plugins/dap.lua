@@ -98,6 +98,23 @@ require('config.lazy').setup(function()
   vim.cmd [[DapPythonSetPython]]
 
   -- ======================
+  -- MATLAB DAP (nvim-dap-matlab)
+  -- ======================
+  require('nvim-dap-matlab').setup {
+    lsp_name = 'matlab_ls',
+    gui_windows = {
+      auto_open = {
+        workspace = false,
+        filebrowser = false,
+      },
+      keymaps = {
+        toggle_workspace = '<leader>dw',
+        toggle_filebrowser = '<leader>df',
+      },
+    },
+  }
+
+  -- ======================
   -- DAP Keymaps
   -- ======================
   vim.keymap.set('n', '<leader>db', dap.toggle_breakpoint, { desc = 'Toggle breakpoint' })

@@ -16,6 +16,7 @@ lazy.setup(function()
         'rust_analyzer',
         'ruff',
         'biome',
+        'basedpyright',
       },
     }
   end
@@ -262,7 +263,8 @@ vim.lsp.config['matlab_ls'] = {
   settings = {
     MATLAB = {
       indexWorkspace = false,
-      matlabConnectionTiming = 'onDemand',
+      -- onStart: spawn/connect MATLAB up front so DAP debugging sessions are ready.
+      matlabConnectionTiming = 'onStart',
       telemetry = false,
       installPath = 'C:\\Program Files\\MATLAB\\R2024b',
     },
@@ -290,6 +292,28 @@ vim.lsp.config['ruff'] = {
   },
 }
 vim.lsp.enable 'ruff'
+
+-- Python (basedpyright)
+-- Type checking + code intelligence (completions, goto-def, hover, rename).
+-- ruff handles linting/formatting; the two are designed to pair.
+vim.lsp.config['basedpyright'] = {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = { 'python' },
+  root_markers = { 'pyproject.toml', 'pyrightconfig.json', 'setup.py', 'setup.cfg', '.git' },
+  single_file_support = true,
+  settings = {
+    basedpyright = {
+      analysis = {
+        typeCheckingMode = 'basic',
+        useLibraryCodeForTypes = true,
+        autoSearchPaths = true,
+        diagnosticMode = 'openFilesOnly',
+      },
+    },
+  },
+}
+vim.lsp.enable 'basedpyright'
 
 -- nvim-cmp Setup (deferred until first insert to keep startup fast)
 lazy.on('InsertEnter', function()

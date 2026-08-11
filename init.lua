@@ -28,6 +28,7 @@ require 'plugins.colorschemes'
 require 'plugins.comment'
 require 'plugins.conform'
 require 'plugins.dap'
+require 'plugins.fidget' -- Before lspconfig so the $/progress handler is active
 require 'plugins.gitsigns'
 require 'plugins.lspconfig'
 require 'plugins.lint' -- After lspconfig due to mason requirement
@@ -38,7 +39,10 @@ require 'plugins.quicker'
 require 'plugins.snacks'
 require 'plugins.surround'
 require 'plugins.treesitter'
+require 'plugins.textobjects'
 require 'plugins.picker'
+require 'plugins.todo'
+require 'plugins.session'
 require 'plugins.undotree'
 require 'plugins.ai' -- At end just to ensure cmp is setup
 require 'plugins.obsidian'
