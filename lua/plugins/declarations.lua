@@ -109,10 +109,11 @@ vim.pack.add {
 }
 
 -- DAP
--- nvim-dap is Jaehaks' fork: the MATLAB DAP adapter (nvim-dap-matlab) requires
--- it for the "empty setBreakpoints" fix (upstream mfussenegger PR #1592 is unmerged).
+-- nvim-dap-matlab needs nvim-dap to send an empty `breakpoints` array when
+-- clearing breakpoints (upstream PR #1592 unmerged). Rather than use a fork,
+-- we stay on mainline and apply the fix as a runtime monkeypatch in dap.lua.
 vim.pack.add {
-  { src = 'https://github.com/Jaehaks/nvim-dap.git' },
+  { src = 'https://codeberg.org/mfussenegger/nvim-dap.git' },
   { src = gh 'Jaehaks/nvim-dap-matlab' },
   { src = gh 'rcarriga/nvim-dap-ui' },
   { src = gh 'theHamsta/nvim-dap-virtual-text' },

@@ -84,8 +84,8 @@
       "src": "https://github.com/hrsh7th/nvim-cmp"
     },
     "nvim-dap": {
-      "rev": "e64d9574103b0e31b6aa8e9bbe165c7911bdf067",
-      "src": "https://github.com/Jaehaks/nvim-dap.git"
+      "rev": "9e848e09a697ee95302a3ef2dd43fd6eb709e570",
+      "src": "https://codeberg.org/mfussenegger/nvim-dap.git"
     },
     "nvim-dap-go": {
       "rev": "b4421153ead5d726603b02743ea40cf26a51ed5f",

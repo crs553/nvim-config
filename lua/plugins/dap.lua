@@ -3,6 +3,16 @@ require('config.lazy').setup(function()
   local dap = require 'dap'
   local dapui = require 'dapui'
 
+  -- nvim-dap-matlab needs nvim-dap to send an empty `breakpoints` array when
+  -- clearing breakpoints (upstream PR #1592 unmerged). Patch mainline locally
+  -- so we can stay on the codeberg release.
+  local dap_session = require 'dap.session'
+  local orig_set_breakpoints = dap_session.set_breakpoints
+  function dap_session:set_breakpoints(bps, on_done)
+    if vim.tbl_count(bps) == 0 then bps = { [vim.api.nvim_get_current_buf()] = {} } end
+    return orig_set_breakpoints(self, bps, on_done)
+  end
+
   -- ======================
   -- DAP UI Setup
   -- ======================
