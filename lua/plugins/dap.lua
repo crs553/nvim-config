@@ -3,6 +3,10 @@ require('config.lazy').setup(function()
   local dap = require 'dap'
   local dapui = require 'dapui'
 
+  -- ======================
+  -- Workarounds
+  -- ======================
+
   -- nvim-dap-matlab needs nvim-dap to send an empty `breakpoints` array when
   -- clearing breakpoints (upstream PR #1592 unmerged). Patch mainline locally
   -- so we can stay on the codeberg release.
@@ -29,6 +33,25 @@ require('config.lazy').setup(function()
         run_last = '▶▶',
         terminate = '⏹',
         disconnect = '⏏',
+      },
+    },
+    layouts = {
+      {
+        elements = {
+          { id = 'scopes', size = 0.35 },
+          { id = 'breakpoints', size = 0.20 },
+          { id = 'stacks', size = 0.25 },
+          { id = 'watches', size = 0.20 },
+        },
+        size = 40,
+        position = 'left',
+      },
+      {
+        elements = {
+          { id = 'repl', size = 1 },
+        },
+        size = 10,
+        position = 'bottom',
       },
     },
   }
@@ -145,43 +168,126 @@ require('config.lazy').setup(function()
   -- ======================
   -- DAP Keymaps
   -- ======================
-  vim.keymap.set('n', '<leader>db', dap.toggle_breakpoint, { desc = 'Toggle breakpoint' })
+
+  -- Breakpoints
+  vim.keymap.set('n', '<leader>db', dap.toggle_breakpoint, {
+    desc = 'Toggle breakpoint',
+  })
+
   vim.keymap.set(
     'n',
     '<leader>dB',
     function() dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ') end,
-    { desc = 'Conditional breakpoint' }
+    {
+      desc = 'Conditional breakpoint',
+    }
   )
-  vim.keymap.set('n', '<F5>', dap.continue, { desc = 'Continue / Start' })
-  vim.keymap.set('n', '<leader>dC', dap.run_to_cursor, { desc = 'Run to cursor' })
-  vim.keymap.set('n', '<leader>do', dap.step_over, { desc = 'Step over' })
-  vim.keymap.set('n', '<leader>di', dap.step_into, { desc = 'Step into' })
-  vim.keymap.set('n', '<leader>dO', dap.step_out, { desc = 'Step out' })
-  vim.keymap.set('n', '<leader>dt', dap.terminate, { desc = 'Terminate' })
+
   vim.keymap.set(
     'n',
-    '<leader>dr',
-    function() dap.repl.toggle({}, 'vsplit') end,
-    { desc = 'Toggle REPL' }
+    '<leader>dL',
+    function() dap.set_breakpoint(nil, nil, vim.fn.input 'Log message: ') end,
+    {
+      desc = 'Log breakpoint',
+    }
   )
-  vim.keymap.set('n', '<leader>du', dapui.toggle, { desc = 'Toggle DAP UI' })
-  vim.keymap.set(
-    'n',
-    '<leader>de',
-    function() dapui.eval() end,
-    { desc = 'Evaluate expression (hover)' }
-  )
-  vim.keymap.set(
-    { 'x', 'o' },
-    '<leader>de',
-    function() dapui.eval() end,
-    { desc = 'Evaluate expression (visual)' }
-  )
-  vim.keymap.set('n', '<leader>dk', dap.up, { desc = 'Move up stack frame' })
-  vim.keymap.set('n', '<leader>dj', dap.down, { desc = 'Move down stack frame' })
+
+  vim.keymap.set('n', '<leader>dl', dap.list_breakpoints, {
+    desc = 'List breakpoints',
+  })
+
+  vim.keymap.set('n', '<leader>dX', dap.clear_breakpoints, {
+    desc = 'Clear all breakpoints',
+  })
+
+  -- Execution
+  vim.keymap.set('n', '<F5>', dap.continue, {
+    desc = 'Continue / Start',
+  })
+
+  vim.keymap.set('n', '<leader>dg', dap.continue, {
+    desc = 'Go',
+  })
+
+  vim.keymap.set('n', '<leader>dR', dap.run_last, {
+    desc = 'Run last debug session',
+  })
+
+  vim.keymap.set('n', '<leader>dP', dap.pause, {
+    desc = 'Pause',
+  })
+
+  vim.keymap.set('n', '<leader>dt', dap.terminate, {
+    desc = 'Terminate',
+  })
+
+  vim.keymap.set('n', '<leader>dq', dap.disconnect, {
+    desc = 'Disconnect',
+  })
+
+  vim.keymap.set('n', '<leader>dC', dap.run_to_cursor, {
+    desc = 'Run to cursor',
+  })
+
+  -- Stepping
+  vim.keymap.set('n', '<leader>do', dap.step_over, {
+    desc = 'Step over',
+  })
+
+  vim.keymap.set('n', '<leader>di', dap.step_into, {
+    desc = 'Step into',
+  })
+
+  vim.keymap.set('n', '<leader>dO', dap.step_out, {
+    desc = 'Step out',
+  })
+
+  vim.keymap.set('n', '<leader>dF', dap.restart_frame, {
+    desc = 'Restart frame',
+  })
+
+  -- Inspection
+  vim.keymap.set('n', '<leader>de', function() dapui.eval() end, {
+    desc = 'Evaluate expression',
+  })
+
+  vim.keymap.set('n', '<leader>dv', function() require('dap.ui.widgets').hover() end, {
+    desc = 'Hover variable',
+  })
+
+  vim.keymap.set('n', '<leader>dW', function() dapui.elements.watches.add() end, {
+    desc = 'Add watch',
+  })
+
+  -- UI
+  vim.keymap.set('n', '<leader>du', dapui.toggle, {
+    desc = 'Toggle DAP UI',
+  })
+
+  vim.keymap.set('n', '<leader>dr', function() dap.repl.toggle({}, 'vsplit') end, {
+    desc = 'Toggle REPL',
+  })
+
   vim.keymap.set('n', '<leader>dh', function()
     local buf = dapui.elements.stacks.buffer()
     local wins = vim.fn.win_findbuf(buf)
+
     if #wins > 0 then vim.api.nvim_set_current_win(wins[1]) end
-  end, { desc = 'Focus stacks' })
+  end, {
+    desc = 'Focus stacks',
+  })
+
+  -- Stack navigation
+  vim.keymap.set('n', '<leader>dk', dap.up, {
+    desc = 'Move up stack frame',
+  })
+
+  vim.keymap.set('n', '<leader>dj', dap.down, {
+    desc = 'Move down stack frame',
+  })
+
+  -- Visual / operator-pending evaluation
+  vim.keymap.set({ 'x', 'o' }, '<leader>de', function() dapui.eval() end, {
+    desc = 'Evaluate expression',
+  })
 end)
