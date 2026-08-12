@@ -124,6 +124,24 @@ require('config.lazy').setup(function()
     },
   }
 
+  -- nvim-dap-matlab's <leader>dw / <leader>df send evalRequest to the MATLAB LS
+  -- as soon as `lsp_client` is set, which happens while the LS is still
+  -- "connecting" (before `lsp_ready`). Same guard as adapter.start() to avoid
+  -- crashing the LS during load.
+  local matlab_adapter = require 'nvim-dap-matlab.adapter'
+  local matlab_send_direct = matlab_adapter.send_to_lsp_direct
+  matlab_adapter.send_to_lsp_direct = function(cmd)
+    local st = matlab_adapter.get_state()
+    if not st.lsp_client or not st.lsp_ready then
+      vim.notify(
+        '[matlab-dap] matlab lsp is not ready. Please wait and retry',
+        vim.log.levels.ERROR
+      )
+      return
+    end
+    return matlab_send_direct(cmd)
+  end
+
   -- ======================
   -- DAP Keymaps
   -- ======================
