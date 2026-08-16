@@ -146,3 +146,84 @@ end, {
   silent = true,
   desc = 'Toggle floating shell terminal',
 })
+
+-- Persistent split terminal (reopened when hidden to background)
+local splitterm_state = { buf = nil, win = nil }
+
+local function start_terminal_in_current_win()
+  local buf = vim.api.nvim_create_buf(false, true)
+  vim.bo[buf].bufhidden = 'hide'
+  vim.api.nvim_win_set_buf(vim.api.nvim_get_current_win(), buf)
+
+  local shell
+  if vim.fn.has 'win32' == 1 then
+    shell = { 'powershell.exe' }
+  else
+    shell = { vim.o.shell }
+  end
+
+  vim.fn.jobstart(shell, {
+    term = true,
+    on_exit = function()
+      if splitterm_state.buf == buf then splitterm_state.buf = nil end
+      splitterm_state.win = nil
+    end,
+  })
+  return buf
+end
+
+local function open_split_terminal(open)
+  if
+    splitterm_state.win
+    and vim.api.nvim_win_is_valid(splitterm_state.win)
+    and vim.bo[vim.api.nvim_win_get_buf(splitterm_state.win)].buftype == 'terminal'
+  then
+    vim.api.nvim_set_current_win(splitterm_state.win)
+    vim.cmd 'startinsert'
+    return
+  end
+
+  if open == 'split' then
+    vim.cmd 'split'
+  elseif open == 'left' then
+    vim.cmd 'vsplit'
+    vim.cmd 'wincmd h'
+  else
+    vim.cmd 'vsplit'
+  end
+
+  if splitterm_state.buf and vim.api.nvim_buf_is_valid(splitterm_state.buf) then
+    vim.api.nvim_win_set_buf(vim.api.nvim_get_current_win(), splitterm_state.buf)
+  else
+    splitterm_state.buf = start_terminal_in_current_win()
+  end
+  splitterm_state.win = vim.api.nvim_get_current_win()
+  vim.cmd 'startinsert'
+end
+
+-- Vertical split terminal (default right)
+vim.api.nvim_create_user_command(
+  'Termvsplit',
+  function(opts) open_split_terminal(opts.fargs[1] == 'left' and 'left' or 'vsplit') end,
+  {
+    nargs = '?',
+    complete = function() return { 'left', 'right' } end,
+  }
+)
+vim.cmd.cabbrev('termvsplit', 'Termvsplit')
+
+vim.keymap.set('n', '<leader>tv', function() vim.cmd 'Termvsplit' end, {
+  noremap = true,
+  silent = true,
+  desc = 'Open terminal in vertical split',
+})
+vim.keymap.set('n', '<leader>th', function() open_split_terminal 'split' end, {
+  noremap = true,
+  silent = true,
+  desc = 'Open terminal in horizontal split',
+})
+
+-- Close terminal window, keep shell running in the background
+vim.keymap.set('t', '<M-x>', '<C-\\><C-n>:close<CR>', {
+  desc = 'Close terminal split (keep shell running in background)',
+})
