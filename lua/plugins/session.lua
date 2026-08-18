@@ -15,12 +15,25 @@ local function session_file()
   return dir .. '/' .. name .. '.vim'
 end
 
-local function save_session() pcall(vim.cmd, 'mksession! ' .. vim.fn.fnameescape(session_file())) end
+local function save_session()
+  local ft = vim.bo.filetype
+  if ft == 'help' or ft == 'man' then return end
+  pcall(vim.cmd, 'mksession! ' .. vim.fn.fnameescape(session_file()))
+end
 
 local function restore_session()
   if vim.fn.argc() > 0 then return end -- launched with file arguments
   local file = session_file()
-  if vim.fn.filereadable(file) == 1 then vim.cmd('source ' .. vim.fn.fnameescape(file)) end
+  if vim.fn.filereadable(file) == 1 then
+    vim.cmd('source ' .. vim.fn.fnameescape(file))
+    vim.schedule(function()
+      for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.bo[bufnr].buftype == '' and vim.api.nvim_buf_is_loaded(bufnr) then
+          vim.api.nvim_buf_call(bufnr, function() vim.cmd 'doautocmd BufReadPost' end)
+        end
+      end
+    end)
+  end
 end
 
 local group = vim.api.nvim_create_augroup('session', { clear = true })
