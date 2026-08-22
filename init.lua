@@ -43,6 +43,7 @@ require 'plugins.textobjects'
 require 'plugins.picker'
 require 'plugins.todo'
 require 'plugins.session'
+require 'plugins.manpages'
 require 'plugins.undotree'
 require 'plugins.ai' -- At end just to ensure cmp is setup
 require 'plugins.obsidian'
