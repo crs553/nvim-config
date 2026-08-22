@@ -23,6 +23,9 @@ end
 
 local function restore_session()
   if vim.fn.argc() > 0 then return end -- launched with file arguments
+  for _, arg in ipairs(vim.v.argv) do
+    if arg:sub(1, 1) == '+' then return end -- launched with +command (e.g. nvim +Man!)
+  end
   local file = session_file()
   if vim.fn.filereadable(file) == 1 then
     vim.cmd('source ' .. vim.fn.fnameescape(file))
