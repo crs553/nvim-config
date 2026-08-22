@@ -12,7 +12,13 @@ local function close_all_buffers_except_current()
   local bufs = vim.api.nvim_list_bufs()
   local current_buf = vim.api.nvim_get_current_buf()
   for _, buf in ipairs(bufs) do
-    if buf ~= current_buf then vim.api.nvim_buf_delete(buf, { force = false }) end
+    if
+      buf ~= current_buf
+      and vim.api.nvim_buf_is_valid(buf)
+      and vim.bo[buf].buftype ~= 'terminal'
+    then
+      vim.api.nvim_buf_delete(buf, { force = false })
+    end
   end
   vim.notify 'Non-focused buffers deleted'
 end
