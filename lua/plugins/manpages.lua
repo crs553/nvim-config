@@ -21,7 +21,12 @@ vim.api.nvim_create_autocmd('FileType', {
     end, { buffer = args.buf, desc = 'Man page (fallback to help)' })
 
     -- <leader>mq: Close man page
-    vim.keymap.set('n', '<leader>mq', '<cmd>close<CR>', { buffer = args.buf, desc = 'Close man page' })
+    vim.keymap.set(
+      'n',
+      '<leader>mq',
+      '<cmd>close<CR>',
+      { buffer = args.buf, desc = 'Close man page' }
+    )
 
     -- <leader>mt: Table of contents
     vim.keymap.set(
@@ -33,7 +38,7 @@ vim.api.nvim_create_autocmd('FileType', {
 
     -- <leader>mn / <leader>mp: Next/prev section
     vim.keymap.set('n', '<leader>mn', function()
-      local cur_name = vim.fn.expand '%:t':match '^(.-)%('
+      local cur_name = vim.fn.expand('%:t'):match '^(.-)%('
       local cur_sect = vim.b.man_sect or ''
       local idx = vim.fn.indexof(sections, cur_sect)
       local next_sect = sections[(idx + 1) % #sections + 1]
@@ -41,7 +46,7 @@ vim.api.nvim_create_autocmd('FileType', {
     end, { buffer = args.buf, desc = 'Next man section' })
 
     vim.keymap.set('n', '<leader>mp', function()
-      local cur_name = vim.fn.expand '%:t':match '^(.-)%('
+      local cur_name = vim.fn.expand('%:t'):match '^(.-)%('
       local cur_sect = vim.b.man_sect or ''
       local idx = vim.fn.indexof(sections, cur_sect)
       local prev_sect = sections[(idx - 1) % #sections + 1]
