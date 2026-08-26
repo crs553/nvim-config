@@ -249,6 +249,16 @@ vim.lsp.config['rust_analyzer'] = {
 }
 vim.lsp.enable 'rust_analyzer'
 
+-- Nix (nixd)
+vim.lsp.config['nixd'] = {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = { 'nix' },
+  root_markers = { 'flake.nix', 'flake.lock', '.git' },
+  single_file_support = true,
+}
+vim.lsp.enable 'nixd'
+
 -- MATLAB -- note I managed this externally as the Mason files were not working for me
 vim.lsp.config['matlab_ls'] = {
   capabilities = capabilities,

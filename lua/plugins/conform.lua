@@ -10,6 +10,7 @@ require('conform').setup {
     jsonc = { 'biome' },
     lua = { 'stylua' },
     markdown = { 'prettier' },
+    nix = { 'nixfmt' },
     python = { 'ruff_format', 'ruff_organize_imports' },
     rust = { 'rustfmt' },
     sh = { 'shfmt' },
