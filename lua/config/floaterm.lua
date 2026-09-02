@@ -224,6 +224,6 @@ vim.keymap.set('n', '<leader>th', function() open_split_terminal 'split' end, {
 })
 
 -- Close terminal window, keep shell running in the background
-vim.keymap.set('t', '<M-x>', '<C-\\><C-n>:close<CR>', {
+vim.keymap.set({ 't', 'n' }, '<M-x>', '<C-\\><C-n>:close<CR>', {
   desc = 'Close terminal split (keep shell running in background)',
 })
