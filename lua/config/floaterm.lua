@@ -5,6 +5,17 @@ local shell_state = { buf = nil, win = nil, is_open = false }
 -- Create autocommand group
 local augroup = vim.api.nvim_create_augroup('FloatTerminal', { clear = true })
 
+---Return the appropriate shell command for the current platform.
+---@return string[]
+local function get_shell()
+  if vim.fn.has 'win32' == 1 then return { 'powershell.exe' } end
+  return { vim.o.shell }
+end
+
+-- Highlight groups (defined once at module load)
+vim.api.nvim_set_hl(0, 'FloatingTermNormal', { bg = 'none' })
+vim.api.nvim_set_hl(0, 'FloatingTermBorder', { bg = 'none' })
+
 -- Shared floating window helper
 local function create_floating_win(buf)
   local width = math.floor(vim.o.columns * 0.8)
@@ -24,8 +35,6 @@ local function create_floating_win(buf)
 
   vim.wo[win].winblend = 0
   vim.wo[win].winhighlight = 'Normal:FloatingTermNormal,FloatBorder:FloatingTermBorder'
-  vim.api.nvim_set_hl(0, 'FloatingTermNormal', { bg = 'none' })
-  vim.api.nvim_set_hl(0, 'FloatingTermBorder', { bg = 'none' })
 
   return win
 end
@@ -112,20 +121,7 @@ local function FloatingTerminal()
   if not has_terminal then
     -- Attach the terminal to the floating buffer
     vim.api.nvim_set_current_win(shell_state.win)
-
-    local shell
-    if vim.fn.has 'win32' == 1 then
-      -- Prefer PowerShell on Windows
-      shell = { 'powershell.exe' }
-      -- Or use PowerShell 7 if you prefer:
-      -- shell = { "pwsh.exe" }
-    else
-      shell = { vim.o.shell }
-    end
-
-    vim.fn.jobstart(shell, {
-      term = true,
-    })
+    vim.fn.jobstart(get_shell(), { term = true })
   end
 
   shell_state.is_open = true
@@ -155,14 +151,7 @@ local function start_terminal_in_current_win()
   vim.bo[buf].bufhidden = 'hide'
   vim.api.nvim_win_set_buf(vim.api.nvim_get_current_win(), buf)
 
-  local shell
-  if vim.fn.has 'win32' == 1 then
-    shell = { 'powershell.exe' }
-  else
-    shell = { vim.o.shell }
-  end
-
-  vim.fn.jobstart(shell, {
+  vim.fn.jobstart(get_shell(), {
     term = true,
     on_exit = function()
       if splitterm_state.buf == buf then splitterm_state.buf = nil end

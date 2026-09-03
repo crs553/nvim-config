@@ -47,29 +47,25 @@ local on_attach = function(_, bufnr)
   map('n', '<leader>ls', vim.lsp.buf.signature_help, 'Signature Help')
 end
 
+--- Configure and enable an LSP server with shared defaults.
+---@param server string
+---@param opts? table  Extra config merged into the server config.
+local function lsp(server, opts)
+  opts = opts or {}
+  opts.on_attach = opts.on_attach or on_attach
+  opts.capabilities = opts.capabilities or capabilities
+  vim.lsp.config[server] = opts
+  vim.lsp.enable(server)
+end
+
 -- Arduino Language Server
-vim.lsp.config['arduino_language_server'] = {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  root_dir = vim.uv.cwd,
-}
+lsp('arduino_language_server', { root_dir = vim.uv.cwd })
 
-vim.lsp.enable 'arduino_language_server'
-vim.lsp.config['bashls'] = {
-  on_attach = on_attach,
-  capabilities = capabilities,
-}
-vim.lsp.enable 'bashls'
+lsp 'bashls'
+lsp 'harper_ls'
 
-vim.lsp.config['harper_ls'] = {
-  on_attach = on_attach,
-  capabilities = capabilities,
-}
-vim.lsp.enable 'harper_ls'
-
-vim.lsp.config['gopls'] = {
-  capabilities = capabilities,
-  on_attach = on_attach,
+-- Go
+lsp('gopls', {
   settings = {
     gopls = {
       analyses = {
@@ -80,7 +76,6 @@ vim.lsp.config['gopls'] = {
       gofumpt = true,
       completeUnimported = true,
       usePlaceholders = true,
-      -- Enable inlay hints for better variable type visibility
       hints = {
         assignVariableTypes = true,
         compositeLiteralFields = true,
@@ -92,13 +87,10 @@ vim.lsp.config['gopls'] = {
       },
     },
   },
-}
-vim.lsp.enable 'gopls'
+})
 
 -- Lua
-vim.lsp.config['lua_ls'] = {
-  on_attach = on_attach,
-  capabilities = capabilities,
+lsp('lua_ls', {
   filetypes = { 'lua' },
   settings = {
     Lua = {
@@ -109,13 +101,10 @@ vim.lsp.config['lua_ls'] = {
       telemetry = { enable = false },
     },
   },
-}
-vim.lsp.enable 'lua_ls'
+})
 
 -- TypeScript/JavaScript
-vim.lsp.config['ts_ls'] = {
-  on_attach = on_attach,
-  capabilities = capabilities,
+lsp('ts_ls', {
   root_markers = { 'tsconfig.json', 'jsconfig.json', 'package.json', '.git' },
   single_file_support = true,
   settings = {
@@ -140,42 +129,26 @@ vim.lsp.config['ts_ls'] = {
       },
     },
   },
-}
-vim.lsp.enable 'ts_ls'
+})
 
 -- CSS
-vim.lsp.config['cssls'] = {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  single_file_support = true,
-}
-vim.lsp.enable 'cssls'
+lsp('cssls', { single_file_support = true })
 
 -- HTML
-vim.lsp.config['html'] = {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  single_file_support = true,
-}
-vim.lsp.enable 'html'
+lsp('html', { single_file_support = true })
 
 -- JSON
-vim.lsp.config['jsonls'] = {
-  on_attach = on_attach,
-  capabilities = capabilities,
+lsp('jsonls', {
   single_file_support = true,
   settings = {
     json = {
       validate = { enable = true },
     },
   },
-}
-vim.lsp.enable 'jsonls'
+})
 
 -- YAML
-vim.lsp.config['yamlls'] = {
-  on_attach = on_attach,
-  capabilities = capabilities,
+lsp('yamlls', {
   single_file_support = true,
   settings = {
     yaml = {
@@ -183,14 +156,11 @@ vim.lsp.config['yamlls'] = {
       validate = true,
     },
   },
-}
-vim.lsp.enable 'yamlls'
+})
 
 -- Biome (linting + formatting for JS/TS/JSON/CSS/HTML)
 -- Requires biome.json / biome.jsonc in project root to activate.
-vim.lsp.config['biome'] = {
-  on_attach = on_attach,
-  capabilities = capabilities,
+lsp('biome', {
   filetypes = {
     'astro',
     'css',
@@ -212,14 +182,14 @@ vim.lsp.config['biome'] = {
     '.biome.jsonc',
   },
   single_file_support = false,
-}
-vim.lsp.enable 'biome'
+})
 
 -- Disable ts_ls formatting for buffers where biome is active
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('biome_override', { clear = true }),
   callback = function(args)
-    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    local clients = vim.lsp.get_clients { id = args.data.client_id }
+    local client = clients[1]
     if client and client.name == 'biome' then
       local ts_clients = vim.lsp.get_clients { name = 'ts_ls', bufnr = args.buf }
       for _, ts_client in ipairs(ts_clients) do
@@ -230,9 +200,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
-vim.lsp.config['rust_analyzer'] = {
-  on_attach = on_attach,
-  capabilities = capabilities,
+-- Rust
+lsp('rust_analyzer', {
   cmd = { 'rust-analyzer' },
   filetypes = { 'rust' },
   root_markers = { 'Cargo.toml', '.git' },
@@ -246,23 +215,17 @@ vim.lsp.config['rust_analyzer'] = {
       procMacro = { enable = true },
     },
   },
-}
-vim.lsp.enable 'rust_analyzer'
+})
 
 -- Nix (nixd)
-vim.lsp.config['nixd'] = {
-  on_attach = on_attach,
-  capabilities = capabilities,
+lsp('nixd', {
   filetypes = { 'nix' },
   root_markers = { 'flake.nix', 'flake.lock', '.git' },
   single_file_support = true,
-}
-vim.lsp.enable 'nixd'
+})
 
--- MATLAB -- note I managed this externally as the Mason files were not working for me
-vim.lsp.config['matlab_ls'] = {
-  capabilities = capabilities,
-  on_attach = on_attach,
+-- MATLAB
+lsp('matlab_ls', {
   cmd = {
     'C:/Users/charlie/scoop/apps/nodejs-lts/current/node.exe',
     'C:/Users/charlie/Documents/MATLAB-language-server/out/index.js',
@@ -273,22 +236,18 @@ vim.lsp.config['matlab_ls'] = {
   settings = {
     MATLAB = {
       indexWorkspace = false,
-      -- onStart: spawn/connect MATLAB up front so DAP debugging sessions are ready.
       matlabConnectionTiming = 'onStart',
       telemetry = false,
       installPath = 'C:\\Program Files\\MATLAB\\R2024b',
     },
   },
   single_file_support = true,
-}
-vim.lsp.enable 'matlab_ls'
+})
 
 -- Python (ruff)
 -- ruff provides linting, formatting, and import organization.
 -- For code intelligence (completions, goto-def, hover), pair with basedpyright.
-vim.lsp.config['ruff'] = {
-  on_attach = on_attach,
-  capabilities = capabilities,
+lsp('ruff', {
   filetypes = { 'python' },
   root_markers = { 'pyproject.toml', 'ruff.toml', '.ruff.toml', 'setup.py', 'setup.cfg', '.git' },
   single_file_support = true,
@@ -300,15 +259,12 @@ vim.lsp.config['ruff'] = {
       lint = { enable = true },
     },
   },
-}
-vim.lsp.enable 'ruff'
+})
 
 -- Python (basedpyright)
 -- Type checking + code intelligence (completions, goto-def, hover, rename).
 -- ruff handles linting/formatting; the two are designed to pair.
-vim.lsp.config['basedpyright'] = {
-  on_attach = on_attach,
-  capabilities = capabilities,
+lsp('basedpyright', {
   filetypes = { 'python' },
   root_markers = { 'pyproject.toml', 'pyrightconfig.json', 'setup.py', 'setup.cfg', '.git' },
   single_file_support = true,
@@ -322,8 +278,7 @@ vim.lsp.config['basedpyright'] = {
       },
     },
   },
-}
-vim.lsp.enable 'basedpyright'
+})
 
 -- nvim-cmp Setup (deferred until first insert to keep startup fast)
 lazy.on('InsertEnter', function()
@@ -381,7 +336,6 @@ lazy.on('InsertEnter', function()
       { name = 'path', priority = 300 },
     }),
 
-    -- CLEAR LABELS IN MENU
     formatting = {
       format = function(entry, vim_item)
         vim_item.menu = ({
@@ -396,25 +350,25 @@ lazy.on('InsertEnter', function()
       end,
     },
 
-    -- BETTER SORTING (keeps AI stable at top)
     sorting = {
       priority_weight = 2,
       comparators = {
-        require('cmp').config.compare.offset,
-        require('cmp').config.compare.exact,
-        require('cmp').config.compare.score,
-        require('cmp').config.compare.recently_used,
-        require('cmp').config.compare.kind,
-        require('cmp').config.compare.sort_text,
-        require('cmp').config.compare.length,
-        require('cmp').config.compare.order,
+        cmp.config.compare.offset,
+        cmp.config.compare.exact,
+        cmp.config.compare.score,
+        cmp.config.compare.recently_used,
+        cmp.config.compare.kind,
+        cmp.config.compare.sort_text,
+        cmp.config.compare.length,
+        cmp.config.compare.order,
       },
     },
 
     experimental = {
       ghost_text = true,
     },
-  } -- CMP cmdline support
+  }
+
   cmp.setup.cmdline(
     { '/', '?' },
     { mapping = cmp.mapping.preset.cmdline(), sources = { { name = 'buffer' } } }

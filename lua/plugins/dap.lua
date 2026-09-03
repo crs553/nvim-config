@@ -113,22 +113,24 @@ require('config.lazy').setup(function()
   -- ======================
   -- Python DAP (nvim-dap-python)
   -- ======================
-  require('dap-python').setup 'python'
-  -- Resolve python from virtualenvs
-  _G._python_dap = function()
-    local venv_paths = {
-      vim.fn.getcwd() .. '/.venv/bin/python',
-      vim.fn.getcwd() .. '/venv/bin/python',
-      vim.fn.getcwd() .. '/.venv/Scripts/python.exe',
-      vim.fn.getcwd() .. '/venv/Scripts/python.exe',
+
+  ---Resolve python from virtualenvs in the current project.
+  ---@return string
+  local function resolve_python()
+    local candidates = {
+      '.venv/bin/python',
+      'venv/bin/python',
+      '.venv/Scripts/python.exe',
+      'venv/Scripts/python.exe',
     }
-    for _, path in ipairs(venv_paths) do
+    for _, rel in ipairs(candidates) do
+      local path = vim.fn.getcwd() .. '/' .. rel
       if vim.fn.executable(path) == 1 then return path end
     end
     return 'python'
   end
-  vim.cmd [[command! -nargs=* DapPythonSetPython lua require("dap-python").setup(_G._python_dap())]]
-  vim.cmd [[DapPythonSetPython]]
+
+  require('dap-python').setup(resolve_python())
 
   -- ======================
   -- MATLAB DAP (nvim-dap-matlab)

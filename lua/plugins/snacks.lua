@@ -126,10 +126,6 @@ map.set(
 vim.api.nvim_create_autocmd('User', {
   pattern = 'VeryLazy',
   callback = function()
-    _G.dd = function(...) S.debug.inspect(...) end
-    _G.bt = function() S.debug.backtrace() end
-    vim.print = _G.dd
-
     -- Toggle mappings
     S.toggle.option('spell', { name = 'Spelling' }):map '<leader>us'
     S.toggle.option('wrap', { name = 'Wrap' }):map '<leader>uw'

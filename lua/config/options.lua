@@ -30,7 +30,7 @@ opt.updatetime = 250
 opt.timeoutlen = 300
 
 -- Preview substitutions
-opt.signcolumn = 'yes' -- akways show a signcolumn
+opt.signcolumn = 'yes' -- always show a signcolumn
 opt.showmatch = true -- highlight matching brackets
 opt.completeopt = 'menuone,noinsert,noselect' -- completion o[tions
 opt.showmode = false
@@ -39,8 +39,8 @@ opt.pumblend = 10
 opt.winblend = 0
 opt.conceallevel = 0
 opt.concealcursor = ''
-opt.synmaxcol = 300 -- Preview substitutions live when typing
-opt.inccommand = 'split'
+opt.synmaxcol = 300
+opt.inccommand = 'split' -- Preview substitutions live when typing
 opt.fillchars = { eob = ' ' }
 
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
