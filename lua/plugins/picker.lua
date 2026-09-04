@@ -31,7 +31,7 @@ map(
 map('n', '<leader>fd', function() S.picker.files { ignored = true } end, { desc = 'Find Files' })
 map('n', '<leader>fg', function() S.picker.git_files() end, { desc = 'Find Git Files' })
 map('n', '<leader>fp', function() S.picker.projects() end, { desc = 'Switch project root' })
-map('n', '<leader>fr', function() S.picker.recent() end, { desc = 'Recent Files' })
+--map('n', '<leader>fr', function() S.picker.recent() end, { desc = 'Recent Files' })
 
 -- Grep
 map('n', '<leader>fs', function() S.picker.grep() end, { desc = 'Grep' })
