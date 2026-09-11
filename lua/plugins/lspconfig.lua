@@ -62,7 +62,36 @@ end
 lsp('arduino_language_server', { root_dir = vim.uv.cwd })
 
 lsp 'bashls'
-lsp 'harper_ls'
+-- Grammar & prose linter (British English)
+lsp('harper_ls', {
+  settings = {
+    ['harper-ls'] = {
+      linters = {
+        SpellCheck = true,
+        SpelledNumbers = false,
+        AnA = true,
+        SentenceCapitalization = true,
+        UnclosedQuotes = true,
+        WrongApostrophe = false,
+        LongSentences = true,
+        RepeatedWords = true,
+        Spaces = true,
+        CorrectNumberSuffix = true,
+      },
+      codeActions = { ForceStable = false },
+      markdown = { IgnoreLinkTitle = false },
+      diagnosticSeverity = 'hint',
+      dialect = 'British',
+      maxFileLength = 120000,
+      isolateEnglish = false,
+      userDictPath = '',
+      workspaceDictPath = '',
+      fileDictPath = '',
+      ignoredLintsPath = '',
+      excludePatterns = {},
+    },
+  },
+})
 
 -- Go
 lsp('gopls', {
