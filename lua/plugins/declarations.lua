@@ -67,6 +67,8 @@ vim.pack.add {
   },
 }
 vim.pack.add { { src = gh 'nvim-mini/mini.comment', version = 'stable' } }
+vim.pack.add { { src = gh 'nvim-mini/mini.pairs', version = 'stable' } }
+vim.pack.add { { src = gh 'nvim-mini/mini.move', version = 'stable' } }
 vim.pack.add {
   { src = gh 'stevearc/conform.nvim' },
 }
@@ -81,6 +83,7 @@ vim.pack.add {
 vim.pack.add {
   { src = gh 'nvim-treesitter/nvim-treesitter' },
   { src = gh 'nvim-treesitter/nvim-treesitter-textobjects' },
+  { src = gh 'windwp/nvim-ts-autotag' },
 }
 
 -- Fidget (LSP progress + notification UI)
