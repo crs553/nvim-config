@@ -348,8 +348,8 @@ lazy.on('InsertEnter', function()
       -- only accept with C-y
       ['<C-y>'] = cmp.mapping.confirm { select = true },
 
-      -- enter disabled for completion (always fallback newline)
-      ['<CR>'] = cmp.mapping(function(fallback) fallback() end, { 'i', 's' }),
+      -- confirm selected item, otherwise insert newline
+      ['<CR>'] = cmp.mapping.confirm { select = false },
 
       ['<C-e>'] = cmp.mapping.abort(),
     },
