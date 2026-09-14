@@ -52,20 +52,14 @@ vim.pack.add {
   gh 'nvim-tree/nvim-web-devicons',
 }
 vim.pack.add {
-  gh 'folke/which-key.nvim',
-  gh 'nvim-mini/mini.icons',
+  { src = gh 'folke/which-key.nvim' },
+  { src = gh 'nvim-mini/mini.icons', verson = 'stable' },
 }
-vim.pack.add {
-  { src = gh 'folke/snacks.nvim' },
-}
+vim.pack.add { gh 'folke/snacks.nvim' }
 
 -- Editor features
 vim.pack.add { gh 'lewis6991/gitsigns.nvim' }
-vim.pack.add {
-  {
-    src = gh 'kylechui/nvim-surround',
-  },
-}
+vim.pack.add { { src = gh 'nvim-mini/mini.surround', version = 'stable' } }
 vim.pack.add { { src = gh 'nvim-mini/mini.comment', version = 'stable' } }
 vim.pack.add { { src = gh 'nvim-mini/mini.pairs', version = 'stable' } }
 vim.pack.add { { src = gh 'nvim-mini/mini.move', version = 'stable' } }
