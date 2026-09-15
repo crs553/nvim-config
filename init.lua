@@ -24,6 +24,7 @@ require 'config.packclean'
 require 'config.git'
 
 require 'plugins.declarations'
+require 'plugins.devicons'
 require 'plugins.colorschemes'
 require 'plugins.comment'
 require 'plugins.conform'
