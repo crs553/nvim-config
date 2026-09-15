@@ -18,6 +18,7 @@ end
 local function save_session()
   local ft = vim.bo.filetype
   if ft == 'help' or ft == 'man' then return end
+  pcall(require('dap-view').close) -- prevent DAP View from persisting in session
   pcall(vim.cmd, 'mksession! ' .. vim.fn.fnameescape(session_file()))
 end
 

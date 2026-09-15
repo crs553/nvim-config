@@ -1,7 +1,7 @@
 -- DAP setup (deferred until after startup; only needed when debugging)
 require('config.lazy').setup(function()
   local dap = require 'dap'
-  local dapui = require 'dapui'
+  local dap_view = require 'dap-view'
 
   -- ======================
   -- Workarounds
@@ -18,48 +18,17 @@ require('config.lazy').setup(function()
   end
 
   -- ======================
-  -- DAP UI Setup
+  -- DAP View Setup
   -- ======================
-  dapui.setup {
-    icons = { expanded = '▾', collapsed = '▸', current_frame = '▸' },
-    controls = {
-      icons = {
-        pause = '⏸',
-        play = '▶',
-        step_into = '⏎',
-        step_over = '⏭',
-        step_out = '⏮',
-        step_back = '⏪',
-        run_last = '▶▶',
-        terminate = '⏹',
-        disconnect = '⏏',
-      },
+  dap_view.setup {
+    winbar = {
+      sections = { 'watches', 'scopes', 'exceptions', 'breakpoints', 'threads', 'repl' },
     },
-    layouts = {
-      {
-        elements = {
-          { id = 'scopes', size = 0.35 },
-          { id = 'breakpoints', size = 0.20 },
-          { id = 'stacks', size = 0.25 },
-          { id = 'watches', size = 0.20 },
-        },
-        size = 40,
-        position = 'left',
-      },
-      {
-        elements = {
-          { id = 'repl', size = 1 },
-        },
-        size = 10,
-        position = 'bottom',
-      },
+    windows = {
+      position = 'right',
     },
+    virtual_text = { enabled = true, position = 'inline' },
   }
-
-  -- Auto-open/close DAP UI
-  dap.listeners.after.event_initialized['dapui'] = function() dapui.open { reset = true } end
-  dap.listeners.after.event_terminated['dapui'] = function() dapui.close() end
-  dap.listeners.after.event_exited['dapui'] = function() dapui.close() end
 
   dap.configurations.go = {
     {
@@ -72,16 +41,6 @@ require('config.lazy').setup(function()
 
       args = {},
     },
-  }
-
-  -- ======================
-  -- Virtual Text
-  -- ======================
-  require('nvim-dap-virtual-text').setup {
-    enabled = true,
-    virt_text_pos = 'eol',
-    highlight_changed_variables = true,
-    show_stop_reason = true,
   }
 
   -- ======================
@@ -362,34 +321,41 @@ require('config.lazy').setup(function()
   })
 
   -- Inspection
-  vim.keymap.set('n', '<leader>de', function() dapui.eval() end, {
-    desc = 'Evaluate expression',
+  vim.keymap.set('n', '<leader>de', function() dap_view.hover() end, {
+    desc = 'Evaluate / hover expression',
   })
 
-  vim.keymap.set('n', '<leader>dv', function() require('dap.ui.widgets').hover() end, {
+  vim.keymap.set('n', '<leader>dv', function() dap_view.hover() end, {
     desc = 'Hover variable',
   })
 
-  vim.keymap.set('n', '<leader>dW', function() dapui.elements.watches.add() end, {
+  vim.keymap.set('n', '<leader>dW', function() dap_view.add_expr() end, {
     desc = 'Add watch',
   })
 
   -- UI
-  vim.keymap.set('n', '<leader>du', dapui.toggle, {
-    desc = 'Toggle DAP UI',
+  vim.keymap.set('n', '<leader>du', function() dap_view.toggle() end, {
+    desc = 'Toggle DAP View',
   })
 
-  vim.keymap.set('n', '<leader>dr', function() dap.repl.toggle({}, 'vsplit') end, {
-    desc = 'Toggle REPL',
+  vim.keymap.set('n', '<leader>dr', function() dap_view.show_view 'repl' end, {
+    desc = 'Switch to REPL view',
   })
 
-  vim.keymap.set('n', '<leader>dh', function()
-    local buf = dapui.elements.stacks.buffer()
-    local wins = vim.fn.win_findbuf(buf)
+  vim.keymap.set('n', '<leader>ds', function() dap_view.show_view 'scopes' end, {
+    desc = 'Switch to Scopes view',
+  })
 
-    if #wins > 0 then vim.api.nvim_set_current_win(wins[1]) end
-  end, {
-    desc = 'Focus stacks',
+  vim.keymap.set('n', '<leader>dn', function() dap_view.show_view 'breakpoints' end, {
+    desc = 'Switch to Breakpoints view',
+  })
+
+  vim.keymap.set('n', '<leader>dS', function() dap_view.show_view 'threads' end, {
+    desc = 'Switch to Threads view',
+  })
+
+  vim.keymap.set('n', '<leader>dh', function() dap_view.jump_to_view 'threads' end, {
+    desc = 'Focus threads (stack frames)',
   })
 
   -- Stack navigation
@@ -402,7 +368,7 @@ require('config.lazy').setup(function()
   })
 
   -- Visual / operator-pending evaluation
-  vim.keymap.set({ 'x', 'o' }, '<leader>de', function() dapui.eval() end, {
-    desc = 'Evaluate expression',
+  vim.keymap.set({ 'x', 'o' }, '<leader>de', function() dap_view.hover() end, {
+    desc = 'Evaluate / hover selection',
   })
 end)

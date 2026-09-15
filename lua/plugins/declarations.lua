@@ -111,9 +111,8 @@ vim.pack.add {
 -- we stay on mainline and apply the fix as a runtime monkeypatch in dap.lua.
 vim.pack.add {
   { src = 'https://codeberg.org/mfussenegger/nvim-dap.git' },
+  { src = gh 'igorlfs/nvim-dap-view' },
   { src = gh 'Jaehaks/nvim-dap-matlab' },
-  { src = gh 'rcarriga/nvim-dap-ui' },
-  { src = gh 'theHamsta/nvim-dap-virtual-text' },
   { src = gh 'leoluz/nvim-dap-go' },
   { src = 'https://codeberg.org/mfussenegger/nvim-dap-python' },
   { src = gh 'nvim-neotest/nvim-nio' },
