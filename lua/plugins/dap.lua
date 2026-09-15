@@ -22,10 +22,13 @@ require('config.lazy').setup(function()
   -- ======================
   dap_view.setup {
     winbar = {
-      sections = { 'watches', 'scopes', 'exceptions', 'breakpoints', 'threads', 'repl' },
+      sections = { 'watches', 'scopes', 'exceptions', 'breakpoints', 'threads', 'repl', 'console' },
+      default_section = 'repl',
     },
+    auto_toggle = true,
     windows = {
       position = 'right',
+      size = 0.5,
     },
     virtual_text = { enabled = true, position = 'inline' },
   }
