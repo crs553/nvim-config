@@ -168,6 +168,119 @@ require('config.lazy').setup(function()
   end
 
   -- ======================
+  -- MATLAB help (visual/normal mode)
+  -- ======================
+  -- <leader>mh : show MATLAB help("<fcn>") in a Neovim float
+  -- <leader>mH : open MATLAB doc("<fcn>") in the MATLAB Help browser
+
+  local function get_visual_selection()
+    local srow, scol = unpack(vim.api.nvim_buf_get_mark(0, '<'))
+    local erow, ecol = unpack(vim.api.nvim_buf_get_mark(0, '>'))
+
+    if srow > erow or (srow == erow and scol > ecol) then
+      srow, scol, erow, ecol = erow, ecol, srow, scol
+    end
+
+    local text =
+      table.concat(vim.api.nvim_buf_get_text(0, srow - 1, scol - 1, erow - 1, ecol, {}), ' ')
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'nx', false)
+    return (text or ''):gsub('^%s+', ''):gsub('%s+$', '')
+  end
+
+  local function run_with_help_selection(fn)
+    local fcn = get_visual_selection()
+    if fcn == '' or not fcn:match '^[%w_.]+$' then
+      vim.notify('[matlab-dap] Select a single function name first', vim.log.levels.WARN)
+      return
+    end
+    fn(fcn)
+  end
+
+  -- normal-mode: use the word under the cursor, else ask in a floating input window
+  local function run_with_word_or_input(fn)
+    local cword = vim.fn.expand '<cword>'
+    if cword ~= '' and cword:match '^[%w_.]+$' then
+      fn(cword)
+      return
+    end
+    vim.ui.input({ prompt = 'MATLAB function: ' }, function(fcn)
+      if not fcn or fcn == '' then return end
+      fcn = fcn:gsub('^%s+', ''):gsub('%s+$', '')
+      if not fcn:match '^[%w_.]+$' then
+        vim.notify('[matlab-dap] Not a valid function name', vim.log.levels.WARN)
+        return
+      end
+      fn(fcn)
+    end)
+  end
+
+  local function matlab_help_float(fcn)
+    -- evalRequest is one-way; fetch help text via a temp file round-trip.
+    local tmp = vim.fn.tempname():gsub('\\', '/')
+    local cmd = string.format(
+      "try,f=fopen('%s','w');fprintf(f,'%%s',help('%s'));fclose(f);catch e,f=fopen('%s','w');fprintf(f,'%%s',e.message);fclose(f);end",
+      tmp,
+      fcn,
+      tmp
+    )
+    matlab_adapter.send_to_lsp_direct(cmd)
+
+    -- poll until the engine has WRITTEN the content: fopen() creates an empty
+    -- file first, so "file exists" alone returns too early
+    local ok = vim.wait(
+      2500,
+      function() return vim.fn.filereadable(tmp) == 1 and #vim.fn.readfile(tmp) > 0 end,
+      20
+    )
+    if not ok then
+      if vim.fn.filereadable(tmp) == 1 then vim.fn.delete(tmp) end
+      vim.notify('[matlab-dap] Timed out fetching help for ' .. fcn, vim.log.levels.ERROR)
+      return
+    end
+
+    local contents = vim.fn.readfile(tmp)
+    vim.fn.delete(tmp)
+    vim.list_extend(contents, { '', '-- help(' .. fcn .. ')' })
+
+    -- 'text' ft on purpose: a 'matlab' ft would re-fire FileType autocmds
+    -- (this augroup + conform) inside the float buffer.
+    vim.lsp.util.open_floating_preview(contents, 'text', { border = 'rounded' })
+  end
+
+  local function matlab_help_browser(fcn) matlab_adapter.send_to_lsp_direct("doc('" .. fcn .. "')") end
+
+  local function set_matlab_help_keymaps(bufnr)
+    vim.keymap.set('n', '<leader>mh', function() run_with_word_or_input(matlab_help_float) end, {
+      buffer = bufnr,
+      desc = 'MATLAB: show help (float)',
+    })
+    vim.keymap.set('n', '<leader>mH', function() run_with_word_or_input(matlab_help_browser) end, {
+      buffer = bufnr,
+      desc = 'MATLAB: open in Help browser',
+    })
+    vim.keymap.set('x', '<leader>mh', function() run_with_help_selection(matlab_help_float) end, {
+      buffer = bufnr,
+      desc = 'MATLAB: show help (float)',
+    })
+    vim.keymap.set('x', '<leader>mH', function() run_with_help_selection(matlab_help_browser) end, {
+      buffer = bufnr,
+      desc = 'MATLAB: open in Help browser',
+    })
+  end
+
+  local matlab_help_augroup = vim.api.nvim_create_augroup('matlab-dap-help', { clear = true })
+  vim.api.nvim_create_autocmd('FileType', {
+    group = matlab_help_augroup,
+    pattern = 'matlab',
+    callback = function(args) set_matlab_help_keymaps(args.buf) end,
+  })
+  for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_valid(bufnr) and vim.bo[bufnr].filetype == 'matlab' then
+      set_matlab_help_keymaps(bufnr)
+    end
+  end
+
+  -- ======================
   -- DAP Keymaps
   -- ======================
 
