@@ -4,6 +4,9 @@
 require('fidget').setup {
   notification = {
     override_vim_notify = false,
+    window = {
+      max_width = 0, -- disable width limit of message
+    },
   },
   opts = {
     progress = {
