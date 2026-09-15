@@ -5,4 +5,9 @@ require('fidget').setup {
   notification = {
     override_vim_notify = false,
   },
+  opts = {
+    progress = {
+      ignore_empty_message = true,
+    },
+  },
 }
