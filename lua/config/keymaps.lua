@@ -1,8 +1,17 @@
 -- lua/config/keymaps.lua
 local map = vim.keymap.set
 
-map('n', '<M-j>', '<cmd>cnext<CR>', { desc = 'Quickfix Next' })
-map('n', '<M-k>', '<cmd>cprev<CR>', { desc = 'Quickfix Prev' })
+-- Quickfix
+map('n', '<leader>qo', '<cmd>copen<CR>', { desc = 'Quickfix open' })
+map('n', '<leader>qq', '<cmd>cclose<CR>', { desc = 'Quickfix quit' })
+map('n', '<leader>qn', '<cmd>cnext<CR>', { desc = 'Quickfix next' })
+map('n', '<leader>qp', '<cmd>cprev<CR>', { desc = 'Quickfix prev' })
+map('n', '<leader>qc', function()
+  vim.fn.setqflist {}
+  vim.cmd 'cclose'
+  vim.notify 'Quickfix list cleared'
+end, { desc = 'Clear quickfix list' })
+map('n', '<leader>qd', vim.diagnostic.setloclist, { desc = 'Diagnostics to loclist' })
 
 map('n', '<space><space>x', '<cmd>source %<CR>', { desc = 'Source File' })
 map('n', '<space>x', ':.lua<CR>', { desc = 'Run Line' })
@@ -22,16 +31,7 @@ local function close_all_buffers_except_current()
   end
   vim.notify 'Non-focused buffers deleted'
 end
--- Map to a key (e.g., <leader>q)
-map('n', '<leader>qb', close_all_buffers_except_current, { desc = 'Close all other buffers' })
-
-map('n', '<leader>qc', function()
-  vim.fn.setqflist {}
-  vim.cmd 'cclose'
-  vim.notify 'Quickfix list cleared'
-end, { desc = 'Clear quickfix list' })
-
-map('n', '<leader>qd', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+map('n', '<leader>bo', close_all_buffers_except_current, { desc = 'Close all other buffers' })
 
 map('n', '<c-k>', ':wincmd k<CR>', { desc = 'Move up in split', silent = true })
 map('n', '<c-j>', ':wincmd j<CR>', { desc = 'Move down in split ', silent = true })
