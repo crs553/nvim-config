@@ -106,12 +106,12 @@ require('config.lazy').setup(function()
       },
       keymaps = {
         toggle_workspace = '<leader>dw',
-        toggle_filebrowser = '<leader>df',
+        toggle_filebrowser = '<leader>dF',
       },
     },
   }
 
-  -- nvim-dap-matlab's <leader>dw / <leader>df send evalRequest to the MATLAB LS
+  -- nvim-dap-matlab's <leader>dw / <leader>dF send evalRequest to the MATLAB LS
   -- as soon as `lsp_client` is set, which happens while the LS is still
   -- "connecting" (before `lsp_ready`). Same guard as adapter.start() to avoid
   -- crashing the LS during load.
@@ -319,7 +319,7 @@ require('config.lazy').setup(function()
     desc = 'Step out',
   })
 
-  vim.keymap.set('n', '<leader>dF', dap.restart_frame, {
+  vim.keymap.set('n', '<leader>dA', dap.restart_frame, {
     desc = 'Restart frame',
   })
 
@@ -369,6 +369,75 @@ require('config.lazy').setup(function()
   vim.keymap.set('n', '<leader>dj', dap.down, {
     desc = 'Move down stack frame',
   })
+
+  -- Run/debug current file
+  vim.keymap.set('n', '<leader>df', function()
+    local ft = vim.bo.filetype
+    local cfg = dap.configurations[ft]
+    if cfg and #cfg > 0 then
+      dap.run(cfg[1])
+    else
+      dap.run {
+        type = ft,
+        request = 'launch',
+        name = 'Debug current file',
+        program = '${file}',
+        cwd = '${workspaceFolder}',
+      }
+    end
+  end, { desc = 'Debug/run current file' })
+
+  -- MATLAB: run current test file from repo root via DAP REPL
+  vim.keymap.set('n', '<leader>dT', function()
+    if vim.bo.filetype ~= 'matlab' then
+      vim.notify('[dap] <leader>dT is only for MATLAB files', vim.log.levels.WARN)
+      return
+    end
+
+    local dap = require 'dap'
+    local file = vim.fn.expand '%:p'
+    local rel = vim.fn.fnamemodify(file, ':.')
+    local root = vim.fn.getcwd()
+
+    local test_cmd = string.format(
+      "clc; addpath(genpath('%s')); results = run(testsuite('%s')); disp(results);",
+      root:gsub('\\', '/'),
+      rel:gsub('\\', '/')
+    )
+
+    local function run_test()
+      local session = dap.session()
+      if not session or session.config.type ~= 'matlab' then
+        vim.notify('[matlab-dap] No active MATLAB debug session', vim.log.levels.WARN)
+        return
+      end
+      pcall(function() require('dap-view').show_view 'repl' end)
+      vim.notify('[matlab-dap] Running tests in REPL...', vim.log.levels.INFO)
+      session:evaluate(test_cmd, nil, { context = 'repl' })
+    end
+
+    local session = dap.session()
+    if not session or session.config.type ~= 'matlab' then
+      local ok_cfg = dap.configurations.matlab and dap.configurations.matlab[1]
+      if not ok_cfg then
+        vim.notify('[matlab-dap] No MATLAB DAP config found', vim.log.levels.ERROR)
+        return
+      end
+      vim.notify('[matlab-dap] Starting MATLAB debug session...', vim.log.levels.INFO)
+      local listener_id = 'matlab_test_run_' .. tostring(math.random(1000000))
+      dap.listeners.after.event_initialized[listener_id] = function(s)
+        if s.config.type ~= 'matlab' then
+          return
+        end
+        dap.listeners.after.event_initialized[listener_id] = nil
+        vim.defer_fn(run_test, 1000)
+      end
+      dap.run(vim.tbl_extend('force', ok_cfg, { name = 'MATLAB Test', program = file, cwd = root }))
+      return
+    end
+
+    run_test()
+  end, { desc = 'MATLAB: run current test file via DAP REPL' })
 
   -- Visual / operator-pending evaluation
   vim.keymap.set({ 'x', 'o' }, '<leader>de', function() dap_view.hover() end, {
