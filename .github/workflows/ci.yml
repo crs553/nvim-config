@@ -1,12 +1,13 @@
+---
 name: CI
 
-on:
+"on":
   push:
     branches: [main]
   pull_request:
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: "ci-${{ github.workflow }}-${{ github.ref }}"
   cancel-in-progress: true
 
 permissions:
@@ -20,7 +21,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Lint GitHub Actions workflows
-        uses: reviewdog/action-actionlint@v1
+        uses: reviewdog/action-actionlint@v1.66.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review
@@ -51,7 +52,7 @@ jobs:
           luacheck lua/ ftplugin/
 
       - name: Check for typos
-        uses: crate-ci/typos@v1.42.3
+        uses: crate-ci/typos@v1.40.0
         with:
           config: ./typos.toml
 
@@ -76,7 +77,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: ~/.local/share/nvim/site/pack
-          key: pack-${{ matrix.nvim-version }}-${{ hashFiles('**/nvim-pack-lock.json') }}
+          key: "pack-${{ matrix.nvim-version }}-${{ hashFiles('**/nvim-pack-lock.json') }}"
           restore-keys: |
             pack-${{ matrix.nvim-version }}-
             pack-
@@ -101,10 +102,8 @@ jobs:
           export XDG_CONFIG_HOME="$PWD/.ci"
           mkdir -p "$XDG_CONFIG_HOME"
           ln -s "$PWD" "$XDG_CONFIG_HOME/nvim"
-
           set -o pipefail
           nvim --headless -c "qa" 2>&1 | tee nvim.log
-
           ! grep -E "E[0-9]{4}:|Error in |Error detected|stack traceback|Attempt to" nvim.log
 
       - name: Checkhealth smoke test

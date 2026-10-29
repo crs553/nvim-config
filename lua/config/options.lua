@@ -17,7 +17,7 @@ opt.autoindent = true -- Copy indent from current line when starting a new line
 -- Text wrapping
 opt.breakindent = true
 
--- search unless \C or one or more captials in search term
+-- search unless \C or one or more capitals in search term
 opt.ignorecase = true -- case insensitive search
 opt.smartcase = true -- case sensitive if upper case in string
 opt.hlsearch = true -- highlight search matches
@@ -26,7 +26,7 @@ opt.incsearch = true -- show matches as you type
 -- Decrease update time
 opt.updatetime = 250
 
--- Decrease mapped sentense waittime
+-- Decrease mapped sentence waittime
 opt.timeoutlen = 300
 
 -- Preview substitutions

@@ -53,7 +53,7 @@ vim.pack.add {
 }
 vim.pack.add {
   { src = gh 'folke/which-key.nvim' },
-  { src = gh 'nvim-mini/mini.icons', verson = 'stable' },
+  { src = gh 'nvim-mini/mini.icons', version = 'stable' },
 }
 vim.pack.add { gh 'folke/snacks.nvim' }
 
