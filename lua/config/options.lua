@@ -6,6 +6,7 @@ opt.cursorline = true -- Highlight the line of the cursor
 opt.wrap = true
 opt.scrolloff = 10 -- keep 10 lines above and below the printer
 opt.sidescrolloff = 10 -- keep 10 lines left/right of the cursor
+opt.smoothscroll = true
 
 -- Tabstops
 opt.tabstop = 2 -- Number of spaces a <Tab> counts for
