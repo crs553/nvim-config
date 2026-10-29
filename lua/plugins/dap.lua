@@ -394,7 +394,7 @@ require('config.lazy').setup(function()
     end
 
     map('n', '<leader>dta', function()
-      local dap = require 'dap'
+      local dap_mod = require 'dap'
       local file = vim.fn.expand '%:p'
       local rel = vim.fn.fnamemodify(file, ':.')
       local root = vim.fn.getcwd()
@@ -406,7 +406,7 @@ require('config.lazy').setup(function()
       )
 
       local function run_test()
-        local session = dap.session()
+        local session = dap_mod.session()
         if not session or session.config.type ~= 'matlab' then
           vim.notify('[matlab-dap] No active MATLAB debug session', vim.log.levels.WARN)
           return
@@ -416,23 +416,23 @@ require('config.lazy').setup(function()
         session:evaluate(test_cmd, nil, { context = 'repl' })
       end
 
-      local session = dap.session()
+      local session = dap_mod.session()
       if not session or session.config.type ~= 'matlab' then
-        local ok_cfg = dap.configurations.matlab and dap.configurations.matlab[1]
+        local ok_cfg = dap_mod.configurations.matlab and dap_mod.configurations.matlab[1]
         if not ok_cfg then
           vim.notify('[matlab-dap] No MATLAB DAP config found', vim.log.levels.ERROR)
           return
         end
         vim.notify('[matlab-dap] Starting MATLAB debug session...', vim.log.levels.INFO)
         local listener_id = 'matlab_test_all_' .. tostring(math.random(1000000))
-        dap.listeners.after.event_initialized[listener_id] = function(s)
-          if s.config.type ~= 'matlab' then return end
-          dap.listeners.after.event_initialized[listener_id] = nil
+        dap_mod.listeners.after.event_initialized[listener_id] = function(s)
+          if s.config.type ~= 'matlab' then
+            return
+          end
+          dap_mod.listeners.after.event_initialized[listener_id] = nil
           vim.defer_fn(run_test, 1000)
         end
-        dap.run(
-          vim.tbl_extend('force', ok_cfg, { name = 'MATLAB Test', program = file, cwd = root })
-        )
+        dap_mod.run(vim.tbl_extend('force', ok_cfg, { name = 'MATLAB Test', program = file, cwd = root }))
         return
       end
 
@@ -440,7 +440,7 @@ require('config.lazy').setup(function()
     end, 'MATLAB: run all tests in current file')
 
     map('n', '<leader>dtf', function()
-      local dap = require 'dap'
+      local dap_mod = require 'dap'
       local file = vim.fn.expand '%:p'
       local rel = vim.fn.fnamemodify(file, ':.')
       local root = vim.fn.getcwd()
@@ -477,7 +477,9 @@ require('config.lazy').setup(function()
       end
 
       local test_cmd = string.format(
-        "clc; cd('%s'); addpath(genpath('.')); suite = testsuite('%s'); suite = suite.selectIf('Name', '%s/%s'); if isempty(suite) then disp('No matching test method'); else results = run(suite); disp(results); end",
+        "clc; cd('%s'); addpath(genpath('.')); suite = testsuite('%s'); "
+          .. "suite = suite.selectIf('Name', '%s/%s'); "
+          .. "if isempty(suite) then disp('No matching test method'); else results = run(suite); disp(results); end",
         root:gsub('\\', '/'),
         rel:gsub('\\', '/'),
         class_name,
@@ -485,7 +487,7 @@ require('config.lazy').setup(function()
       )
 
       local function run_test()
-        local session = dap.session()
+        local session = dap_mod.session()
         if not session or session.config.type ~= 'matlab' then
           vim.notify('[matlab-dap] No active MATLAB debug session', vim.log.levels.WARN)
           return
@@ -498,23 +500,23 @@ require('config.lazy').setup(function()
         session:evaluate(test_cmd, nil, { context = 'repl' })
       end
 
-      local session = dap.session()
+      local session = dap_mod.session()
       if not session or session.config.type ~= 'matlab' then
-        local ok_cfg = dap.configurations.matlab and dap.configurations.matlab[1]
+        local ok_cfg = dap_mod.configurations.matlab and dap_mod.configurations.matlab[1]
         if not ok_cfg then
           vim.notify('[matlab-dap] No MATLAB DAP config found', vim.log.levels.ERROR)
           return
         end
         vim.notify('[matlab-dap] Starting MATLAB debug session...', vim.log.levels.INFO)
         local listener_id = 'matlab_test_method_' .. tostring(math.random(1000000))
-        dap.listeners.after.event_initialized[listener_id] = function(s)
-          if s.config.type ~= 'matlab' then return end
-          dap.listeners.after.event_initialized[listener_id] = nil
+        dap_mod.listeners.after.event_initialized[listener_id] = function(s)
+          if s.config.type ~= 'matlab' then
+            return
+          end
+          dap_mod.listeners.after.event_initialized[listener_id] = nil
           vim.defer_fn(run_test, 1000)
         end
-        dap.run(
-          vim.tbl_extend('force', ok_cfg, { name = 'MATLAB Test', program = file, cwd = root })
-        )
+        dap_mod.run(vim.tbl_extend('force', ok_cfg, { name = 'MATLAB Test', program = file, cwd = root }))
         return
       end
 
