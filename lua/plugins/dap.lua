@@ -426,13 +426,13 @@ require('config.lazy').setup(function()
         vim.notify('[matlab-dap] Starting MATLAB debug session...', vim.log.levels.INFO)
         local listener_id = 'matlab_test_all_' .. tostring(math.random(1000000))
         dap_mod.listeners.after.event_initialized[listener_id] = function(s)
-          if s.config.type ~= 'matlab' then
-            return
-          end
+          if s.config.type ~= 'matlab' then return end
           dap_mod.listeners.after.event_initialized[listener_id] = nil
           vim.defer_fn(run_test, 1000)
         end
-        dap_mod.run(vim.tbl_extend('force', ok_cfg, { name = 'MATLAB Test', program = file, cwd = root }))
+        dap_mod.run(
+          vim.tbl_extend('force', ok_cfg, { name = 'MATLAB Test', program = file, cwd = root })
+        )
         return
       end
 
@@ -510,13 +510,13 @@ require('config.lazy').setup(function()
         vim.notify('[matlab-dap] Starting MATLAB debug session...', vim.log.levels.INFO)
         local listener_id = 'matlab_test_method_' .. tostring(math.random(1000000))
         dap_mod.listeners.after.event_initialized[listener_id] = function(s)
-          if s.config.type ~= 'matlab' then
-            return
-          end
+          if s.config.type ~= 'matlab' then return end
           dap_mod.listeners.after.event_initialized[listener_id] = nil
           vim.defer_fn(run_test, 1000)
         end
-        dap_mod.run(vim.tbl_extend('force', ok_cfg, { name = 'MATLAB Test', program = file, cwd = root }))
+        dap_mod.run(
+          vim.tbl_extend('force', ok_cfg, { name = 'MATLAB Test', program = file, cwd = root })
+        )
         return
       end
 
