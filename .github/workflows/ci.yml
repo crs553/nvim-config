@@ -13,36 +13,29 @@ permissions:
   contents: read
 
 jobs:
-  ci:
+  lint-actions:
     runs-on: ubuntu-latest
-
     steps:
       - name: Check out repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v6
 
-      - name: Install Neovim
-        uses: rhysd/action-setup-vim@v1
+      - name: Lint GitHub Actions workflows
+        uses: reviewdog/action-actionlint@v1
         with:
-          neovim: true
-          version: stable
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          fail_level: error
 
-      - name: Cache plugins
-        uses: actions/cache@v5
-        with:
-          path: ~/.local/share/nvim/site/pack
-          key: pack-${{ hashFiles('**/nvim-pack-lock.json') }}
-          restore-keys: pack-
-
-      - name: Install dependencies
+      - name: Lint YAML workflows
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-          git \
-          curl \
-          unzip \
-          build-essential \
-          cmake \
-          lua-check
+          pip install --quiet yamllint
+          yamllint .github/workflows
+
+  style:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
 
       - name: Check formatting
         uses: JohnnyMorganz/stylua-action@v5
@@ -52,7 +45,54 @@ jobs:
           args: --check .
 
       - name: Lint Lua
-        run: luacheck lua/ ftplugin/
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua-check
+          luacheck lua/ ftplugin/
+
+      - name: Check for typos
+        uses: crate-ci/typos@v1.42.3
+        with:
+          config: ./typos.toml
+
+  neovim:
+    needs: [lint-actions, style]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        nvim-version: [stable, nightly]
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Install Neovim
+        uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: ${{ matrix.nvim-version }}
+
+      - name: Cache plugins
+        uses: actions/cache@v5
+        with:
+          path: ~/.local/share/nvim/site/pack
+          key: pack-${{ matrix.nvim-version }}-${{ hashFiles('**/nvim-pack-lock.json') }}
+          restore-keys: |
+            pack-${{ matrix.nvim-version }}-
+            pack-
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            git \
+            curl \
+            unzip \
+            build-essential \
+            cmake
+
+      - name: Verify lockfile not modified
+        run: git diff --exit-code -- nvim-pack-lock.json
 
       - name: Verify config loads
         env:
@@ -66,3 +106,12 @@ jobs:
           nvim --headless -c "qa" 2>&1 | tee nvim.log
 
           ! grep -E "E[0-9]{4}:|Error in |Error detected|stack traceback|Attempt to" nvim.log
+
+      - name: Checkhealth smoke test
+        env:
+          NVIM_SKIP_MASON: "1"
+        run: |
+          export XDG_CONFIG_HOME="$PWD/.ci"
+          ln -sf "$PWD" "$XDG_CONFIG_HOME/nvim"
+          nvim --headless "+checkhealth" "+qa" 2>&1 | tee checkhealth.log || true
+          ! grep -n "ERROR" checkhealth.log

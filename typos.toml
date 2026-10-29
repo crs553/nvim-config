@@ -1,0 +1,16 @@
+[files]
+extend-exclude = [".git/", "nvim-pack-lock.json"]
+
+[default]
+extend-ignore-re = [
+  "(?i)LSP",
+  "(?i)RPC",
+]
+
+[default.extend-words]
+nvim = "nvim"
+luacheck = "luacheck"
+stylua = "stylua"
+treesitter = "treesitter"
+conform = "conform"
+dap = "dap"
