@@ -46,6 +46,24 @@ require('config.lazy').setup(function()
     },
   }
 
+  -- Wrap long lines in DAP View and REPL windows.
+  local dap_wrap = vim.api.nvim_create_augroup('DapViewWrap', {
+    clear = true,
+  })
+
+  vim.api.nvim_create_autocmd({ 'FileType', 'BufWinEnter', 'WinEnter' }, {
+    group = dap_wrap,
+    callback = function()
+      local ft = vim.bo.filetype
+
+      if ft == 'dap-view' or ft == 'dap-repl' then
+        vim.wo.wrap = true
+        vim.wo.linebreak = true
+        vim.wo.breakindent = true
+      end
+    end,
+  })
+
   -- ======================
   -- Go DAP (nvim-dap-go)
   -- ======================
