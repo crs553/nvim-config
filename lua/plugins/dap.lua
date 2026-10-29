@@ -25,7 +25,7 @@ require('config.lazy').setup(function()
       sections = { 'watches', 'scopes', 'exceptions', 'breakpoints', 'threads', 'repl', 'console' },
       default_section = 'repl',
     },
-    auto_toggle = true,
+    auto_toggle = false,
     windows = {
       position = 'right',
       size = 0.5,
