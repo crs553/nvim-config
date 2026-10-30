@@ -429,7 +429,15 @@ require('config.lazy').setup(function()
           vim.notify('[matlab-dap] No active MATLAB debug session', vim.log.levels.WARN)
           return
         end
-        pcall(function() require('dap-view').show_view 'repl' end)
+        local dv_ok, dv = pcall(require, 'dap-view')
+        if dv_ok then
+          pcall(dv.open)
+          pcall(dv.show_view, 'repl')
+        end
+        local repl_ok, dap_repl = pcall(require, 'dap.repl')
+        if repl_ok and dap_repl.clear then
+          pcall(dap_repl.clear)
+        end
         vim.notify('[matlab-dap] Running all tests in file...', vim.log.levels.INFO)
         session:evaluate(test_cmd, nil, { context = 'repl' })
       end
@@ -510,7 +518,15 @@ require('config.lazy').setup(function()
           vim.notify('[matlab-dap] No active MATLAB debug session', vim.log.levels.WARN)
           return
         end
-        pcall(function() require('dap-view').show_view 'repl' end)
+        local dv_ok, dv = pcall(require, 'dap-view')
+        if dv_ok then
+          pcall(dv.open)
+          pcall(dv.show_view, 'repl')
+        end
+        local repl_ok, dap_repl = pcall(require, 'dap.repl')
+        if repl_ok and dap_repl.clear then
+          pcall(dap_repl.clear)
+        end
         vim.notify(
           string.format('[matlab-dap] Running %s/%s...', class_name, method_name),
           vim.log.levels.INFO
