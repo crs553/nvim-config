@@ -435,9 +435,7 @@ require('config.lazy').setup(function()
           pcall(dv.show_view, 'repl')
         end
         local repl_ok, dap_repl = pcall(require, 'dap.repl')
-        if repl_ok and dap_repl.clear then
-          pcall(dap_repl.clear)
-        end
+        if repl_ok and dap_repl.clear then pcall(dap_repl.clear) end
         vim.notify('[matlab-dap] Running all tests in file...', vim.log.levels.INFO)
         session:evaluate(test_cmd, nil, { context = 'repl' })
       end
@@ -524,9 +522,7 @@ require('config.lazy').setup(function()
           pcall(dv.show_view, 'repl')
         end
         local repl_ok, dap_repl = pcall(require, 'dap.repl')
-        if repl_ok and dap_repl.clear then
-          pcall(dap_repl.clear)
-        end
+        if repl_ok and dap_repl.clear then pcall(dap_repl.clear) end
         vim.notify(
           string.format('[matlab-dap] Running %s/%s...', class_name, method_name),
           vim.log.levels.INFO
