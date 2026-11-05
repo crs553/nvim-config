@@ -52,7 +52,7 @@ jobs:
           luacheck lua/ ftplugin/
 
       - name: Check for typos
-        uses: crate-ci/typos@v1.40.0
+        uses: crate-ci/typos@v1.52.0
         with:
           config: ./typos.toml
 
