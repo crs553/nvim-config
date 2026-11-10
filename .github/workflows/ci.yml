@@ -5,6 +5,8 @@ name: CI
   push:
     branches: [main]
   pull_request:
+  schedule:
+    - cron: "0 6 * * 1"
 
 concurrency:
   group: "ci-${{ github.workflow }}-${{ github.ref }}"
@@ -16,12 +18,16 @@ permissions:
 jobs:
   lint-actions:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
 
       - name: Lint GitHub Actions workflows
-        uses: reviewdog/action-actionlint@v1.66.1
+        uses: reviewdog/action-actionlint@v1.81.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review
@@ -29,11 +35,12 @@ jobs:
 
       - name: Lint YAML workflows
         run: |
-          pip install --quiet yamllint
+          python -m pip install --quiet yamllint==1.37.1
           yamllint .github/workflows
 
   style:
     runs-on: ubuntu-latest
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
@@ -41,28 +48,34 @@ jobs:
       - name: Check formatting
         uses: JohnnyMorganz/stylua-action@v5
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           version: 2.5.2
           args: --check .
 
-      - name: Lint Lua
+      - name: Install LuaCheck
         run: |
           sudo apt-get update
           sudo apt-get install -y lua-check
-          luacheck lua/ ftplugin/
+
+      - name: Lint Lua
+        run: luacheck init.lua lua/ ftplugin/
 
       - name: Check for typos
-        uses: crate-ci/typos@v1.40.0
+        uses: crate-ci/typos@v1.52.0
         with:
           config: ./typos.toml
 
   neovim:
     needs: [lint-actions, style]
     runs-on: ubuntu-latest
+
+    env:
+      NVIM_SKIP_MASON: "1"
+
     strategy:
       fail-fast: false
       matrix:
         nvim-version: [stable, nightly]
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
@@ -77,10 +90,9 @@ jobs:
         uses: actions/cache@v5
         with:
           path: ~/.local/share/nvim/site/pack
-          key: "pack-${{ matrix.nvim-version }}-${{ hashFiles('**/nvim-pack-lock.json') }}"
-          restore-keys: |
-            pack-${{ matrix.nvim-version }}-
-            pack-
+          key: >-
+            nvim-plugins-${{ runner.os }}-${{ matrix.nvim-version }}-${{
+            hashFiles('nvim-pack-lock.json') }}
 
       - name: Install dependencies
         run: |
@@ -92,25 +104,29 @@ jobs:
             build-essential \
             cmake
 
-      - name: Verify lockfile not modified
-        run: git diff --exit-code -- nvim-pack-lock.json
-
-      - name: Verify config loads
-        env:
-          NVIM_SKIP_MASON: "1"
+      - name: Configure Neovim environment
         run: |
-          export XDG_CONFIG_HOME="$PWD/.ci"
+          export XDG_CONFIG_HOME="$RUNNER_TEMP/nvim-config"
           mkdir -p "$XDG_CONFIG_HOME"
-          ln -s "$PWD" "$XDG_CONFIG_HOME/nvim"
-          set -o pipefail
-          nvim --headless -c "qa" 2>&1 | tee nvim.log
-          ! grep -E "E[0-9]{4}:|Error in |Error detected|stack traceback|Attempt to" nvim.log
+          ln -s "$GITHUB_WORKSPACE" "$XDG_CONFIG_HOME/nvim"
 
-      - name: Checkhealth smoke test
-        env:
-          NVIM_SKIP_MASON: "1"
+          echo "XDG_CONFIG_HOME=$XDG_CONFIG_HOME" >> "$GITHUB_ENV"
+
+      - name: Verify configuration loads
         run: |
-          export XDG_CONFIG_HOME="$PWD/.ci"
-          ln -sf "$PWD" "$XDG_CONFIG_HOME/nvim"
-          nvim --headless "+checkhealth" "+qa" 2>&1 | tee checkhealth.log || true
-          ! grep -n "ERROR" checkhealth.log
+          set -o pipefail
+
+          nvim --headless \
+            -c "lua dofile('tests/smoke.lua')" \
+            -c "qa!" \
+            2>&1 | tee nvim.log
+
+          if grep -Eq \
+            'E[0-9]{4}:|Error in |Error detected|stack traceback|Attempt to' \
+            nvim.log; then
+            echo "Neovim configuration reported errors"
+            exit 1
+          fi
+
+      - name: Verify lockfile was not modified
+        run: git diff --exit-code -- nvim-pack-lock.json
