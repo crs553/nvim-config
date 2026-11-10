@@ -201,12 +201,12 @@ vim.api.nvim_create_user_command(
 )
 vim.cmd.cabbrev('termvsplit', 'Termvsplit')
 
-vim.keymap.set('n', '<leader>tv', function() vim.cmd 'Termvsplit' end, {
+vim.keymap.set('n', '<M-v>', function() vim.cmd 'Termvsplit' end, {
   noremap = true,
   silent = true,
   desc = 'Open terminal in vertical split',
 })
-vim.keymap.set('n', '<leader>th', function() open_split_terminal 'split' end, {
+vim.keymap.set('n', '<M-h>', function() open_split_terminal 'split' end, {
   noremap = true,
   silent = true,
   desc = 'Open terminal in horizontal split',

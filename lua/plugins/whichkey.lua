@@ -23,6 +23,7 @@ wk.add {
   { '<leader>o', group = 'Obsidian' },
   { '<leader>q', group = 'Quickfix' },
   { '<leader>s', group = 'Search In ...' },
+  { '<leader>t', group = 'Test' },
   { '<leader>u', group = 'Toggle / Undo / Notify' },
   { '<leader>v', group = 'Vim Pack ...' },
   { '<leader>x', group = 'Run...' },
