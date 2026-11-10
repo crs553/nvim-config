@@ -1,0 +1,44 @@
+#!/bin/sh
+# Pre-commit checks mirroring the CI `style` job, limited to staged files.
+# Bypass with: git commit --no-verify
+
+# Collect staged files (added/copied/modified/renamed; deletions are skipped).
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+[ -n "$staged" ] || exit 0
+
+# --- Lua: stylua (formatting) + luacheck (lint) ---
+lua_files=$(printf '%s\n' "$staged" | grep '\.lua$' || true)
+if [ -n "$lua_files" ]; then
+  if command -v stylua >/dev/null 2>&1; then
+    # shellcheck disable=SC2086
+    if ! stylua --check $lua_files; then
+      echo "pre-commit: stylua check failed. Run 'stylua .' and re-stage." >&2
+      exit 1
+    fi
+  else
+    echo "pre-commit: stylua not found, skipping format check" >&2
+  fi
+
+  if command -v luacheck >/dev/null 2>&1; then
+    # shellcheck disable=SC2086
+    if ! luacheck $lua_files; then
+      echo "pre-commit: luacheck failed. Fix the issues above." >&2
+      exit 1
+    fi
+  else
+    echo "pre-commit: luacheck not found, skipping lint check" >&2
+  fi
+fi
+
+# --- typos (all staged files; CI always enforces this one) ---
+if command -v typos >/dev/null 2>&1; then
+  # shellcheck disable=SC2086
+  if ! typos --config typos.toml $staged; then
+    echo "pre-commit: typos found. Fix them or extend typos.toml." >&2
+    exit 1
+  fi
+else
+  echo "pre-commit: typos not found, skipping typo check" >&2
+fi
+
+exit 0

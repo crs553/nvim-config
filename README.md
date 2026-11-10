@@ -54,6 +54,7 @@ Main groups:
 | `<leader>o` | Obsidian                   |
 | `<leader>q` | Quickfix                   |
 | `<leader>s` | Search in ...              |
+| `<leader>t` | Test (MATLAB tests)         |
 | `<leader>u` | Toggles / Undo / Notify    |
 | `<leader>v` | Vim Pack management        |
 | `<leader>x` | Run / source               |
@@ -137,3 +138,18 @@ All specs are in `lua/plugins/`. To verify a plugin loaded:
 ```
 
 Or check with `:lua print(vim.pack.get("plugin-name"))`.
+
+## Git hooks
+
+A `pre-commit` hook (`.githooks/pre-commit`) mirrors the CI style job for
+staged files: `stylua --check`, `luacheck`, and `typos` (only if installed;
+CI always runs `typos`).
+
+Enable it once per clone:
+
+```
+git config core.hooksPath .githooks
+```
+
+Bypass with `git commit --no-verify`. Requires `stylua` and `luacheck` on
+your `PATH`.
