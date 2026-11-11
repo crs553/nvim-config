@@ -275,10 +275,12 @@ end
 ---@param cmd string MATLAB command to evaluate
 ---@param label string notification label
 local function eval_in_matlab_repl(session, cmd, label)
+  local origin = vim.api.nvim_get_current_win()
   local dv_ok, dv = pcall(require, 'dap-view')
   if dv_ok then
     pcall(dv.open)
     pcall(dv.show_view, 'repl')
+    if vim.api.nvim_win_is_valid(origin) then vim.api.nvim_set_current_win(origin) end
   end
   local repl_ok, dap_repl = pcall(require, 'dap.repl')
   if repl_ok and dap_repl.clear then pcall(dap_repl.clear) end
