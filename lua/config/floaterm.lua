@@ -143,10 +143,64 @@ end, {
   desc = 'Toggle floating shell terminal',
 })
 
--- Persistent split terminal (reopened when hidden to background)
-local splitterm_state = { buf = nil, win = nil }
+-- Persistent split terminals (one per orientation, reopened when hidden)
+local splitterm_state = {
+  v = { buf = nil, win = nil },
+  h = { buf = nil, win = nil },
+}
+local esc_double_timeout = 500
+local open_split_terminal
 
-local function start_terminal_in_current_win()
+local function term_win_open(state)
+  return state.win
+    and vim.api.nvim_win_is_valid(state.win)
+    and vim.bo[vim.api.nvim_win_get_buf(state.win)].buftype == 'terminal'
+end
+
+local function close_split_terminal(state)
+  if term_win_open(state) then pcall(vim.api.nvim_win_close, state.win, false) end
+  state.win = nil
+end
+
+local function attach_split_term_maps(buf)
+  -- Esc leaves terminal mode; a second Esc within the timeout closes the split
+  vim.keymap.set('t', '<Esc>', function()
+    vim.b[buf].split_term_esc_at = vim.uv.now()
+    vim.api.nvim_feedkeys(
+      vim.api.nvim_replace_termcodes('<C-\\><C-n>', true, false, true),
+      'n',
+      false
+    )
+  end, { buffer = buf, desc = 'Leave terminal mode' })
+
+  vim.keymap.set('n', '<Esc>', function()
+    local now = vim.uv.now()
+    local last = vim.b[buf].split_term_esc_at or 0
+
+    if now - last <= esc_double_timeout then
+      vim.b[buf].split_term_esc_at = 0
+      for _, state in pairs(splitterm_state) do
+        if state.buf == buf then state.win = nil end
+      end
+      pcall(vim.api.nvim_win_close, vim.api.nvim_get_current_win(), false)
+    else
+      vim.b[buf].split_term_esc_at = now
+      vim.cmd 'nohlsearch'
+    end
+  end, { buffer = buf, nowait = true, desc = 'Double Esc to close terminal' })
+
+  -- Repressing the toggle key while inside the terminal closes its split
+  vim.keymap.set('t', '<M-v>', function() open_split_terminal 'vsplit' end, {
+    buffer = buf,
+    desc = 'Toggle vertical terminal split',
+  })
+  vim.keymap.set('t', '<M-h>', function() open_split_terminal 'split' end, {
+    buffer = buf,
+    desc = 'Toggle horizontal terminal split',
+  })
+end
+
+local function start_terminal_in_current_win(state)
   local buf = vim.api.nvim_create_buf(false, true)
   vim.bo[buf].bufhidden = 'hide'
   vim.api.nvim_win_set_buf(vim.api.nvim_get_current_win(), buf)
@@ -154,20 +208,29 @@ local function start_terminal_in_current_win()
   vim.fn.jobstart(get_shell(), {
     term = true,
     on_exit = function()
-      if splitterm_state.buf == buf then splitterm_state.buf = nil end
-      splitterm_state.win = nil
+      if state.buf ~= buf then return end
+      state.buf = nil
+      if state.win and vim.api.nvim_win_is_valid(state.win) then
+        pcall(vim.api.nvim_win_close, state.win, false)
+      end
+      state.win = nil
     end,
   })
+
+  attach_split_term_maps(buf)
   return buf
 end
 
-local function open_split_terminal(open)
-  if
-    splitterm_state.win
-    and vim.api.nvim_win_is_valid(splitterm_state.win)
-    and vim.bo[vim.api.nvim_win_get_buf(splitterm_state.win)].buftype == 'terminal'
-  then
-    vim.api.nvim_set_current_win(splitterm_state.win)
+function open_split_terminal(open)
+  local axis = open == 'split' and 'h' or 'v'
+  local state = splitterm_state[axis]
+
+  if term_win_open(state) then
+    if vim.api.nvim_get_current_win() == state.win then
+      close_split_terminal(state)
+      return
+    end
+    vim.api.nvim_set_current_win(state.win)
     vim.cmd 'startinsert'
     return
   end
@@ -181,14 +244,25 @@ local function open_split_terminal(open)
     vim.cmd 'vsplit'
   end
 
-  if splitterm_state.buf and vim.api.nvim_buf_is_valid(splitterm_state.buf) then
-    vim.api.nvim_win_set_buf(vim.api.nvim_get_current_win(), splitterm_state.buf)
+  if state.buf and vim.api.nvim_buf_is_valid(state.buf) then
+    vim.api.nvim_win_set_buf(vim.api.nvim_get_current_win(), state.buf)
   else
-    splitterm_state.buf = start_terminal_in_current_win()
+    state.buf = start_terminal_in_current_win(state)
   end
-  splitterm_state.win = vim.api.nvim_get_current_win()
+  state.win = vim.api.nvim_get_current_win()
   vim.cmd 'startinsert'
 end
+
+-- Keep state in sync when a split is closed manually or via <M-x>
+vim.api.nvim_create_autocmd('WinClosed', {
+  group = augroup,
+  callback = function(args)
+    local win = tonumber(args.match)
+    for _, state in pairs(splitterm_state) do
+      if state.win == win then state.win = nil end
+    end
+  end,
+})
 
 -- Vertical split terminal (default right)
 vim.api.nvim_create_user_command(
@@ -201,15 +275,15 @@ vim.api.nvim_create_user_command(
 )
 vim.cmd.cabbrev('termvsplit', 'Termvsplit')
 
-vim.keymap.set('n', '<M-v>', function() vim.cmd 'Termvsplit' end, {
+vim.keymap.set('n', '<M-v>', function() open_split_terminal 'vsplit' end, {
   noremap = true,
   silent = true,
-  desc = 'Open terminal in vertical split',
+  desc = 'Toggle terminal in vertical split',
 })
 vim.keymap.set('n', '<M-h>', function() open_split_terminal 'split' end, {
   noremap = true,
   silent = true,
-  desc = 'Open terminal in horizontal split',
+  desc = 'Toggle terminal in horizontal split',
 })
 
 -- Close terminal window, keep shell running in the background
