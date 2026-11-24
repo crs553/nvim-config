@@ -267,7 +267,7 @@ lsp('matlab_ls', {
       indexWorkspace = false,
       matlabConnectionTiming = 'onStart',
       telemetry = false,
-      installPath = 'C:\\Program Files\\MATLAB\\R2024b',
+      installPath = 'C:\\Program Files\\MATLAB\\R2026b',
     },
   },
   single_file_support = true,
